@@ -52,11 +52,11 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
   };
 
   return (
-    <div className="fixed bottom-24 z-50 flex flex-col gap-[16px] w-[658px] left-1/2 -translate-x-1/2">
+    <div className="fixed bottom-16 md:bottom-24 z-50 flex flex-col gap-[16px] w-[calc(100%-32px)] max-w-[658px] left-1/2 -translate-x-1/2 px-4 md:px-0">
       {/* AI Response Bubble */}
       {response && (
         <div
-          className="backdrop-blur-[2.35px] bg-[rgba(246,246,246,0.9)] flex items-start pb-[66px] pt-[16px] px-[30px] rounded-[15px] relative w-[658px] animate-fadeIn"
+          className="backdrop-blur-[2.35px] bg-[rgba(246,246,246,0.9)] flex items-start pb-[66px] pt-[16px] px-[20px] md:px-[30px] rounded-[15px] relative w-full animate-fadeIn"
           style={{
             minHeight: '80px',
             maxHeight: '300px',
@@ -68,7 +68,7 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
             className="absolute border border-[#dcdcdc] border-solid inset-[-1px] pointer-events-none rounded-[16px]"
           />
           <div className="flex items-start justify-between gap-2 w-full">
-            <p className="font-['Fira_Code'] font-medium leading-[normal] text-[#0b0b0b] text-[15px] w-[598px] whitespace-pre-wrap">
+            <p className="font-['Fira_Code'] font-medium leading-[normal] text-[#0b0b0b] text-[14px] md:text-[15px] flex-1 whitespace-pre-wrap">
               {response}
             </p>
             <button
@@ -83,7 +83,7 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
       )}
 
       {/* Input Field */}
-      <div className="bg-white flex h-[50px] items-center px-[30px] py-[39px] rounded-[15px] relative w-[658px]">
+      <div className="bg-white flex h-[50px] items-center px-[20px] md:px-[30px] py-[39px] rounded-[15px] relative w-full">
         <div
           aria-hidden="true"
           className="absolute border border-[#dcdcdc] border-solid inset-[-1px] pointer-events-none rounded-[16px] shadow-[0px_3px_14.9px_0px_rgba(0,0,0,0.12)]"
@@ -93,14 +93,14 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
           <div className="flex items-center gap-3 w-full justify-center">
             <button
               onClick={handleEmailClick}
-              className="font-['Fira_Code'] font-medium text-[15px] text-[#0b0b0b] hover:text-[#3d3d3d] transition-colors"
+              className="font-['Fira_Code'] font-medium text-[14px] md:text-[15px] text-[#0b0b0b] hover:text-[#3d3d3d] transition-colors"
             >
               {emailCopied ? t.copied : t.email}
             </button>
             <span className="text-[#dcdcdc]">•</span>
             <button
               onClick={handleLinkedInClick}
-              className="font-['Fira_Code'] font-medium text-[15px] text-[#0b0b0b] hover:text-[#3d3d3d] transition-colors"
+              className="font-['Fira_Code'] font-medium text-[14px] md:text-[15px] text-[#0b0b0b] hover:text-[#3d3d3d] transition-colors"
             >
               {t.linkedin}
             </button>
@@ -116,7 +116,7 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
                 onKeyDown={handleKeyDown}
                 disabled={isLoading}
                 placeholder={t.chatPlaceholder}
-                className="font-['Fira_Code'] font-normal leading-[normal] text-[15px] w-full bg-transparent border-none outline-none text-[#0b0b0b] placeholder:text-[#8e8281] pr-2"
+                className="font-['Fira_Code'] font-normal leading-[normal] text-[14px] md:text-[15px] w-full bg-transparent border-none outline-none text-[#0b0b0b] placeholder:text-[#8e8281] pr-2"
               />
               <button
                 onClick={toggleLanguage}

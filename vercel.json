@@ -3,9 +3,5 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "regions": ["iad1"],
-  "env": {
-    "SPOTIFY_CLIENT_SECRET": "@spotify-client-secret",
-    "SPOTIFY_REFRESH_TOKEN": "@spotify-refresh-token"
-  }
+  "regions": ["iad1"]
 }
