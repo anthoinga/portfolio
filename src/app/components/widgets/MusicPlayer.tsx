@@ -13,8 +13,8 @@ interface MusicPlayerProps {
 
 export function MusicPlayer({ nowPlaying }: MusicPlayerProps) {
   return (
-    <div className="h-20 relative w-full shrink-0">
-      <div className="absolute left-0 top-0 w-20 h-20">
+    <div className="player-container h-20 relative w-full shrink-0">
+      <div className="album absolute left-0 top-0 w-20 h-20">
         <Image
           src={nowPlaying.albumArt}
           alt={nowPlaying.albumName}
@@ -38,8 +38,8 @@ export function MusicPlayer({ nowPlaying }: MusicPlayerProps) {
         </div>
       </div>
 
-      <div className="absolute left-20 right-0 top-0 h-20">
-        <div className="absolute top-2 left-2 right-11">
+      <div className="info absolute left-20 right-0 top-0 h-20">
+        <div className="meta absolute top-2 left-2 right-11">
           <p
             className="font-body font-bold text-[14px] text-white truncate"
             style={{ textShadow: '0px 0px 2px rgba(0,0,0,0.4)' }}
@@ -54,13 +54,13 @@ export function MusicPlayer({ nowPlaying }: MusicPlayerProps) {
           </p>
         </div>
 
-        <div className="absolute right-2 top-[10px] w-[18px] h-[18px]">
+        <div className="logo absolute right-2 top-[10px] w-[18px] h-[18px]">
           <svg className="w-full h-full" fill="none" viewBox="0 0 18 18">
             <path d={spotifyLogoPath} fill="white" />
           </svg>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 w-full flex items-center pl-2 pr-4">
+        <div className="controls absolute bottom-0 left-0 right-0 w-full flex items-center pl-2 pr-4">
           <button type="button" className="p-1" aria-label="Previous">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 16 16">
               <path
@@ -70,7 +70,7 @@ export function MusicPlayer({ nowPlaying }: MusicPlayerProps) {
               />
             </svg>
           </button>
-          <div className="flex-1 h-1 bg-[rgba(255,255,255,0.3)] mx-1" />
+          <div className="progress flex-1 h-1 bg-[rgba(255,255,255,0.3)] mx-1" />
           <button type="button" className="p-1" aria-label="Next">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 16 16">
               <path

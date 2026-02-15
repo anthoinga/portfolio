@@ -31,7 +31,7 @@ export function ProjectTile({
         }}
       >
         {header ? (
-          <div className="tile-header flex items-center justify-center pt-3 w-full">
+          <div className="header flex items-center justify-center pt-3 w-full">
             <p className="font-mono font-medium text-[16px] text-[#3d3d3d] uppercase text-center">
               {header}
             </p>
