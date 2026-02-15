@@ -13,9 +13,9 @@ export function Header({ name, title, location }: HeaderInfo) {
           paddingBottom: `${SPACING.pillPaddingY}px`,
         }}
       >
-        <h1 className="font-logo text-[18px] md:text-[24px] text-[#3d3d3d] uppercase tracking-[1.2px]">
+        <p className="font-medium text-[12px] md:text-[18px] text-[#3d3d3d] uppercase tracking-[1.2px]">
           {name}
-        </h1>
+        </p>
       </div>
 
       {title && (

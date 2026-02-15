@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, KeyboardEvent } from 'react';
+import { useLanguage } from '@/app/i18n/LanguageContext';
 
 interface ChatInterfaceProps {
   onQuery: (query: string) => void;
@@ -13,6 +14,7 @@ interface ChatInterfaceProps {
 export function ChatInterface({ onQuery, response, isLoading, onClose, queryCount }: ChatInterfaceProps) {
   const [inputValue, setInputValue] = useState('');
   const [emailCopied, setEmailCopied] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   const handleSubmit = () => {
     console.log('ChatInterface handleSubmit called', { inputValue, isLoading });
@@ -43,6 +45,10 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
 
   const handleLinkedInClick = () => {
     window.open('https://www.linkedin.com/in/anthonyinga/', '_blank', 'noopener,noreferrer');
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'es' : 'en');
   };
 
   return (
@@ -77,7 +83,7 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
       )}
 
       {/* Input Field */}
-      <div className="bg-white flex h-[50px] items-center px-[30px] py-[16px] rounded-[15px] relative w-[658px]">
+      <div className="bg-white flex h-[50px] items-center px-[30px] py-[39px] rounded-[15px] relative w-[658px]">
         <div
           aria-hidden="true"
           className="absolute border border-[#dcdcdc] border-solid inset-[-1px] pointer-events-none rounded-[16px] shadow-[0px_3px_14.9px_0px_rgba(0,0,0,0.12)]"
@@ -89,28 +95,37 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
               onClick={handleEmailClick}
               className="font-['Fira_Code'] font-medium text-[15px] text-[#0b0b0b] hover:text-[#3d3d3d] transition-colors"
             >
-              {emailCopied ? 'Copied!' : 'Email'}
+              {emailCopied ? t.copied : t.email}
             </button>
             <span className="text-[#dcdcdc]">•</span>
             <button
               onClick={handleLinkedInClick}
               className="font-['Fira_Code'] font-medium text-[15px] text-[#0b0b0b] hover:text-[#3d3d3d] transition-colors"
             >
-              LinkedIn
+              {t.linkedin}
             </button>
           </div>
         ) : (
           /* Normal input field */
           <>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              disabled={isLoading}
-              placeholder="Ask about my experiences..."
-              className="font-['Fira_Code'] font-normal leading-[normal] text-[15px] w-full bg-transparent border-none outline-none text-[#0b0b0b] placeholder:text-[#8e8281] pr-2"
-            />
+            <div className="flex flex-col w-full gap-1">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={isLoading}
+                placeholder={t.chatPlaceholder}
+                className="font-['Fira_Code'] font-normal leading-[normal] text-[15px] w-full bg-transparent border-none outline-none text-[#0b0b0b] placeholder:text-[#8e8281] pr-2"
+              />
+              <button
+                onClick={toggleLanguage}
+                className="font-['Fira_Code'] font-medium text-[10px] text-[#8e8281] hover:text-[#0b0b0b] transition-colors self-start uppercase"
+                aria-label="Toggle language"
+              >
+                {t.chatLanguageToggle}
+              </button>
+            </div>
             <button
               onClick={handleSubmit}
               disabled={isLoading || !inputValue.trim()}

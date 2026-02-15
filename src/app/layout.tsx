@@ -1,6 +1,7 @@
 import '@/styles/fonts.css';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
+import { LanguageProvider } from '@/app/i18n/LanguageContext';
 
 export const metadata: Metadata = {
   title: 'Portfolio',
@@ -14,7 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   );
 }

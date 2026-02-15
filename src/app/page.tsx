@@ -9,23 +9,25 @@ import { executeFilter } from '@/app/utils/filterEngine';
 import { generateFilterResponse } from '@/app/utils/responseGenerator';
 import { allProjects } from '@/app/data/projects';
 import { SPACING, COLORS } from '@/app/data/constants';
+import { useLanguage } from '@/app/i18n/LanguageContext';
 
 export default function HomePage() {
   const [filteredIds, setFilteredIds] = useState<string[] | null>(null);
   const [response, setResponse] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [queryCount, setQueryCount] = useState(0);
+  const { t, language } = useLanguage();
 
   const headerInfo = {
-    name: 'Inga',
+    name: 'INGA.DEV',
     //title: 'Software Designer, Creative Technologist',
-    location: 'TEXAS',
+    location: t.location,
   };
 
   const footerInfo = {
     name: 'Inga',
-    copyright: 'Copyright 2026',
-    tagline: '🇵🇪 HECHO EN PERU',
+    copyright: t.copyright,
+    tagline: t.tagline,
   };
 
   // Load queryCount from sessionStorage after mount (avoids hydration mismatch)
@@ -86,8 +88,8 @@ export default function HomePage() {
       const filterResult = executeFilter(query, allProjects);
       console.log('Filter result:', filterResult);
 
-      // Generate response
-      const result = generateFilterResponse(filterResult, allProjects);
+      // Generate response with current language
+      const result = generateFilterResponse(filterResult, allProjects, language);
       console.log('Generated response:', result);
 
       // Update state
@@ -96,7 +98,7 @@ export default function HomePage() {
       setQueryCount(prev => prev + 1);
     } catch (error) {
       console.error('Filter error:', error);
-      setResponse('Sorry, something went wrong. Please try again.');
+      setResponse(t.errorMessage);
     } finally {
       setIsLoading(false);
     }

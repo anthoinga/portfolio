@@ -122,18 +122,18 @@ export function ProjectTile({
               }}
             >
               {title && (
-                <p className="font-body text-[14px] text-[#3d3d3d] leading-none">
+                <p className="font-code text-[14px] text-[#3d3d3d] leading-none">
                   {title}
                 </p>
               )}
-              <div className="flex items-center gap-2" style={{ marginTop: 0 }}>
+              <div className="flex items-center gap-2" style={{ marginTop: 3 }}>
                 {location && (
-                  <span className="font-body text-[14px] text-[#3d3d3d] leading-none flex items-center gap-1">
+                  <span className="font-code text-[14px] text-[#3d3d3d] leading-none flex items-center gap-1">
                     {location}
                   </span>
                 )}
                 {date && (
-                  <span className="font-body text-[14px] text-[#3d3d3d] leading-none">
+                  <span className="font-code text-[14px] text-[#3d3d3d] leading-none">
                     {date}
                   </span>
                 )}
