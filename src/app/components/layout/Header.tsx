@@ -1,0 +1,44 @@
+import type { HeaderInfo } from '@/app/types';
+import { SPACING } from '@/app/data/constants';
+
+export function Header({ name, title, location }: HeaderInfo) {
+  return (
+    <header className="headerRoot flex items-center justify-between w-full pb-3 gap-2">
+      <div
+        className="headerNamePill flex items-center justify-center h-10 rounded-[20px]"
+        style={{
+          paddingLeft: `${SPACING.pillPaddingX}px`,
+          paddingRight: `${SPACING.pillPaddingX}px`,
+          paddingTop: `${SPACING.pillPaddingY}px`,
+          paddingBottom: `${SPACING.pillPaddingY}px`,
+        }}
+      >
+        <h1 className="font-logo text-[18px] md:text-[24px] text-[#3d3d3d] uppercase tracking-[1.2px]">
+          {name}
+        </h1>
+      </div>
+
+      {title && (
+        <div className="headerTitle hidden md:flex items-center justify-center h-10 py-[10px]">
+          <p className="font-code font-medium text-[15px] uppercase text-center text-[#3d3d3d]">
+            {title}
+          </p>
+        </div>
+      )}
+
+      <div
+        className="headerLocationPill flex items-center justify-center h-10 rounded-[20px]"
+        style={{
+          paddingLeft: `${SPACING.pillPaddingX}px`,
+          paddingRight: `${SPACING.pillPaddingX}px`,
+          paddingTop: `${SPACING.pillPaddingY}px`,
+          paddingBottom: `${SPACING.pillPaddingY}px`,
+        }}
+      >
+        <p className="font-code font-medium text-[14px] md:text-[16px] text-[#3d3d3d]">
+          📍{location}
+        </p>
+      </div>
+    </header>
+  );
+}
