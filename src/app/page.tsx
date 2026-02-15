@@ -1,9 +1,21 @@
+'use client';
+
+import { useState, useMemo, useEffect } from 'react';
 import { Header } from '@/app/components/layout/Header';
 import { Footer } from '@/app/components/layout/Footer';
 import { ProjectGrid } from '@/app/components/portfolio/ProjectGrid';
+import { ChatInterface } from '@/app/components/chat/ChatInterface';
+import { executeFilter } from '@/app/utils/filterEngine';
+import { generateFilterResponse } from '@/app/utils/responseGenerator';
+import { allProjects } from '@/app/data/projects';
 import { SPACING, COLORS } from '@/app/data/constants';
 
 export default function HomePage() {
+  const [filteredIds, setFilteredIds] = useState<string[] | null>(null);
+  const [response, setResponse] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [queryCount, setQueryCount] = useState(0);
+
   const headerInfo = {
     name: 'Inga',
     //title: 'Software Designer, Creative Technologist',
@@ -16,19 +28,115 @@ export default function HomePage() {
     tagline: '🇵🇪 HECHO EN PERU',
   };
 
+  // Load queryCount from sessionStorage after mount (avoids hydration mismatch)
+  useEffect(() => {
+    const saved = sessionStorage.getItem('chatQueryCount');
+    if (saved) {
+      setQueryCount(parseInt(saved, 10));
+    }
+  }, []);
+
+  // Save queryCount to sessionStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('chatQueryCount', queryCount.toString());
+    }
+  }, [queryCount]);
+
+  // Content protection - disable right-click, drag, and save-as
+  useEffect(() => {
+    // Prevent context menu (right-click)
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      return false;
+    };
+
+    // Prevent drag start on images and other elements
+    const handleDragStart = (e: DragEvent) => {
+      e.preventDefault();
+      return false;
+    };
+
+    // Prevent save-as shortcuts (Ctrl+S, Cmd+S)
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('dragstart', handleDragStart);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('dragstart', handleDragStart);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  const handleQuery = (query: string) => {
+    console.log('handleQuery called with:', query);
+    setIsLoading(true);
+
+    try {
+      // Execute filter
+      console.log('Executing filter with allProjects:', allProjects.length);
+      const filterResult = executeFilter(query, allProjects);
+      console.log('Filter result:', filterResult);
+
+      // Generate response
+      const result = generateFilterResponse(filterResult, allProjects);
+      console.log('Generated response:', result);
+
+      // Update state
+      setFilteredIds(result.matchedProjects.length > 0 ? result.matchedProjects : null);
+      setResponse(result.response);
+      setQueryCount(prev => prev + 1);
+    } catch (error) {
+      console.error('Filter error:', error);
+      setResponse('Sorry, something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    setFilteredIds(null);
+    setResponse(null);
+    // Keep queryCount persistent - don't reset
+  };
+
+  const filteredProjects = useMemo(() => {
+    if (!filteredIds) return allProjects;
+    return allProjects.filter(p => filteredIds.includes(p.id));
+  }, [filteredIds]);
+
   return (
     <div
-      className="min-h-screen flex flex-col px-4 md:px-8 lg:px-[30px]"
+      className="min-h-screen flex flex-col px-4 md:px-8 lg:px-[30px] select-none"
       style={{
         backgroundColor: COLORS.background,
         paddingTop: `${SPACING.containerPadding}px`,
         paddingBottom: `${SPACING.containerPadding}px`,
         gap: `${SPACING.tileGap}px`,
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        msUserSelect: 'none',
       }}
     >
       <Header {...headerInfo} />
-      <ProjectGrid />
+      <ProjectGrid projects={filteredProjects} />
       <Footer {...footerInfo} />
+
+      <ChatInterface
+        onQuery={handleQuery}
+        response={response}
+        isLoading={isLoading}
+        onClose={handleClose}
+        queryCount={queryCount}
+      />
     </div>
   );
 }

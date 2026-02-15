@@ -1,22 +1,36 @@
+import { Project } from '@/app/types';
 import { ProjectColumn } from './ProjectColumn';
 import { SpotifyWidget } from '@/app/components/widgets/SpotifyWidget';
-import {
-  column1Projects,
-  column2Projects,
-  column3Projects,
-} from '@/app/data/projects';
 import { nowPlaying } from '@/app/data/music';
 import { SPACING } from '@/app/data/constants';
 
-export function ProjectGrid() {
+interface ProjectGridProps {
+  projects: Project[];
+}
+
+export function ProjectGrid({ projects }: ProjectGridProps) {
+  // Redistribute projects into 3 columns
+  const column1: Project[] = [];
+  const column2: Project[] = [];
+  const column3: Project[] = [];
+
+  if (projects && Array.isArray(projects)) {
+    projects.forEach((project, index) => {
+      const columnIndex = index % 3;
+      if (columnIndex === 0) column1.push(project);
+      else if (columnIndex === 1) column2.push(project);
+      else column3.push(project);
+    });
+  }
+
   return (
     <div
-      className="grid flex flex-col md:flex-row md:flex-wrap items-start w-full"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full"
       style={{ gap: `${SPACING.tileGap}px` }}
     >
-      <ProjectColumn projects={column1Projects} />
-      <ProjectColumn projects={column2Projects} />
-      <ProjectColumn projects={column3Projects}>
+      <ProjectColumn projects={column1} />
+      <ProjectColumn projects={column2} />
+      <ProjectColumn projects={column3}>
         <SpotifyWidget nowPlaying={nowPlaying} />
       </ProjectColumn>
     </div>

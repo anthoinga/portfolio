@@ -47,5 +47,26 @@
     --breakpointMobile: 768px;
     --breakpointTablet: 1024px;
     --breakpointDesktop: 1440px;
+
+    /* Content protection */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  /* Prevent image dragging and selection */
+  img {
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    pointer-events: none;
+  }
+
+  /* Allow pointer events on links and buttons */
+  a, button {
+    pointer-events: auto;
   }
 }
