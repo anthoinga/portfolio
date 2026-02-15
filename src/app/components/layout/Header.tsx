@@ -3,9 +3,9 @@ import { SPACING } from '@/app/data/constants';
 
 export function Header({ name, title, location }: HeaderInfo) {
   return (
-    <header className="headerRoot flex items-center justify-between w-full pb-3 gap-2">
+    <header className="flex items-center justify-between w-full pb-3 gap-2">
       <div
-        className="headerNamePill flex items-center justify-center h-10 rounded-[20px]"
+        className="name-badge flex items-center justify-center h-10 rounded-[20px]"
         style={{
           paddingLeft: `${SPACING.pillPaddingX}px`,
           paddingRight: `${SPACING.pillPaddingX}px`,
@@ -19,7 +19,7 @@ export function Header({ name, title, location }: HeaderInfo) {
       </div>
 
       {title && (
-        <div className="headerTitle hidden md:flex items-center justify-center h-10 py-[10px]">
+        <div className="title hidden md:flex items-center justify-center h-10 py-[10px]">
           <p className="font-code font-medium text-[15px] uppercase text-center text-[#3d3d3d]">
             {title}
           </p>
@@ -27,7 +27,7 @@ export function Header({ name, title, location }: HeaderInfo) {
       )}
 
       <div
-        className="headerLocationPill flex items-center justify-center h-10 rounded-[20px]"
+        className="location flex items-center justify-center h-10 rounded-[20px]"
         style={{
           paddingLeft: `${SPACING.pillPaddingX}px`,
           paddingRight: `${SPACING.pillPaddingX}px`,

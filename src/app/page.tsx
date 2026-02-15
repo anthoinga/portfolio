@@ -18,7 +18,7 @@ export default function HomePage() {
 
   return (
     <div
-      className="pageLayout min-h-screen flex flex-col px-4 md:px-8 lg:px-[30px]"
+      className="min-h-screen flex flex-col px-4 md:px-8 lg:px-[30px]"
       style={{
         backgroundColor: COLORS.background,
         paddingTop: `${SPACING.containerPadding}px`,

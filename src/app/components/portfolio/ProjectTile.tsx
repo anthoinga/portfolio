@@ -15,14 +15,14 @@ export function ProjectTile({
   return (
     <a
       href={url}
-      className="projectTile flex flex-col overflow-clip rounded-[12px] w-full shrink-0 hover:opacity-90 transition-opacity"
+      className="tile flex flex-col overflow-clip rounded-[12px] w-full shrink-0 hover:opacity-90 transition-opacity"
       style={{
         height: `${dimensions.height}px`,
         minHeight: `${dimensions.minHeight}px`,
       }}
     >
       <div
-        className="projectTileContent bg-[#e8e8e8] flex flex-col items-center justify-between h-full w-full"
+        className="content bg-[#e8e8e8] flex flex-col items-center justify-between h-full w-full"
         style={{
           paddingLeft: `${SPACING.tilePaddingX}px`,
           paddingRight: `${SPACING.tilePaddingX}px`,
@@ -31,7 +31,7 @@ export function ProjectTile({
         }}
       >
         {header ? (
-          <div className="projectTileHeader flex items-center justify-center pt-3 w-full">
+          <div className="tile-header flex items-center justify-center pt-3 w-full">
             <p className="font-mono font-medium text-[16px] text-[#3d3d3d] uppercase text-center">
               {header}
             </p>
@@ -40,9 +40,9 @@ export function ProjectTile({
           <Spacer />
         )}
 
-        <div className="projectTileImageArea flex-1 relative w-full flex items-center justify-center min-h-0">
+        <div className="image-container flex-1 relative w-full flex items-center justify-center min-h-0">
           <div
-            className="projectTileImageWrapper relative w-full h-full"
+            className="image-wrapper relative w-full h-full"
             style={{ boxShadow: 'none' }}
           >
             <Image

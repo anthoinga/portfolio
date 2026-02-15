@@ -10,7 +10,7 @@ interface ProjectColumnProps {
 export function ProjectColumn({ projects, children }: ProjectColumnProps) {
   return (
     <div
-      className="projectColumn flex flex-col flex-1 w-full"
+      className="column flex flex-col flex-1 w-full"
       style={{ gap: `${SPACING.tileGap}px` }}
     >
       {projects.map((project) => (

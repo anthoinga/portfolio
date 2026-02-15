@@ -11,7 +11,7 @@ import { SPACING } from '@/app/data/constants';
 export function ProjectGrid() {
   return (
     <div
-      className="projectGrid flex flex-col md:flex-row md:flex-wrap items-start w-full"
+      className="grid flex flex-col md:flex-row md:flex-wrap items-start w-full"
       style={{ gap: `${SPACING.tileGap}px` }}
     >
       <ProjectColumn projects={column1Projects} />
