@@ -40,23 +40,6 @@ setInterval(() => {
   });
 }, 5 * 60 * 1000);
 
-function isComplexQuery(query: string): boolean {
-  const triggers = [
-    'process',
-    'approach',
-    'why',
-    'how do you',
-    'tell me about',
-    'explain',
-    'what made you',
-    'philosophy',
-    'thinking',
-    'methodology',
-  ];
-  const lowerQuery = query.toLowerCase();
-  return triggers.some(t => lowerQuery.includes(t));
-}
-
 function sanitizeInput(input: string): string {
   if (typeof input !== 'string') {
     throw new Error('Invalid input type');
@@ -95,10 +78,8 @@ export async function POST(request: NextRequest) {
 
     const sanitizedQuery = sanitizeInput(query);
 
-    // Select model based on query complexity
-    const model = isComplexQuery(sanitizedQuery)
-      ? 'claude-3-5-sonnet-20241022' // Complex queries
-      : 'claude-3-5-haiku-20241022';  // Simple queries (12x cheaper)
+    // Use Haiku for all queries (lean and cost-effective)
+    const model = 'claude-3-haiku-20240307';
 
     // Build system prompt with project context
     const systemPrompt = buildSystemPrompt(
