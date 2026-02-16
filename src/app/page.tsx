@@ -78,27 +78,53 @@ export default function HomePage() {
     };
   }, []);
 
-  const handleQuery = (query: string) => {
+  const handleQuery = async (query: string) => {
     console.log('handleQuery called with:', query);
     setIsLoading(true);
 
     try {
-      // Execute filter
+      // Step 1: Client-side filtering (keep this - it's fast)
       console.log('Executing filter with allProjects:', allProjects.length);
       const filterResult = executeFilter(query, allProjects);
       console.log('Filter result:', filterResult);
 
-      // Generate response with current language
-      const result = generateFilterResponse(filterResult, allProjects, language);
-      console.log('Generated response:', result);
+      // Step 2: Call AI API with filtered context
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query,
+          language,
+          matchedProjects: filterResult.matchedProjects.map(id =>
+            allProjects.find(p => p.id === id)
+          ).filter(Boolean), // Remove any undefined entries
+          allProjectsCount: allProjects.length,
+        }),
+      });
 
-      // Update state
-      setFilteredIds(result.matchedProjects.length > 0 ? result.matchedProjects : null);
-      setResponse(result.response);
+      if (!response.ok) {
+        throw new Error('Failed to get AI response');
+      }
+
+      const { response: aiResponse } = await response.json();
+
+      // Step 3: Update UI
+      setFilteredIds(filterResult.matchedProjects.length > 0 ? filterResult.matchedProjects : null);
+      setResponse(aiResponse);
       setQueryCount(prev => prev + 1);
     } catch (error) {
-      console.error('Filter error:', error);
-      setResponse(t.errorMessage);
+      console.error('Query error:', error);
+      // Fallback to template-based response if AI fails
+      try {
+        const filterResult = executeFilter(query, allProjects);
+        const result = generateFilterResponse(filterResult, allProjects, language);
+        setFilteredIds(result.matchedProjects.length > 0 ? result.matchedProjects : null);
+        setResponse(result.response);
+        setQueryCount(prev => prev + 1);
+      } catch (fallbackError) {
+        console.error('Fallback error:', fallbackError);
+        setResponse(t.errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

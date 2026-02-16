@@ -101,3 +101,17 @@ export interface VoiceProfile {
     };
   };
 }
+
+// AI Chat API Types
+export interface ChatRequest {
+  query: string;
+  language: 'en' | 'es';
+  matchedProjects: Project[];
+  allProjectsCount: number;
+}
+
+export interface ChatResponse {
+  response: string;
+  model: string; // 'haiku' or 'sonnet'
+  tokensUsed?: number;
+}

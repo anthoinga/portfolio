@@ -12,8 +12,21 @@ import { column3Projects } from '@/app/data/projects';
 const EXCLUDED_PROJECT_IDS = new Set(column3Projects.map(p => p.id));
 
 export function parseQuery(queryString: string): FilterQuery {
-  const normalized = queryString.toLowerCase().trim();
-  const query: FilterQuery = { raw: queryString };
+  // Input validation
+  if (typeof queryString !== 'string') {
+    throw new Error('Invalid query type');
+  }
+
+  // Limit length (prevent DoS)
+  if (queryString.length > 500) {
+    queryString = queryString.slice(0, 500);
+  }
+
+  // Remove HTML tags (defense in depth)
+  const sanitized = queryString.replace(/[<>]/g, '').trim();
+
+  const normalized = sanitized.toLowerCase();
+  const query: FilterQuery = { raw: sanitized };
 
   // Extract frameworks
   query.frameworks = extractMatches(normalized, FRAMEWORK_KEYWORDS);
