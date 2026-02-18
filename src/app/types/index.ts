@@ -62,6 +62,7 @@ export interface HeaderInfo {
   name: string;
   title?: string;
   location: string;
+  onReset?: () => void;
 }
 
 export interface FooterInfo {

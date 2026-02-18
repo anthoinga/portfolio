@@ -16,6 +16,7 @@ export default function HomePage() {
   const [response, setResponse] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [queryCount, setQueryCount] = useState(0);
+  const [gridVisible, setGridVisible] = useState(true);
   const { t, language } = useLanguage();
 
   const headerInfo = {
@@ -108,19 +109,29 @@ export default function HomePage() {
 
       const { response: aiResponse } = await response.json();
 
-      // Step 3: Update UI
-      setFilteredIds(filterResult.matchedProjects.length > 0 ? filterResult.matchedProjects : null);
-      setResponse(aiResponse);
-      setQueryCount(prev => prev + 1);
+      // Step 3: Update UI — fade out, swap content, fade in
+      const newIds = filterResult.matchedProjects.length > 0 ? filterResult.matchedProjects : null;
+      setGridVisible(false);
+      setTimeout(() => {
+        setFilteredIds(newIds);
+        setResponse(aiResponse);
+        setQueryCount(prev => prev + 1);
+        setGridVisible(true);
+      }, 180);
     } catch (error) {
       console.error('Query error:', error);
       // Fallback to template-based response if AI fails
       try {
         const filterResult = executeFilter(query, allProjects);
         const result = generateFilterResponse(filterResult, allProjects, language);
-        setFilteredIds(result.matchedProjects.length > 0 ? result.matchedProjects : null);
-        setResponse(result.response);
-        setQueryCount(prev => prev + 1);
+        const newIds = result.matchedProjects.length > 0 ? result.matchedProjects : null;
+        setGridVisible(false);
+        setTimeout(() => {
+          setFilteredIds(newIds);
+          setResponse(result.response);
+          setQueryCount(prev => prev + 1);
+          setGridVisible(true);
+        }, 180);
       } catch (fallbackError) {
         console.error('Fallback error:', fallbackError);
         setResponse(t.errorMessage);
@@ -131,9 +142,21 @@ export default function HomePage() {
   };
 
   const handleClose = () => {
-    setFilteredIds(null);
-    setResponse(null);
-    // Keep queryCount persistent - don't reset
+    setGridVisible(false);
+    setTimeout(() => {
+      setFilteredIds(null);
+      setResponse(null);
+      setGridVisible(true);
+    }, 180);
+  };
+
+  const handleReset = () => {
+    setGridVisible(false);
+    setTimeout(() => {
+      setFilteredIds(null);
+      setResponse(null);
+      setGridVisible(true);
+    }, 180);
   };
 
   const filteredProjects = useMemo(() => {
@@ -154,8 +177,10 @@ export default function HomePage() {
         msUserSelect: 'none',
       }}
     >
-      <Header {...headerInfo} />
-      <ProjectGrid projects={filteredProjects} />
+      <Header {...headerInfo} onReset={handleReset} />
+      <div style={{ opacity: gridVisible ? 1 : 0, transition: 'opacity 0.18s ease-out' }}>
+        <ProjectGrid projects={filteredProjects} />
+      </div>
       <Footer {...footerInfo} />
 
       <ChatInterface
