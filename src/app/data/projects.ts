@@ -25,7 +25,7 @@ export const column1Projects: Project[] = [
     size: 'large',
     imageUrl: '/images/rsvp-app.png',
     imageAlt: 'RSVP Reader',
-    url: 'https://rsvp-reader-q1d9bl3t9-elsaqramusho-2860s-projects.vercel.app/',
+    url: 'https://anthonyi.notion.site/Reading-at-the-Speed-of-Thought-30b037de312980d0b826e6b89511a157?source=copy_link',
     title: 'AI RSVP Reader',
     date: '2026',
     metadata: {
