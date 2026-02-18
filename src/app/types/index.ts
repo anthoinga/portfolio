@@ -9,6 +9,24 @@ export interface ProjectMetadata {
   year?: string;
 }
 
+export interface ProjectContext {
+  client?: string;
+  industry?: string;
+  category?: string;
+  role?: string;
+  team?: string;
+  engagement?: string;
+  projectName?: string;
+  challenge?: string;
+  prompt?: string;
+  approach?: string;
+  outcome?: string;
+  scope?: string[];
+  experiences?: string[];
+  awards?: boolean;
+  notes?: string;
+}
+
 export interface Project {
   id: string;
   size: TileSize;
@@ -21,6 +39,7 @@ export interface Project {
   location?: string;
   date?: string;
   metadata?: ProjectMetadata;
+  context?: ProjectContext;
 }
 
 export interface Track {

@@ -11,6 +11,7 @@ export const FRAMEWORK_KEYWORDS: Record<string, string[]> = {
   'TypeScript': ['typescript', 'ts'],
   'Node.js': ['nodejs', 'node.js', 'node'],
   'Jetpack Compose': ['jetpack compose', 'jetpack', 'compose'],
+  'Tailwind': ['tailwind', 'tailwindcss', 'tailwind css'],
 };
 
 export const PLATFORM_KEYWORDS: Record<string, string[]> = {
@@ -29,13 +30,22 @@ export const SKILL_KEYWORDS: Record<string, string[]> = {
   '3D': ['3d', 'three dimensional', 'webgl', '3d visualization'],
   'Data Visualization': ['data viz', 'dataviz', 'visualization', 'charts', 'analytics'],
   'Mobile Development': ['mobile dev', 'mobile development', 'app development'],
+  'Cross-Platform Development': ['cross-platform', 'cross platform', 'multiplatform'],
   'DevOps': ['devops', 'dev ops', 'deployment', 'ci/cd'],
-  'AI': ['ai', 'artificial intelligence', 'machine learning', 'ml'],
+  'AI': ['ai', 'artificial intelligence', 'machine learning', 'ml', 'ai integration'],
+  'Agentic Engineering': ['agentic', 'agentic engineering', 'agent', 'agents'],
   'Design Systems': ['design system', 'design systems', 'component library'],
+  'Experience Architecture': ['experience architecture', 'information architecture', 'ia'],
+  'System Architecture': ['system architecture', 'systems architecture', 'architecture'],
+  'Systems Design': ['systems design', 'system design'],
+  'Operational UX': ['operational ux', 'operations', 'workflow design'],
+  'Product Marketing': ['product marketing', 'marketing'],
+  'Analytics': ['analytics', 'data analytics'],
 };
 
 export const TOOL_KEYWORDS: Record<string, string[]> = {
   'Figma': ['figma'],
+  'FigJam': ['figjam', 'fig jam'],
   'Storybook': ['storybook'],
   'Docker': ['docker'],
   'Kubernetes': ['kubernetes', 'k8s'],
@@ -46,6 +56,14 @@ export const TOOL_KEYWORDS: Record<string, string[]> = {
   'D3.js': ['d3', 'd3.js'],
   'Chart.js': ['chartjs', 'chart.js'],
   'Blender': ['blender'],
+  'Salesforce': ['salesforce', 'sfdc', 'crm'],
+  'Zeplin': ['zeplin'],
+  'Jira': ['jira'],
+  'AI/ML': ['ai', 'ml', 'ai/ml', 'machine learning', 'artificial intelligence'],
+  'OpenAI': ['openai', 'open ai', 'gpt', 'chatgpt'],
+  'Claude': ['claude', 'anthropic'],
+  'Cursor': ['cursor'],
+  'Windsurf': ['windsurf'],
 };
 
 export const YEAR_PATTERN = /\b(20\d{2})\b/g;

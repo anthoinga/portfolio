@@ -9,9 +9,30 @@ export const buildSystemPrompt = (
   const lang = language === 'es' ? 'Spanish' : 'English';
 
   const projectContext = projects.length > 0
-    ? `\n\nRELEVANT PROJECTS (USE THESE ONLY):\n${projects.map(p =>
-        `- ${p.title || p.header}: ${p.category || ''} ${p.metadata?.frameworks?.join(', ') || ''}`
-      ).join('\n')}`
+    ? `\n\nRELEVANT PROJECTS (USE THESE ONLY):\n${projects.map(p => {
+        const meta = p.metadata;
+        const ctx = p.context;
+        let details = `- ${p.title || p.header}`;
+
+        if (meta) {
+          if (meta.frameworks?.length) details += `\n  Frameworks: ${meta.frameworks.join(', ')}`;
+          if (meta.tools?.length) details += `\n  Tools: ${meta.tools.join(', ')}`;
+          if (meta.platform?.length) details += `\n  Platform: ${meta.platform.join(', ')}`;
+          if (meta.skills?.length) details += `\n  Skills: ${meta.skills.join(', ')}`;
+          if (meta.projectType) details += `\n  Type: ${meta.projectType}`;
+          if (meta.year) details += `\n  Year: ${meta.year}`;
+        }
+
+        if (ctx) {
+          if (ctx.client) details += `\n  Client: ${ctx.client}`;
+          if (ctx.industry) details += `\n  Industry: ${ctx.industry}`;
+          if (ctx.role) details += `\n  Role: ${ctx.role}`;
+          if (ctx.challenge) details += `\n  Challenge: ${ctx.challenge}`;
+          if (ctx.outcome) details += `\n  Outcome: ${ctx.outcome}`;
+        }
+
+        return details;
+      }).join('\n\n')}`
     : '\n\nNO PROJECT CONTEXT PROVIDED - Speak generally about past experience. Do not invent specific project details.';
 
   const guidance = responseGuidance ? `\n\nRESPONSE GUIDANCE FOR THIS QUERY:\n${responseGuidance}` : '';
@@ -34,6 +55,12 @@ CRITICAL LENGTH LIMITS:
 - Total response: 40-60 words MAX
 - If you write more than 80 words, you FAILED
 - ONE clear idea per response
+
+🚨 NEVER START WITH COUNTS:
+- DO NOT say: "Found 3 builds with...", "2 projects use...", "I have 5 apps that..."
+- DO NOT announce how many projects match
+- The UI shows the count visually - you don't need to repeat it
+- Jump straight to the insight or project details
 
 CRITICAL: DO NOT DEFAULT TO REACT
 - If question isn't about React, DON'T mention React
@@ -73,7 +100,9 @@ CORE RULES:
   - Asked about projects? Reference actual projects or say "past work"
 
 STRUCTURE:
-- Lead with the answer/insight (no preamble)
+- Lead with the answer/insight (no preamble, no counts)
+- NEVER start with "Found X projects" or "I have Y builds" - the UI handles that
+- Jump straight to: the tech, the experience, or the project name
 - ONE concrete example if needed — then STOP
 - Pattern: [Core point] → [Quick example] → [Insight/tradeoff]
 - Maximum 3 paragraphs total
@@ -86,7 +115,7 @@ WHAT TO AVOID:
 - Corporate jargon (synergy, leverage, robust, stakeholders)
 - Hedging qualifiers (just, really, very, actually)
 - Dense paragraphs — break it up
-- Counting projects (no "I built 5 apps")
+- Counting/announcing projects: NEVER say "Found X builds", "I have Y projects", "Built 5 apps", "2 projects use..."
 - Follow-up questions or offers to help
 - Stage directions (*clears throat*)
 - Making up features not in context
