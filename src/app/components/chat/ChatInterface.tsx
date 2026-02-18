@@ -68,7 +68,7 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
             className="absolute border border-[#dcdcdc] border-solid inset-[-1px] pointer-events-none rounded-[16px]"
           />
           <div className="flex items-start justify-between gap-2 w-full">
-            <p className="font-['Fira_Code'] font-medium leading-[normal] text-[#0b0b0b] text-[14px] md:text-[15px] flex-1 whitespace-pre-wrap">
+            <p className="font-code font-medium leading-[normal] text-[#0b0b0b] text-[14px] md:text-[15px] flex-1 whitespace-pre-wrap">
               {response}
             </p>
             <button
@@ -93,14 +93,14 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
           <div className="flex items-center gap-3 w-full justify-center">
             <button
               onClick={handleEmailClick}
-              className="font-['Fira_Code'] font-medium text-[14px] md:text-[15px] text-[#0b0b0b] hover:text-[#3d3d3d] transition-colors"
+              className="font-code font-medium text-[14px] md:text-[15px] text-[#0b0b0b] hover:text-[#3d3d3d] transition-colors"
             >
               {emailCopied ? t.copied : t.email}
             </button>
             <span className="text-[#dcdcdc]">•</span>
             <button
               onClick={handleLinkedInClick}
-              className="font-['Fira_Code'] font-medium text-[14px] md:text-[15px] text-[#0b0b0b] hover:text-[#3d3d3d] transition-colors"
+              className="font-code font-medium text-[14px] md:text-[15px] text-[#0b0b0b] hover:text-[#3d3d3d] transition-colors"
             >
               {t.linkedin}
             </button>
@@ -116,11 +116,11 @@ export function ChatInterface({ onQuery, response, isLoading, onClose, queryCoun
                 onKeyDown={handleKeyDown}
                 disabled={isLoading}
                 placeholder={t.chatPlaceholder}
-                className="font-['Fira_Code'] font-normal leading-[normal] text-[14px] md:text-[15px] w-full bg-transparent border-none outline-none text-[#0b0b0b] placeholder:text-[#8e8281] pr-2"
+                className="font-code font-medium leading-[normal] text-[14px] md:text-[15px] w-full bg-transparent border-none outline-none text-[#0b0b0b] placeholder:text-[#8e8281] pr-2"
               />
               <button
                 onClick={toggleLanguage}
-                className="font-['Fira_Code'] font-medium text-[10px] text-[#8e8281] hover:text-[#0b0b0b] transition-colors self-start uppercase"
+                className="font-code font-medium text-[10px] text-[#8e8281] hover:text-[#0b0b0b] transition-colors self-start uppercase"
                 aria-label="Toggle language"
               >
                 {t.chatLanguageToggle}
