@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { followPointer } from '$lib/actions/followPointer'
 	import { loadWhenNear } from '$lib/actions/loadWhenNear'
 	import { tilt } from '$lib/actions/tilt'
 	import CardMeta from '$lib/components/ui/CardMeta.svelte'
@@ -10,10 +9,9 @@
 
 	let {
 		project,
-		preload = false,
 		index = 0,
 		topOffset = 0
-	}: { project: ProjectCard; preload?: boolean; index?: number; topOffset?: number } = $props()
+	}: { project: ProjectCard; index?: number; topOffset?: number } = $props()
 
 	let hovering = $state(false)
 	let near = $state(false)
@@ -26,37 +24,26 @@
 	const visualH = $derived(Math.max(0, collapse * cardHeight))
 	const imageY = $derived(-(1 - collapse) * cardHeight)
 	const labelOpacity = $derived(mapRange(collapse, 0.2, 0.1, 1, 0))
-	const wide = $derived(isFirst && m.wideFirst)
-	const showVideo = $derived(Boolean(project.previewVideo?.url) && (isFirst || hovering) && (preload || near || isFirst))
+	const showVideo = $derived(
+		Boolean(project.previewVideo?.url) && (isFirst || (hovering && near))
+	)
 	const surface = $derived(projectSurface(project))
 </script>
 
 <div
 	class="pointer-events-none sticky top-4 overflow-hidden"
+	class:col-span-full={isFirst && m.wideFirst}
 	style:height="{cardHeight}px"
-	style:grid-column={wide ? '1 / 3' : 'auto'}
 >
 	<div
-		class="card-depth pointer-events-auto relative overflow-hidden rounded-media"
-		data-scheme={project.colorScheme}
+		class="pointer-events-auto relative overflow-hidden rounded-home-card"
 		style="{projectCssVars(project)}; height:{visualH}px; background:{surface.background}; color:{surface.color}"
 		use:tilt
-		use:followPointer
 		use:loadWhenNear={() => (near = true)}
 	>
-		<div
-			class="card-shade pointer-events-none absolute inset-x-0 top-0"
-			style:height="{cardHeight}px"
-			aria-hidden="true"
-		></div>
-		<div
-			class="card-grain pointer-events-none absolute inset-x-0 top-0"
-			style:height="{cardHeight}px"
-			aria-hidden="true"
-		></div>
 		<a
 			href={project.externalUrl}
-			class="block h-full"
+			class="relative block h-full"
 			data-cursor="case-study"
 			target="_blank"
 			rel="noopener noreferrer"
@@ -69,7 +56,7 @@
 				style:height="{cardHeight}px"
 				style:transform="translateY({imageY}px)"
 			>
-				<div data-follow class="relative h-full w-full">
+				<div class="relative h-full w-full">
 					{#if project.poster?.url}
 						<img
 							src={project.poster.url}
@@ -90,16 +77,23 @@
 							disablepictureinpicture
 							preload={isFirst ? 'auto' : 'metadata'}
 						></video>
-					{:else if !project.poster?.url}
-						<div
-							class="ambient-placeholder pointer-events-none absolute inset-0 opacity-25 mix-blend-multiply"
-							style="background: radial-gradient(circle at 30% 18%, {project.colorAccent}, transparent 58%)"
-						></div>
 					{/if}
 				</div>
 			</div>
 
-			<CardMeta title={project.title} opacity={labelOpacity} />
+			<div
+				class="pointer-events-none absolute inset-x-3 top-3 z-10 flex items-start justify-between gap-3"
+				style:opacity={labelOpacity}
+			>
+				<div class="min-w-0">
+					<CardMeta title={project.title} />
+				</div>
+				{#if project.year != null}
+					<div class="shrink-0">
+						<CardMeta title={String(project.year)} />
+					</div>
+				{/if}
+			</div>
 		</a>
 	</div>
 </div>

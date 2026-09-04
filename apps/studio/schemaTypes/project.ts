@@ -12,6 +12,12 @@ export const project = defineType({
 			options: { source: 'title' },
 			validation: (r) => r.required()
 		}),
+		defineField({
+			name: 'externalUrl',
+			title: 'Case study URL',
+			type: 'url',
+			description: 'Homepage cards open this in a new tab'
+		}),
 		defineField({ name: 'description', type: 'string', title: 'Tagline' }),
 		defineField({ name: 'tags', type: 'array', of: [{ type: 'string' }], options: { layout: 'tags' } }),
 		defineField({
@@ -28,6 +34,7 @@ export const project = defineType({
 			initialValue: 'case-study'
 		}),
 		defineField({ name: 'scope', type: 'string', description: 'e.g. 8 weeks (2024)' }),
+		defineField({ name: 'year', type: 'number', description: 'Shown on the homepage card pill' }),
 		defineField({ name: 'weight', type: 'number', initialValue: 0, description: 'Homepage sort, lower first' }),
 		defineField({ name: 'hidden', type: 'boolean', initialValue: false }),
 		defineField({

@@ -24,7 +24,7 @@
 	)
 
 	$effect(() => {
-		document.documentElement.classList.toggle('cursor-takeover', enabled)
+		document.documentElement.classList.toggle('cursor-takeover', enabled && visible)
 		return () => document.documentElement.classList.remove('cursor-takeover')
 	})
 
@@ -108,8 +108,8 @@
 				lx = tx
 				ly = ty
 				seeded = true
-				visible = true
 			}
+			if (!visible) visible = true
 			const hit = document.elementFromPoint(e.clientX, e.clientY)
 			const study = hit?.closest('[data-cursor="case-study"]') ?? null
 			caseStudy = Boolean(study)
@@ -133,9 +133,15 @@
 		}
 
 		const show = () => {
-			if (!seeded) return
+			if (!seeded || document.visibilityState === 'hidden') return
 			visible = true
 			markMoving()
+			kick()
+		}
+
+		const onVisibility = () => {
+			if (document.visibilityState === 'hidden') hide()
+			else show()
 		}
 
 		const onResize = () => {
@@ -152,6 +158,9 @@
 		document.addEventListener('mouseleave', hide)
 		document.addEventListener('mouseenter', show)
 		window.addEventListener('blur', hide)
+		window.addEventListener('focus', show)
+		window.addEventListener('pageshow', show)
+		document.addEventListener('visibilitychange', onVisibility)
 
 		return () => {
 			cancelAnimationFrame(raf)
@@ -162,6 +171,9 @@
 			document.removeEventListener('mouseleave', hide)
 			document.removeEventListener('mouseenter', show)
 			window.removeEventListener('blur', hide)
+			window.removeEventListener('focus', show)
+			window.removeEventListener('pageshow', show)
+			document.removeEventListener('visibilitychange', onVisibility)
 		}
 	})
 </script>

@@ -15,32 +15,76 @@ export function mapRange(value: number, inMin: number, inMax: number, outMin: nu
 export type CardMetrics = {
 	first: number
 	normal: number
-	twoCol: boolean
+	cols: number
 	wideFirst: boolean
 }
 
-/** Sticky `top-4`; featured card must fit below it. */
-const FIRST_CARD_TOP_GAP = 16
+/** Keep in lockstep with the home shell in `app.css`. */
+export const HOME = {
+	md: 768,
+	lg: 1024,
+	/** 120rem */
+	max: 1920,
+	/** `.home-shell` `mx-6` on both sides */
+	shellPad: 48,
+	/** `.home-shell` `gap-4` */
+	gap: 16,
+	cols: 9,
+	feedCols: 7,
+	/** Feed `gap-3` */
+	cardGutter: 12,
+	/** Sticky `top-4` */
+	stickyTop: 16,
+	/** Landscape 4:3 */
+	cardRatio: 3 / 4,
+	/** Landscape 3:2 */
+	heroRatio: 2 / 3
+} as const
+
+function spanWidth(shell: number, tracks: number) {
+	const fr = (shell - (HOME.cols - 1) * HOME.gap) / HOME.cols
+	return tracks * fr + (tracks - 1) * HOME.gap
+}
+
+export function homeFeedWidth(viewW: number) {
+	const shell = Math.max(0, viewW - HOME.shellPad)
+	if (viewW < HOME.lg) return shell
+	return Math.min(spanWidth(shell, HOME.feedCols), spanWidth(HOME.max - HOME.shellPad, HOME.feedCols))
+}
+
+function gridCardWidth(viewW: number, cols: number) {
+	const feed = homeFeedWidth(viewW)
+	if (cols <= 1) return feed
+	return (feed - (cols - 1) * HOME.cardGutter) / cols
+}
+
+function ratioHeight(cardWidth: number, ratio: number, viewH?: number) {
+	const height = cardWidth * ratio
+	if (viewH == null) return height
+	return Math.min(height, Math.max(0, viewH - HOME.stickyTop))
+}
 
 export function cardMetrics(width: number, height: number): CardMetrics {
-	if (width >= 1024) {
+	if (width >= HOME.lg) {
 		return {
-			first: Math.min(0.5 * width, Math.max(0, height - FIRST_CARD_TOP_GAP)),
-			normal: 0.37 * width,
-			twoCol: true,
+			first: ratioHeight(homeFeedWidth(width), HOME.heroRatio, height),
+			normal: ratioHeight(gridCardWidth(width, 2), HOME.cardRatio),
+			cols: 2,
 			wideFirst: true
 		}
 	}
-	if (width >= 768) {
-		return { first: 0.55 * width, normal: 0.55 * width, twoCol: true, wideFirst: false }
+	if (width >= HOME.md) {
+		const card = ratioHeight(gridCardWidth(width, 2), HOME.cardRatio)
+		return { first: card, normal: card, cols: 2, wideFirst: false }
 	}
-	return { first: 0.9 * width, normal: 0.9 * width, twoCol: false, wideFirst: false }
+	const card = ratioHeight(homeFeedWidth(width), HOME.cardRatio)
+	return { first: card, normal: card, cols: 1, wideFirst: false }
 }
 
-export function projectRow(index: number, wideFirst: boolean, twoCol: boolean) {
-	if (!twoCol) return index
-	if (wideFirst) return Math.floor((index + 1) / 2)
-	return Math.floor(index / 2)
+export function projectRow(index: number, wideFirst: boolean, cols: number) {
+	if (cols <= 1) return index
+	if (wideFirst) return Math.floor((index + cols - 1) / cols)
+	return Math.floor(index / cols)
 }
 
 /** scrollY window where this sticky card collapses. */
@@ -50,9 +94,9 @@ export function collapseRange(
 	metrics: CardMetrics,
 	topOffset: number
 ) {
-	const row = projectRow(index, metrics.wideFirst, metrics.twoCol)
-	const firstRow = metrics.first + 8
-	const start = firstRow + (row - 1) * (cardHeight + 8) - 16 + topOffset
+	const row = projectRow(index, metrics.wideFirst, metrics.cols)
+	const firstRow = metrics.first + HOME.cardGutter
+	const start = firstRow + (row - 1) * (cardHeight + HOME.cardGutter) - HOME.stickyTop + topOffset
 	const end = start + cardHeight
 	return { start, end, row }
 }

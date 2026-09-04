@@ -3,6 +3,7 @@
 	import IconExternal from '$lib/components/ui/IconExternal.svelte'
 	import InlineLink from '$lib/components/ui/InlineLink.svelte'
 	import LogoMark from '$lib/components/ui/LogoMark.svelte'
+	import { HOME } from '$lib/scroll'
 	import { viewport } from '$lib/scrollRoot.svelte'
 	import type { Credit } from '$lib/sanity/types'
 	import type { PageData } from './$types'
@@ -10,13 +11,9 @@
 	let { data }: { data: PageData } = $props()
 	const settings = $derived(data.settings)
 	let railH = $state(0)
-	const topOffset = $derived(viewport.viewW >= 1024 ? 0 : railH)
-	const githubLabel = $derived(settings?.github?.replace(/\/+$/, '').split('/').pop())
-	const linkedinLabel = $derived(
-		settings?.linkedin
-			? `@${settings.linkedin.replace(/\/+$/, '').split('/').pop()}`
-			: ''
-	)
+	const topOffset = $derived(viewport.viewW >= HOME.lg ? 0 : railH)
+	const githubLabel = $derived(pathTail(settings?.github))
+	const linkedinLabel = $derived(settings?.linkedin ? `@${pathTail(settings.linkedin)}` : '')
 	const bioParts = $derived.by(() => {
 		const bio = settings?.bio
 		if (!bio) return [] as string[]
@@ -28,6 +25,10 @@
 		{ title: 'Experiences', rows: settings?.experiences ?? [], yearCol: false },
 		{ title: 'Awards', rows: settings?.awards ?? [], yearCol: true }
 	] satisfies { title: string; rows: Credit[]; yearCol: boolean }[])
+
+	function pathTail(url?: string) {
+		return url?.replace(/\/+$/, '').split('/').pop() ?? ''
+	}
 </script>
 
 <svelte:head>
@@ -37,17 +38,17 @@
 	{/if}
 </svelte:head>
 
-<main class="home-shell mx-6 grid grid-flow-dense gap-4 text-chrome-ink lg:grid-cols-9">
+<main class="home-shell mx-6 grid gap-4 text-chrome-ink lg:grid-cols-9">
 	<aside class="home-rail lg:col-span-2" bind:clientHeight={railH}>
 		<div class="sticky top-0 flex flex-col pt-8 pb-4 lg:h-screen lg:overflow-y-auto lg:pt-10">
 			<div
-				class="mb-4 size-6 shrink-0 text-chrome-ink sm:size-7 lg:mb-5 lg:size-5 xl:size-6 2xl:mb-6 2xl:size-7"
+				class="mb-4 size-6 shrink-0 text-chrome-ink sm:size-7 lg:mb-5 lg:size-5 2xl:size-6"
 				aria-hidden="true"
 			>
 				<LogoMark />
 			</div>
 			<div
-				class="type-bio flex flex-col gap-[1em] text-[16px] leading-[1.45] font-normal sm:text-[18px] lg:text-[15px] lg:leading-[1.4] xl:text-[18px] 2xl:text-[24px] 2xl:leading-[1.25]"
+				class="flex flex-col gap-[1em] tracking-normal text-[16px] leading-[1.45] font-normal sm:text-[18px] lg:text-[15px] lg:leading-[1.4] 2xl:text-[19px] 2xl:leading-[1.35]"
 			>
 				<p>{settings?.name}</p>
 				{#each bioParts as part}
@@ -79,11 +80,11 @@
 				<div class="space-y-6 text-sm opacity-70">
 					{#each lists as list}
 						<div>
-							<p class="mb-[1em] text-[11px] uppercase tracking-[0.12em] lg:text-[10px] 2xl:text-[12px]">{list.title}</p>
-							<div class="text-[14px] leading-snug sm:text-[15px] lg:text-[13px] xl:text-[15px] 2xl:text-[18px] 2xl:leading-normal">
+							<p class="mb-[1em] text-[11px] uppercase tracking-[0.12em] lg:text-[10px]">{list.title}</p>
+							<div class="text-[14px] leading-snug sm:text-[15px] lg:text-[13px] 2xl:text-[15px]">
 								{#each list.rows as row}
 									<div
-										class="grid gap-x-2 border-b border-current/20 py-1.5 lg:py-1 2xl:py-2 {list.yearCol
+										class="grid gap-x-2 border-b border-current/20 py-1.5 lg:py-1 {list.yearCol
 											? 'grid-cols-[minmax(0,1fr)_auto]'
 											: 'grid-cols-2 gap-x-1'}"
 									>
@@ -97,7 +98,7 @@
 				</div>
 
 				<footer
-					class="mt-10 flex items-baseline justify-between gap-3 text-[14px] leading-snug text-chrome-ink/70 sm:text-[15px] lg:text-[13px] xl:text-[15px] 2xl:text-[18px] 2xl:leading-normal"
+					class="mt-10 flex items-baseline justify-between gap-3 text-[14px] leading-snug text-chrome-ink/70 sm:text-[15px] lg:text-[13px] 2xl:text-[15px]"
 				>
 					<p>© INGA</p>
 					{#if settings?.cv}
@@ -117,10 +118,10 @@
 		</div>
 	</aside>
 
-	<section class="mb-4 lg:col-span-7">
-		<div class="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
+	<section class="home-feed mb-4 lg:col-span-7">
+		<div class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
 			{#each data.projects as project, i (project._id)}
-				<ProjectCard {project} preload={i === 0} index={i} {topOffset} />
+				<ProjectCard {project} index={i} {topOffset} />
 			{/each}
 		</div>
 	</section>

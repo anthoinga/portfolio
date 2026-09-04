@@ -73,14 +73,11 @@ export function readCursorSurface(hit: Element | null): CursorSurface {
 	}
 	if (!hit) return fallback
 
-	const study = hit instanceof Element ? hit.closest('[data-cursor="case-study"]') : null
+	const study = hit.closest('[data-cursor="case-study"]')
 	const cs = getComputedStyle(study ?? hit)
 	const accent = cs.getPropertyValue('--accent').trim() || fallback.accent
 	const bg = cs.getPropertyValue('--bg').trim()
 	const light = cs.getPropertyValue('--light').trim()
-
-	// Card media usually reads much lighter than --bg/--darkest, so key off --light
-	// (or treat the card as a light surface) and use a dark frost on top.
 	const scheme = study
 		? surfaceScheme(light || '#f2f2f2')
 		: bg

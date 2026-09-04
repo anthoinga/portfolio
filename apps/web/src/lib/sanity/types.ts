@@ -34,6 +34,7 @@ export type ProjectCard = {
 	tags: string[]
 	type: ProjectType
 	scope?: string
+	year?: number
 	weight: number
 	hidden: boolean
 	colorScheme: ColorScheme
@@ -43,7 +44,6 @@ export type ProjectCard = {
 	colorDarkest: HexColor
 	previewVideo?: MediaRef | null
 	poster?: MediaRef | null
-	// Home cards open this in a new tab while /projects is tabled.
 	externalUrl?: string
 }
 

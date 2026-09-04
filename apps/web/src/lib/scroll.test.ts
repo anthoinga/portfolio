@@ -1,49 +1,50 @@
 import { describe, expect, it } from 'vitest'
-import { cardMetrics, collapseRange, projectRow } from './scroll'
+import { HOME, cardMetrics, collapseRange, homeFeedWidth, projectRow } from './scroll'
 
 describe('project grid scroll geometry', () => {
-	it('uses the reference breakpoints and card proportions', () => {
-		expect(cardMetrics(1440, 900)).toEqual({
-			first: 720,
-			normal: 532.8,
-			twoCol: true,
-			wideFirst: true
-		})
-		expect(cardMetrics(800, 900)).toEqual({
-			first: 440.00000000000006,
-			normal: 440.00000000000006,
-			twoCol: true,
-			wideFirst: false
-		})
-		expect(cardMetrics(700, 900)).toEqual({
-			first: 630,
-			normal: 630,
-			twoCol: false,
-			wideFirst: false
-		})
+	it('uses a 3:2 hero and 4:3 grid cards at each breakpoint', () => {
+		const desktop = cardMetrics(1440, 900)
+		const feed = homeFeedWidth(1440)
+		expect(desktop.cols).toBe(2)
+		expect(desktop.wideFirst).toBe(true)
+		expect(desktop.first).toBeCloseTo(feed * HOME.heroRatio, 5)
+		expect(desktop.normal).toBeCloseTo(((feed - HOME.cardGutter) / 2) * HOME.cardRatio, 5)
+
+		const tablet = cardMetrics(800, 900)
+		expect(tablet).toMatchObject({ cols: 2, wideFirst: false })
+		expect(tablet.first).toBe(tablet.normal)
+		expect(tablet.normal).toBeCloseTo(
+			((800 - HOME.shellPad - HOME.cardGutter) / 2) * HOME.cardRatio,
+			5
+		)
+
+		const mobile = cardMetrics(700, 900)
+		expect(mobile).toMatchObject({ cols: 1, wideFirst: false })
+		expect(mobile.normal).toBeCloseTo((700 - HOME.shellPad) * HOME.cardRatio, 5)
 	})
 
-	it('caps the first desktop card to the viewport minus sticky inset', () => {
-		expect(cardMetrics(1440, 900).first).toBe(720)
-		expect(cardMetrics(1200, 900).first).toBe(600)
-		expect(cardMetrics(1920, 1080).first).toBe(960)
-		expect(cardMetrics(2560, 1080).first).toBe(1064)
-		expect(cardMetrics(1440, 700).first).toBe(684)
+	it('stops growing the hero once the feed hits its max width', () => {
+		expect(cardMetrics(1440, 700).first).toBe(700 - HOME.stickyTop)
+		expect(homeFeedWidth(2560)).toBe(homeFeedWidth(HOME.max))
+		expect(cardMetrics(2560, 1080).first).toBe(cardMetrics(HOME.max, 1080).first)
+		expect(cardMetrics(2560, 1080).normal).toBe(cardMetrics(HOME.max, 1080).normal)
+		expect(cardMetrics(2560, 1080).first).toBeGreaterThan(cardMetrics(2560, 1080).normal)
 	})
 
 	it('starts collapsing the first desktop card immediately', () => {
 		const metrics = cardMetrics(1440, 900)
 		expect(collapseRange(0, metrics.first, metrics, 0)).toEqual({
-			start: -16,
-			end: 704,
+			start: -HOME.stickyTop,
+			end: metrics.first - HOME.stickyTop,
 			row: 0
 		})
 	})
 
 	it('collapses both cards in a row over the same range', () => {
 		const metrics = cardMetrics(1440, 900)
-		expect(projectRow(1, true, true)).toBe(1)
-		expect(projectRow(2, true, true)).toBe(1)
+		expect(projectRow(1, true, 2)).toBe(1)
+		expect(projectRow(2, true, 2)).toBe(1)
+		expect(projectRow(3, true, 2)).toBe(2)
 		expect(collapseRange(1, metrics.normal, metrics, 0)).toEqual(
 			collapseRange(2, metrics.normal, metrics, 0)
 		)

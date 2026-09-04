@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { rememberCard } from '$lib/scroll'
 	import { tilt } from '$lib/actions/tilt'
-	import CardMeta from '$lib/components/ui/CardMeta.svelte'
 	import { projectCssVars } from '$lib/theme'
 	import type { NextProjectPreview } from '$lib/sanity/types'
 
@@ -24,5 +23,8 @@
 	{#if next.poster?.url}
 		<img src={next.poster.url} alt="" class="absolute inset-0 h-full w-full object-cover" />
 	{/if}
-	<CardMeta title={next.title}>Next case study</CardMeta>
+	<div class="absolute inset-x-0 top-0 mx-4 my-3 grid grid-cols-2 text-sm leading-tight tracking-tight lg:text-base">
+		<div class="mb-1">{next.title}</div>
+		<div class="opacity-60">Next case study</div>
+	</div>
 </a>
