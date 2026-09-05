@@ -1,5 +1,7 @@
 <script lang="ts">
+	import IconClipboard from '$lib/components/ui/IconClipboard.svelte'
 	import IconView from '$lib/components/ui/IconView.svelte'
+	import { cursorNotice } from '$lib/cursorNotice.svelte'
 	import {
 		TRAIL,
 		clearTrail,
@@ -15,6 +17,8 @@
 	let visible = $state(false)
 	let idle = $state(false)
 	let caseStudy = $state(false)
+	const copied = $derived(cursorNotice.copied)
+	const pill = $derived(caseStudy || copied)
 	let surface = $state(readCursorSurface(null))
 	let node: HTMLElement | undefined = $state()
 	let canvas: HTMLCanvasElement | undefined = $state()
@@ -67,8 +71,8 @@
 				const dy = y - ly
 				const dist = Math.hypot(dx, dy)
 				if (dist >= TRAIL.stampAfter) {
-					const radius = caseStudy ? TRAIL.radius.pill : TRAIL.radius.rest
-					const amount = caseStudy ? TRAIL.amount.pill : TRAIL.amount.rest
+					const radius = caseStudy || cursorNotice.copied ? TRAIL.radius.pill : TRAIL.radius.rest
+					const amount = caseStudy || cursorNotice.copied ? TRAIL.amount.pill : TRAIL.amount.rest
 					const steps = Math.max(1, Math.ceil(dist / TRAIL.step))
 					const deposit = Math.max(TRAIL.minDeposit, amount / Math.max(1, steps * TRAIL.stepSpread))
 					for (let i = 1; i <= steps; i++) {
@@ -183,7 +187,7 @@
 		bind:this={canvas}
 		class="cursor-trail"
 		class:is-visible={visible}
-		class:is-pill={caseStudy}
+		class:is-pill={pill}
 		aria-hidden="true"
 	></canvas>
 	<div
@@ -191,18 +195,22 @@
 		class="cursor-takeover-el"
 		class:is-visible={visible}
 		class:is-idle={idle}
-		class:is-pill={caseStudy}
+		class:is-pill={pill}
 		class:is-on-light={surface.scheme === 'light'}
 		style:--cursor-accent={surface.accent}
 		style:--cursor-ink={surface.ink}
 		aria-hidden="true"
 	>
 		<div class="cursor-orb">
-			<span class="cursor-grain" aria-hidden="true"></span>
-			<div class="cursor-label" class:is-open={caseStudy}>
+			<div class="cursor-label" class:is-open={pill}>
 				<div class="cursor-label-inner">
-					<span class="cursor-icon"><IconView /></span>
-					<span>VIEW CASE STUDY</span>
+					{#if copied}
+						<span class="cursor-icon"><IconClipboard /></span>
+						<span>COPIED TO CLIPBOARD</span>
+					{:else}
+						<span class="cursor-icon"><IconView /></span>
+						<span>VIEW CASE STUDY</span>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -260,7 +268,6 @@
 		color: var(--cursor-ink, #161616);
 		transform: translate(-50%, -50%);
 		overflow: hidden;
-		isolation: isolate;
 		transition:
 			min-width 420ms var(--ease),
 			height 420ms var(--ease),
@@ -294,16 +301,6 @@
 		}
 	}
 
-	.cursor-grain {
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		opacity: 0.22;
-		mix-blend-mode: multiply;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-		background-size: 80px 80px;
-	}
-
 	.cursor-takeover-el.is-pill .cursor-orb {
 		height: 40px;
 		padding: 0 16px 0 12px;
@@ -312,11 +309,6 @@
 	.cursor-takeover-el.is-on-light .cursor-orb {
 		border-color: rgb(255 255 255 / 0.14);
 		background: color-mix(in srgb, var(--cursor-accent) 18%, rgb(22 22 22 / 0.94));
-	}
-
-	.cursor-takeover-el.is-on-light .cursor-grain {
-		opacity: 0.28;
-		mix-blend-mode: overlay;
 	}
 
 	@media (prefers-contrast: more) {
@@ -330,7 +322,6 @@
 			background: #161616;
 		}
 
-		.cursor-grain,
 		.cursor-trail {
 			display: none;
 		}
@@ -342,7 +333,6 @@
 			border: 2px solid CanvasText;
 		}
 
-		.cursor-grain,
 		.cursor-trail {
 			display: none;
 		}
@@ -384,6 +374,10 @@
 		letter-spacing: 0.12em;
 		line-height: 1;
 		white-space: nowrap;
+	}
+
+	.cursor-takeover-el:not(.is-on-light) .cursor-label-inner {
+		font-weight: 700;
 	}
 
 	.cursor-icon {

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte'
 	import type { HTMLAnchorAttributes } from 'svelte/elements'
+	import { flashCopied } from '$lib/cursorNotice.svelte'
 	import IconEmail from './IconEmail.svelte'
 	import IconGithub from './IconGithub.svelte'
 	import IconLinkedIn from './IconLinkedIn.svelte'
@@ -17,13 +18,28 @@
 		icon?: 'email' | 'github' | 'linkedin'
 		children: Snippet
 	} & HTMLAnchorAttributes = $props()
+
+	const copyEmail = $derived(icon === 'email' ? href.replace(/^mailto:/i, '') : '')
+
+	async function onCopy(event: MouseEvent) {
+		if (!copyEmail) return
+		event.preventDefault()
+		try {
+			await navigator.clipboard.writeText(copyEmail)
+			flashCopied()
+		} catch {
+			window.location.href = href
+		}
+	}
 </script>
 
 <span class="relative inline-flex h-[1.25em]">
 	<a
 		{href}
-		class="inline-flex h-[1.25em] items-center gap-[0.28em] rounded-full px-2.5 ring-[0.08em] ring-transparent transition-colors hover:text-[#E08925] hover:ring-current focus-visible:text-[#E08925] focus-visible:ring-current {className}"
+		class="inline-flex h-[1.25em] items-center gap-[0.28em] rounded-full px-2.5 ring-[0.08em] ring-transparent transition-colors hover:ring-chrome-ink focus-visible:ring-chrome-ink {className}"
 		{...rest}
+		aria-label={copyEmail ? 'Copy email address' : rest['aria-label']}
+		onclick={copyEmail ? onCopy : undefined}
 	>
 		{#if icon === 'email'}
 			<span class="inline-flex size-[0.9em] shrink-0"><IconEmail /></span>

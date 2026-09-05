@@ -2,6 +2,7 @@
 	import { loadWhenNear } from '$lib/actions/loadWhenNear'
 	import { tilt } from '$lib/actions/tilt'
 	import CardMeta from '$lib/components/ui/CardMeta.svelte'
+	import { subscribeMedia } from '$lib/motion'
 	import { collapseRange, mapRange } from '$lib/scroll'
 	import { metrics, viewport } from '$lib/scrollRoot.svelte'
 	import { projectCssVars, projectSurface } from '$lib/theme'
@@ -15,6 +16,9 @@
 
 	let hovering = $state(false)
 	let near = $state(false)
+	let reduced = $state(false)
+
+	$effect(() => subscribeMedia('(prefers-reduced-motion: reduce)', (matches) => (reduced = matches)))
 
 	const isFirst = $derived(index === 0)
 	const m = $derived(metrics())
@@ -25,7 +29,9 @@
 	const imageY = $derived(-(1 - collapse) * cardHeight)
 	const labelOpacity = $derived(mapRange(collapse, 0.2, 0.1, 1, 0))
 	const showVideo = $derived(
-		Boolean(project.previewVideo?.url) && (isFirst || (hovering && near))
+		Boolean(project.previewVideo?.url) &&
+			!reduced &&
+			(isFirst || (hovering && near))
 	)
 	const surface = $derived(projectSurface(project))
 </script>
@@ -43,7 +49,7 @@
 	>
 		<a
 			href={project.externalUrl}
-			class="relative block h-full"
+			class="project-card-link relative block h-full"
 			data-cursor="case-study"
 			target="_blank"
 			rel="noopener noreferrer"
