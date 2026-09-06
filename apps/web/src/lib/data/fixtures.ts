@@ -1,7 +1,11 @@
+import accuPick from '$lib/assets/cover-art/AccuPick.png?url'
+import aviator from '$lib/assets/cover-art/Aviator.png?url'
+import convConv from '$lib/assets/cover-art/ConConv.png?url'
+import talent from '$lib/assets/cover-art/RH.png?url'
 import type { Project, SiteSettings } from '$lib/sanity/types'
 
 const p = (file: string, alt: string) => ({ url: `/placeholders/${file}`, alt })
-const poster = (file: string, alt: string) => ({ url: `/posters/${file}`, alt })
+const poster = (url: string, alt: string) => ({ url, alt })
 
 export const siteSettingsFixture: SiteSettings = {
 	name: 'Anthony Inga',
@@ -24,24 +28,24 @@ export const siteSettingsFixture: SiteSettings = {
 
 const atlas: Project = {
 	_id: 'proj-atlas',
-	title: 'Designing for new norms',
+	title: 'Curbside Pickup',
 	slug: 'atlas-kitchen',
 	description: 'Voice and chat UX for a convenience retail counter.',
 	tags: ['Product', 'Research', 'Prototyping'],
 	type: 'case-study',
 	scope: '12 weeks (2024)',
 	year: 2023,
-	weight: 1,
+	weight: 2,
 	hidden: false,
 	colorScheme: 'dark',
 	colorAccent: '#3a3a3a',
 	colorLight: '#ffffff',
 	colorDark: '#141414',
 	colorDarkest: '#000000',
-	poster: poster('atlas.png', 'Handheld scanner showing a retail picking workflow'),
+	poster: poster(accuPick, 'Handheld scanner showing a retail picking workflow'),
 	previewVideo: null,
 	externalUrl:
-		'https://anthonyi.notion.site/Designing-for-new-norms-259037de3129805b9822d688be9175ea?source=copy_link',
+		'https://app.notion.com/p/anthonyi/Designing-for-new-norms-259037de3129805b9822d688be9175ea?v=257037de312980cdac76000ce32240a1&source=copy_link',
 	body: [
 		{
 			_type: 'block',
@@ -136,24 +140,24 @@ const atlas: Project = {
 
 const night: Project = {
 	_id: 'proj-night',
-	title: 'Talent in your pocket',
+	title: 'Talent',
 	slug: 'night-bus',
 	description: 'Shared patterns and components for public-health software.',
 	tags: ['Service', 'Motion'],
 	type: 'gallery',
 	scope: '6 weeks (2023)',
 	year: 2021,
-	weight: 2,
+	weight: 4,
 	hidden: false,
 	colorScheme: 'dark',
 	colorAccent: '#f05a52',
 	colorLight: '#ffffff',
 	colorDark: '#8a1518',
 	colorDarkest: '#d12a28',
-	poster: poster('night.png', 'Mobile timesheet app on a phone'),
+	poster: poster(talent, 'Phone showing commute distance for a talent app'),
 	previewVideo: null,
 	externalUrl:
-		'https://anthonyi.notion.site/Talent-in-Your-Pocket-25c037de312980b4815ef54e253f85dd?source=copy_link',
+		'https://app.notion.com/p/anthonyi/Talent-in-Your-Pocket-25c037de312980b4815ef54e253f85dd?v=257037de312980cdac76000ce32240a1&source=copy_link',
 	body: [
 		{
 			_type: 'slideShow',
@@ -197,7 +201,7 @@ const night: Project = {
 
 const glass: Project = {
 	_id: 'proj-glass',
-	title: 'Demystifying coverage marketplace',
+	title: 'Aviator',
 	slug: 'glass-radio',
 	description: 'Interaction patterns for changing workplace and public norms.',
 	tags: ['Object', 'Sound'],
@@ -211,10 +215,10 @@ const glass: Project = {
 	colorLight: '#45e890',
 	colorDark: '#111111',
 	colorDarkest: '#2fd47a',
-	poster: poster('glass.png', 'Insurance quote dashboard on a desktop monitor'),
+	poster: poster(aviator, 'Insurance quote comparison dashboard'),
 	previewVideo: null,
 	externalUrl:
-		'https://anthonyi.notion.site/Demystifying-coverage-marketplace-257037de31298000bd68fa954cb48ec1?source=copy_link',
+		'https://app.notion.com/p/anthonyi/Demystifying-coverage-marketplace-257037de31298000bd68fa954cb48ec1?v=257037de312980cdac76000ce32240a1&source=copy_link',
 	body: [
 		{
 			_type: 'block',
@@ -258,24 +262,22 @@ const glass: Project = {
 
 const field: Project = {
 	_id: 'proj-field',
-	title: 'Reading at the speed of thought',
+	title: 'Conversational Convenience',
 	slug: 'field-notes',
 	description: 'A compact talent product for phone-sized sessions.',
 	tags: ['Editorial'],
 	type: 'blank',
 	scope: '4 weeks (2021)',
 	year: 2025,
-	weight: 4,
+	weight: 1,
 	hidden: false,
 	colorScheme: 'dark',
 	colorAccent: '#3a3a3a',
 	colorLight: '#ffffff',
 	colorDark: '#141414',
 	colorDarkest: '#000000',
-	poster: poster('field.jpg', 'AI reading app on a phone'),
+	poster: poster(convConv, '7-Eleven app with a late-night craving prompt'),
 	previewVideo: null,
-	externalUrl:
-		'https://anthonyi.notion.site/Reading-at-the-Speed-of-Thought-30b037de312980d0b826e6b89511a157?source=copy_link',
 	body: [
 		{ _type: 'spacer', _key: 'f0' },
 		{
@@ -318,21 +320,21 @@ const hidden: Project = {
 	]
 }
 
-atlas.nextProject = {
-	_id: night._id,
-	title: night.title,
-	slug: night.slug,
-	hidden: night.hidden,
-	weight: night.weight,
-	colorScheme: night.colorScheme,
-	colorAccent: night.colorAccent,
-	colorLight: night.colorLight,
-	colorDark: night.colorDark,
-	colorDarkest: night.colorDarkest,
-	poster: night.poster
+field.nextProject = {
+	_id: atlas._id,
+	title: atlas.title,
+	slug: atlas.slug,
+	hidden: atlas.hidden,
+	weight: atlas.weight,
+	colorScheme: atlas.colorScheme,
+	colorAccent: atlas.colorAccent,
+	colorLight: atlas.colorLight,
+	colorDark: atlas.colorDark,
+	colorDarkest: atlas.colorDarkest,
+	poster: atlas.poster
 }
 
-night.nextProject = {
+atlas.nextProject = {
 	_id: glass._id,
 	title: glass.title,
 	slug: glass.slug,
@@ -347,6 +349,20 @@ night.nextProject = {
 }
 
 glass.nextProject = {
+	_id: night._id,
+	title: night.title,
+	slug: night.slug,
+	hidden: night.hidden,
+	weight: night.weight,
+	colorScheme: night.colorScheme,
+	colorAccent: night.colorAccent,
+	colorLight: night.colorLight,
+	colorDark: night.colorDark,
+	colorDarkest: night.colorDarkest,
+	poster: night.poster
+}
+
+night.nextProject = {
 	_id: field._id,
 	title: field.title,
 	slug: field.slug,
@@ -358,20 +374,6 @@ glass.nextProject = {
 	colorDark: field.colorDark,
 	colorDarkest: field.colorDarkest,
 	poster: field.poster
-}
-
-field.nextProject = {
-	_id: atlas._id,
-	title: atlas.title,
-	slug: atlas.slug,
-	hidden: atlas.hidden,
-	weight: atlas.weight,
-	colorScheme: atlas.colorScheme,
-	colorAccent: atlas.colorAccent,
-	colorLight: atlas.colorLight,
-	colorDark: atlas.colorDark,
-	colorDarkest: atlas.colorDarkest,
-	poster: atlas.poster
 }
 
 export const projectsFixture: Project[] = [atlas, night, glass, field, hidden]

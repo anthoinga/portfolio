@@ -34,6 +34,7 @@
 			(isFirst || (hovering && near))
 	)
 	const surface = $derived(projectSurface(project))
+	const href = $derived(project.externalUrl)
 </script>
 
 <div
@@ -47,16 +48,7 @@
 		use:tilt
 		use:loadWhenNear={() => (near = true)}
 	>
-		<a
-			href={project.externalUrl}
-			class="project-card-link relative block h-full"
-			data-cursor="case-study"
-			target="_blank"
-			rel="noopener noreferrer"
-			aria-label="{project.title}, opens in a new tab"
-			onmouseenter={() => (hovering = true)}
-			onmouseleave={() => (hovering = false)}
-		>
+		{#snippet body()}
 			<div
 				class="absolute inset-x-0 top-0 overflow-hidden"
 				style:height="{cardHeight}px"
@@ -67,7 +59,7 @@
 						<img
 							src={project.poster.url}
 							alt=""
-							class="h-full w-full object-contain object-center p-[8%]"
+							class="h-full w-full object-cover object-center"
 							class:opacity-0={showVideo}
 						/>
 					{/if}
@@ -100,6 +92,25 @@
 					</div>
 				{/if}
 			</div>
-		</a>
+		{/snippet}
+
+		{#if href}
+			<a
+				{href}
+				class="project-card-link relative block h-full"
+				data-cursor="case-study"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="{project.title}, opens in a new tab"
+				onmouseenter={() => (hovering = true)}
+				onmouseleave={() => (hovering = false)}
+			>
+				{@render body()}
+			</a>
+		{:else}
+			<div class="project-card-link relative block h-full" data-cursor="coming-soon">
+				{@render body()}
+			</div>
+		{/if}
 	</div>
 </div>

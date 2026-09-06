@@ -17,8 +17,9 @@
 	let visible = $state(false)
 	let idle = $state(false)
 	let caseStudy = $state(false)
+	let comingSoon = $state(false)
 	const copied = $derived(cursorNotice.copied)
-	const pill = $derived(caseStudy || copied)
+	const pill = $derived(caseStudy || comingSoon || copied)
 	let surface = $state(readCursorSurface(null))
 	let node: HTMLElement | undefined = $state()
 	let canvas: HTMLCanvasElement | undefined = $state()
@@ -37,6 +38,7 @@
 			visible = false
 			idle = false
 			caseStudy = false
+			comingSoon = false
 			return
 		}
 		if (!canvas) return
@@ -71,8 +73,9 @@
 				const dy = y - ly
 				const dist = Math.hypot(dx, dy)
 				if (dist >= TRAIL.stampAfter) {
-					const radius = caseStudy || cursorNotice.copied ? TRAIL.radius.pill : TRAIL.radius.rest
-					const amount = caseStudy || cursorNotice.copied ? TRAIL.amount.pill : TRAIL.amount.rest
+					const expanded = caseStudy || comingSoon || cursorNotice.copied
+					const radius = expanded ? TRAIL.radius.pill : TRAIL.radius.rest
+					const amount = expanded ? TRAIL.amount.pill : TRAIL.amount.rest
 					const steps = Math.max(1, Math.ceil(dist / TRAIL.step))
 					const deposit = Math.max(TRAIL.minDeposit, amount / Math.max(1, steps * TRAIL.stepSpread))
 					for (let i = 1; i <= steps; i++) {
@@ -116,11 +119,13 @@
 			if (!visible) visible = true
 			const hit = document.elementFromPoint(e.clientX, e.clientY)
 			const study = hit?.closest('[data-cursor="case-study"]') ?? null
+			const soon = hit?.closest('[data-cursor="coming-soon"]') ?? null
 			caseStudy = Boolean(study)
-			const owner = study ?? (hit instanceof Element ? hit : null)
+			comingSoon = Boolean(soon)
+			const owner = study ?? soon ?? (hit instanceof Element ? hit : null)
 			if (owner !== lastOwner) {
 				lastOwner = owner
-				surface = readCursorSurface(study ?? hit)
+				surface = readCursorSurface(study ?? soon ?? hit)
 			}
 			kick()
 			markMoving()
@@ -131,6 +136,7 @@
 			idle = false
 			clearTimeout(idleTimer)
 			caseStudy = false
+			comingSoon = false
 			lastOwner = null
 			surface = readCursorSurface(null)
 			wipe()
@@ -207,6 +213,8 @@
 					{#if copied}
 						<span class="cursor-icon"><IconClipboard /></span>
 						<span>COPIED TO CLIPBOARD</span>
+					{:else if comingSoon}
+						<span>COMING SOON</span>
 					{:else}
 						<span class="cursor-icon"><IconView /></span>
 						<span>VIEW CASE STUDY</span>
