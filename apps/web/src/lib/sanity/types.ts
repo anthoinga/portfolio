@@ -1,8 +1,6 @@
 export type ColorScheme = 'light' | 'dark'
 export type ProjectType = 'case-study' | 'gallery' | 'blank'
 
-export type HexColor = string
-
 export type Credit = {
 	org: string
 	role?: string
@@ -38,10 +36,10 @@ export type ProjectCard = {
 	weight: number
 	hidden: boolean
 	colorScheme: ColorScheme
-	colorAccent: HexColor
-	colorLight: HexColor
-	colorDark: HexColor
-	colorDarkest: HexColor
+	colorAccent: string
+	colorLight: string
+	colorDark: string
+	colorDarkest: string
 	previewVideo?: MediaRef | null
 	poster?: MediaRef | null
 	externalUrl?: string

@@ -1,15 +1,14 @@
 import accuPick from '$lib/assets/cover-art/AccuPick.png?url'
 import aviator from '$lib/assets/cover-art/Aviator.png?url'
 import convConv from '$lib/assets/cover-art/ConConv.png?url'
-import talent from '$lib/assets/cover-art/RH.png?url'
+import talentCover from '$lib/assets/cover-art/RH.png?url'
 import type { Project, SiteSettings } from '$lib/sanity/types'
 
-const p = (file: string, alt: string) => ({ url: `/placeholders/${file}`, alt })
 const poster = (url: string, alt: string) => ({ url, alt })
-const study = (file: string, alt: string) => ({ url: `/projects/field-notes/${file}`, alt })
-const pick = (file: string, alt: string) => ({ url: `/projects/atlas-kitchen/${file}`, alt })
-const radio = (file: string, alt: string) => ({ url: `/projects/glass-radio/${file}`, alt })
-const half = (file: string, alt: string) => ({ url: `/projects/night-bus/${file}`, alt })
+const conv = (file: string, alt: string) => ({ url: `/projects/convenience/${file}`, alt })
+const curb = (file: string, alt: string) => ({ url: `/projects/curbside/${file}`, alt })
+const insure = (file: string, alt: string) => ({ url: `/projects/insurance/${file}`, alt })
+const tal = (file: string, alt: string) => ({ url: `/projects/talent/${file}`, alt })
 
 export const siteSettingsFixture: SiteSettings = {
 	name: 'Anthony Inga',
@@ -30,10 +29,10 @@ export const siteSettingsFixture: SiteSettings = {
 	]
 }
 
-const atlas: Project = {
-	_id: 'proj-atlas',
+const curbside: Project = {
+	_id: 'proj-curbside',
 	title: 'Curbside Pickup',
-	slug: 'atlas-kitchen',
+	slug: 'curbside',
 	description: 'One fulfillment process for pickup that had outgrown the curb.',
 	tags: ['Product', 'Research', 'Prototyping'],
 	type: 'case-study',
@@ -92,7 +91,7 @@ const atlas: Project = {
 				{
 					_key: 'c-open-a',
 					kind: 'image',
-					image: pick('1.1.png', 'Phone showing a pandemic magazine cover, flanked by curbside pickup news clips'),
+					image: curb('1.1.png', 'Phone showing a pandemic magazine cover, flanked by curbside pickup news clips'),
 					label: '01',
 					title: 'The expectation',
 					text: 'Pickup went from a convenience to the default.'
@@ -128,14 +127,14 @@ const atlas: Project = {
 				{
 					_key: 'c-floor-a',
 					kind: 'image',
-					image: pick('1.2.png', 'Store aisle, a picker with totes, and a board of fulfillment research'),
+					image: curb('1.2.png', 'Store aisle, a picker with totes, and a board of fulfillment research'),
 					title: 'On the floor',
 					text: 'Four improvised ways to pick, none of them written down.'
 				},
 				{
 					_key: 'c-breaks-a',
 					kind: 'image',
-					image: pick('2.2.png', 'Six problems: manual entry, no standard training, rigid operations, no exception handling, connectivity breakdown, lacking oversight'),
+					image: curb('2.2.png', 'Six problems: manual entry, no standard training, rigid operations, no exception handling, connectivity breakdown, lacking oversight'),
 					title: 'What the stores shared',
 					text: 'Manual entry, no shared training, and no path for an exception.'
 				}
@@ -156,7 +155,7 @@ const atlas: Project = {
 				{
 					_key: 'c-board',
 					kind: 'image',
-					image: pick('2.1.png', 'Research board comparing how different stores defined temperature zones and pick flows'),
+					image: curb('2.1.png', 'Research board comparing how different stores defined temperature zones and pick flows'),
 					title: 'One model',
 					text: 'Temperature zones, defined the same way across stores.'
 				}
@@ -179,7 +178,7 @@ const atlas: Project = {
 		{
 			_type: 'fullImage',
 			_key: 'c-cycle',
-			image: pick('3.png', 'Diagram of queuing, picking, staging, and handoff, with the employee need and feature at each step')
+			image: curb('3.png', 'Diagram of queuing, picking, staging, and handoff, with the employee need and feature at each step')
 		},
 		{
 			_type: 'block',
@@ -203,7 +202,7 @@ const atlas: Project = {
 				{
 					_key: 'c-product-start',
 					kind: 'image',
-					image: pick('4.2.png', 'Two Zebra handhelds: a pick ready to start, and a Topo Chico with a substitution note'),
+					image: curb('4.2.png', 'Two Zebra handhelds: a pick ready to start, and a Topo Chico with a substitution note'),
 					label: 'Pick',
 					title: 'One wave at a time',
 					text: 'Stage time, the order, then the item in front of you.'
@@ -211,7 +210,7 @@ const atlas: Project = {
 				{
 					_key: 'c-product-scan',
 					kind: 'image',
-					image: pick('5.2.png', 'Three Zebra handhelds: an item to scan, a successful scan, and a manual UPC entry'),
+					image: curb('5.2.png', 'Three Zebra handhelds: an item to scan, a successful scan, and a manual UPC entry'),
 					label: 'Scan',
 					title: 'Confirm, or type it',
 					text: 'A good scan, then the UPC keyed in when the barcode will not read.'
@@ -243,7 +242,7 @@ const atlas: Project = {
 		{
 			_type: 'fullImage',
 			_key: 'c-system',
-			image: pick('6.png', 'Collage of Zebra screens: start pick, flash orders, scan success, can\'t find item, tote scan, and customer handoff')
+			image: curb('6.png', 'Collage of Zebra screens: start pick, flash orders, scan success, can\'t find item, tote scan, and customer handoff')
 		},
 		{
 			_type: 'block',
@@ -267,7 +266,7 @@ const atlas: Project = {
 				{
 					_key: 'c-device-a',
 					kind: 'image',
-					image: pick('5.1.png', 'Zebra handheld in a produce aisle, asking for a PLU scan of small mangoes'),
+					image: curb('5.1.png', 'Zebra handheld in a produce aisle, asking for a PLU scan of small mangoes'),
 					title: 'On the device',
 					text: 'PLU in the aisle, handoff at the curb.'
 				}
@@ -316,10 +315,10 @@ const atlas: Project = {
 	]
 }
 
-const night: Project = {
-	_id: 'proj-night',
+const talent: Project = {
+	_id: 'proj-talent',
 	title: 'Talent Marketplace',
-	slug: 'night-bus',
+	slug: 'talent',
 	description: 'A status for every timesheet, and a profile that updates itself.',
 	tags: ['Product', 'Systems'],
 	type: 'case-study',
@@ -337,7 +336,7 @@ const night: Project = {
 		{ at: 't-status-card', color: '#ffffff', when: 'reveal' },
 		{ at: 't-quote', color: '#8a1518', when: 'enter', line: 0.8 }
 	],
-	poster: poster(talent, 'Phone showing commute distance for a talent app'),
+	poster: poster(talentCover, 'Phone showing commute distance for a talent app'),
 	previewVideo: null,
 	brief: {
 		paragraphs: [
@@ -374,7 +373,7 @@ const night: Project = {
 				{
 					_key: 't-open-a',
 					kind: 'image',
-					image: half('photo.png', 'A person holding a phone open to a Robert Half job listing, with a laptop behind it'),
+					image: tal('photo.png', 'A person holding a phone open to a Robert Half job listing, with a laptop behind it'),
 					label: '01',
 					title: 'In hand',
 					text: 'Time reports and a profile, and not much said about either.'
@@ -419,7 +418,7 @@ const night: Project = {
 				{
 					_key: 't-status-home',
 					kind: 'image',
-					image: half(
+					image: tal(
 						'status-1.png',
 						'Three phones: a home card with returned hours, a tap that opens the time report, and a long-press menu'
 					),
@@ -436,7 +435,7 @@ const night: Project = {
 				{
 					_key: 't-status-returned',
 					kind: 'image',
-					image: half(
+					image: tal(
 						'status-2.png',
 						'Four phones walking from a returned timesheet through day entry to a resubmit drawer'
 					),
@@ -446,7 +445,7 @@ const night: Project = {
 				{
 					_key: 't-status-waiting',
 					kind: 'image',
-					image: half(
+					image: tal(
 						'status-3.png',
 						'Two phones showing a timesheet awaiting approval and a drawer that can recall the draft'
 					),
@@ -494,7 +493,7 @@ const night: Project = {
 				{
 					_key: 't-profile-home',
 					kind: 'image',
-					image: half(
+					image: tal(
 						'profile-1.png',
 						'Two phones: a filled profile dashboard and the same screen with empty preference and education cards'
 					),
@@ -504,7 +503,7 @@ const night: Project = {
 				{
 					_key: 't-profile-pay',
 					kind: 'image',
-					image: half(
+					image: tal(
 						'profile-3.png',
 						'Four phones: the profile, availability, a pay-rate slider against the market, and commute distance'
 					),
@@ -552,7 +551,7 @@ const night: Project = {
 				{
 					_key: 't-curate-banner',
 					kind: 'image',
-					image: half(
+					image: tal(
 						'banner.png',
 						'Three phones: a profile, a dismissible banner asking about on-site work, and location preferences updated after yes'
 					),
@@ -562,7 +561,7 @@ const night: Project = {
 				{
 					_key: 't-curate-apply',
 					kind: 'image',
-					image: half(
+					image: tal(
 						'curate-1.png',
 						'Four phones: choosing a resume, the application, required skills, and a work-status question'
 					),
@@ -572,7 +571,7 @@ const night: Project = {
 				{
 					_key: 't-curate-gap',
 					kind: 'image',
-					image: half(
+					image: tal(
 						'curate-3.png',
 						'Four phones: salary and hourly pay, commute distance, and a create-account step that asks about visa status'
 					),
@@ -695,10 +694,10 @@ const night: Project = {
 	]
 }
 
-const glass: Project = {
-	_id: 'proj-glass',
+const insurance: Project = {
+	_id: 'proj-insurance',
 	title: 'Insurance Aggregator',
-	slug: 'glass-radio',
+	slug: 'insurance',
 	description: 'Dense tools for agents. A short path for the people buying a policy.',
 	tags: ['Product', 'Research', 'Systems'],
 	type: 'case-study',
@@ -753,7 +752,7 @@ const glass: Project = {
 				{
 					_key: 'g-open-a',
 					kind: 'image',
-					image: radio(
+					image: insure(
 						'03.png',
 						'Audit of the old Salesforce dashboard beside a working session reviewing the quote forms'
 					),
@@ -786,7 +785,7 @@ const glass: Project = {
 				{
 					_key: 'g-context-a',
 					kind: 'image',
-					image: radio(
+					image: insure(
 						'01.png',
 						'Three panels labeled lead generation, application submissions, and partner integrations'
 					),
@@ -834,7 +833,7 @@ const glass: Project = {
 		{
 			_type: 'fullImage',
 			_key: 'g-research',
-			image: radio(
+			image: insure(
 				'02.png',
 				'Research spread covering competitive analysis, a customer journey, sticky-note findings, and a FigJam audit of the response page'
 			)
@@ -847,7 +846,7 @@ const glass: Project = {
 				{
 					_key: 'g-agent-flow',
 					kind: 'image',
-					image: radio(
+					image: insure(
 						'05.png',
 						'Prototype flow connecting driver, phone, and response screens in one form'
 					),
@@ -857,7 +856,7 @@ const glass: Project = {
 				{
 					_key: 'g-agent-quote',
 					kind: 'image',
-					image: radio(
+					image: insure(
 						'07.png',
 						'Agent quote table with a carrier filter open on the results step'
 					),
@@ -882,7 +881,7 @@ const glass: Project = {
 				{
 					_key: 'g-desk-a',
 					kind: 'image',
-					image: radio(
+					image: insure(
 						'08.png',
 						'Agent desktop comparing home, auto, and flood quotes beside a market-share chart'
 					),
@@ -906,7 +905,7 @@ const glass: Project = {
 				{
 					_key: 'g-scale-library',
 					kind: 'image',
-					image: radio(
+					image: insure(
 						'03-1.png',
 						'Selection tiles in Figma next to the same policy card in Storybook'
 					),
@@ -916,7 +915,7 @@ const glass: Project = {
 				{
 					_key: 'g-scale-brand',
 					kind: 'image',
-					image: radio(
+					image: insure(
 						'04.png',
 						'A white-label quote tool with a swappable logo, bot name, and domain, beside partner marks'
 					),
@@ -958,7 +957,7 @@ const glass: Project = {
 				{
 					_key: 'g-client-a',
 					kind: 'image',
-					image: radio(
+					image: insure(
 						'09.png',
 						'Three phones showing a client quote: a short intro, home details, and coverage choices'
 					),
@@ -1052,10 +1051,10 @@ const glass: Project = {
 	]
 }
 
-const field: Project = {
-	_id: 'proj-field',
+const convenience: Project = {
+	_id: 'proj-convenience',
 	title: 'Conversational Convenience',
-	slug: 'field-notes',
+	slug: 'convenience',
 	description: 'How far conversational commerce should go when the visit is short.',
 	tags: ['Product', 'Research', 'Prototyping'],
 	type: 'case-study',
@@ -1110,7 +1109,7 @@ const field: Project = {
 				{
 					_key: 'f-open-a',
 					kind: 'image',
-					image: study('1.1.png', 'OpenAI announcement for buying in ChatGPT through the Agentic Commerce Protocol'),
+					image: conv('1.1.png', 'OpenAI announcement for buying in ChatGPT through the Agentic Commerce Protocol'),
 					label: '01',
 					title: 'The wave',
 					text: 'Agentic checkout, aimed at a longer kind of shopping.'
@@ -1153,7 +1152,7 @@ const field: Project = {
 				{
 					_key: 'f-open-b',
 					kind: 'image',
-					image: study('1.2.png', '7-Eleven storefront at dusk with a question mark in the sky'),
+					image: conv('1.2.png', '7-Eleven storefront at dusk with a question mark in the sky'),
 					label: '02',
 					title: 'The visit',
 					text: 'In and out, basket still unfinished.'
@@ -1219,7 +1218,7 @@ const field: Project = {
 		{
 			_type: 'fullImage',
 			_key: 'f-whiteboard',
-			image: study('2.png', 'Research board on how people shop with AI and what that means for a convenience store')
+			image: conv('2.png', 'Research board on how people shop with AI and what that means for a convenience store')
 		},
 		{
 			_type: 'layoutBlock',
@@ -1230,7 +1229,7 @@ const field: Project = {
 					_key: 'f-fail-1',
 					kind: 'image',
 					stroke: true,
-					image: study('3.1.png', 'A craving for something sweet is turned into a confirmed ice cream order'),
+					image: conv('3.1.png', 'A craving for something sweet is turned into a confirmed ice cream order'),
 					title: 'A line in the sand',
 					text: 'People were clear about distrust. Even if the system knew their preferences cold, they did not want AI to take the wheel and shop for them. Automatic buying crossed a line. Search could suggest and rearrange. It should not decide.'
 				},
@@ -1238,7 +1237,7 @@ const field: Project = {
 					_key: 'f-fail-2',
 					kind: 'image',
 					stroke: true,
-					image: study('3.2.png', 'A mid-day refuel request is answered by reserving a gas pump'),
+					image: conv('3.2.png', 'A mid-day refuel request is answered by reserving a gas pump'),
 					title: 'Double meanings',
 					text: 'Short requests often carry more than one reading. “I need to refuel” can mean gas in the tank or caffeine in the cup. In convenience culture those sit side by side, and a search that commits too early has already misunderstood half of what the person might have meant.'
 				},
@@ -1246,7 +1245,7 @@ const field: Project = {
 					_key: 'f-fail-3',
 					kind: 'image',
 					stroke: true,
-					image: study('3.3.png', 'A request for food for ten returns three products and a running total'),
+					image: conv('3.3.png', 'A request for food for ten returns three products and a running total'),
 					title: 'A pigeon-hole view',
 					text: 'Agentic chat that offers a few strong picks hides the rest of the store. That can work when someone wants one specific product. It fails when they are still looking for ideas. Convenience shopping needs the catalogue in reach, not a narrow set of answers that pretend the decision is already over.'
 				}
@@ -1271,8 +1270,8 @@ const field: Project = {
 			_key: 'f-aisle',
 			canScrub: false,
 			seekOnScroll: false,
-			file: { url: '/projects/field-notes/store-visit.mp4' },
-			poster: study('4.png', 'A convenience aisle: snack shelves on the left, a cooler of drinks on the right'),
+			file: { url: '/projects/convenience/store-visit.mp4' },
+			poster: conv('4.png', 'A convenience aisle: snack shelves on the left, a cooler of drinks on the right'),
 			width: 4096,
 			height: 2648
 		},
@@ -1333,8 +1332,8 @@ const field: Project = {
 				{
 					_key: 'f-demo-lunch',
 					kind: 'video',
-					video: study('lunch.mp4', ''),
-					poster: study('lunch-poster.png', 'Protein-packed lunch grouped into a hot case row and a cold row'),
+					video: conv('lunch.mp4', ''),
+					poster: conv('lunch-poster.png', 'Protein-packed lunch grouped into a hot case row and a cold row'),
 					label: 'Lunch',
 					title: 'Highest protein',
 					text: 'Hot case, then cold and ready to grab.'
@@ -1342,8 +1341,8 @@ const field: Project = {
 				{
 					_key: 'f-demo-movie',
 					kind: 'video',
-					video: study('movie-night.mp4', ''),
-					poster: study('movie-poster.png', 'Movie night search grouped into munchies and candy'),
+					video: conv('movie-night.mp4', ''),
+					poster: conv('movie-poster.png', 'Movie night search grouped into munchies and candy'),
 					label: 'Movie night',
 					title: 'Two readings',
 					text: 'Munchies, then the candy aisle.'
@@ -1351,8 +1350,8 @@ const field: Project = {
 				{
 					_key: 'f-demo-road',
 					kind: 'video',
-					video: study('roadtrip.mp4', ''),
-					poster: study('road-poster.png', 'Road trip search grouped into snacks and drinks'),
+					video: conv('roadtrip.mp4', ''),
+					poster: conv('road-poster.png', 'Road trip search grouped into snacks and drinks'),
 					label: 'Road trip',
 					title: 'For the drive',
 					text: 'No-mess snacks, then something to sip.'
@@ -1451,8 +1450,8 @@ const field: Project = {
 				{
 					_key: 'f-crew',
 					kind: 'video',
-					video: { url: '/projects/field-notes/con-conv-crew.mp4' },
-					poster: study('crew-poster.png', 'Search field reading breakfast for a crew')
+					video: { url: '/projects/convenience/con-conv-crew.mp4' },
+					poster: conv('crew-poster.png', 'Search field reading breakfast for a crew')
 				}
 			]
 		}
@@ -1474,71 +1473,65 @@ const hidden: Project = {
 	colorLight: '#efe6f4',
 	colorDark: '#2a1d30',
 	colorDarkest: '#140e18',
-	poster: p('hidden.svg', 'Muted plum field'),
+	poster: null,
 	previewVideo: null,
-	body: [
-		{
-			_type: 'fullImage',
-			_key: 'h1',
-			image: p('hidden-hero.svg', 'Muted plum field')
-		}
-	]
+	body: []
 }
 
-field.nextProject = {
-	_id: atlas._id,
-	title: atlas.title,
-	slug: atlas.slug,
-	hidden: atlas.hidden,
-	weight: atlas.weight,
-	colorScheme: atlas.colorScheme,
-	colorAccent: atlas.colorAccent,
-	colorLight: atlas.colorLight,
-	colorDark: atlas.colorDark,
-	colorDarkest: atlas.colorDarkest,
-	poster: atlas.poster
+convenience.nextProject = {
+	_id: curbside._id,
+	title: curbside.title,
+	slug: curbside.slug,
+	hidden: curbside.hidden,
+	weight: curbside.weight,
+	colorScheme: curbside.colorScheme,
+	colorAccent: curbside.colorAccent,
+	colorLight: curbside.colorLight,
+	colorDark: curbside.colorDark,
+	colorDarkest: curbside.colorDarkest,
+	poster: curbside.poster
 }
 
-atlas.nextProject = {
-	_id: glass._id,
-	title: glass.title,
-	slug: glass.slug,
-	hidden: glass.hidden,
-	weight: glass.weight,
-	colorScheme: glass.colorScheme,
-	colorAccent: glass.colorAccent,
-	colorLight: glass.colorLight,
-	colorDark: glass.colorDark,
-	colorDarkest: glass.colorDarkest,
-	poster: glass.poster
+curbside.nextProject = {
+	_id: insurance._id,
+	title: insurance.title,
+	slug: insurance.slug,
+	hidden: insurance.hidden,
+	weight: insurance.weight,
+	colorScheme: insurance.colorScheme,
+	colorAccent: insurance.colorAccent,
+	colorLight: insurance.colorLight,
+	colorDark: insurance.colorDark,
+	colorDarkest: insurance.colorDarkest,
+	poster: insurance.poster
 }
 
-glass.nextProject = {
-	_id: night._id,
-	title: night.title,
-	slug: night.slug,
-	hidden: night.hidden,
-	weight: night.weight,
-	colorScheme: night.colorScheme,
-	colorAccent: night.colorAccent,
-	colorLight: night.colorLight,
-	colorDark: night.colorDark,
-	colorDarkest: night.colorDarkest,
-	poster: night.poster
+insurance.nextProject = {
+	_id: talent._id,
+	title: talent.title,
+	slug: talent.slug,
+	hidden: talent.hidden,
+	weight: talent.weight,
+	colorScheme: talent.colorScheme,
+	colorAccent: talent.colorAccent,
+	colorLight: talent.colorLight,
+	colorDark: talent.colorDark,
+	colorDarkest: talent.colorDarkest,
+	poster: talent.poster
 }
 
-night.nextProject = {
-	_id: field._id,
-	title: field.title,
-	slug: field.slug,
-	hidden: field.hidden,
-	weight: field.weight,
-	colorScheme: field.colorScheme,
-	colorAccent: field.colorAccent,
-	colorLight: field.colorLight,
-	colorDark: field.colorDark,
-	colorDarkest: field.colorDarkest,
-	poster: field.poster
+talent.nextProject = {
+	_id: convenience._id,
+	title: convenience.title,
+	slug: convenience.slug,
+	hidden: convenience.hidden,
+	weight: convenience.weight,
+	colorScheme: convenience.colorScheme,
+	colorAccent: convenience.colorAccent,
+	colorLight: convenience.colorLight,
+	colorDark: convenience.colorDark,
+	colorDarkest: convenience.colorDarkest,
+	poster: convenience.poster
 }
 
-export const projectsFixture: Project[] = [atlas, night, glass, field, hidden]
+export const projectsFixture: Project[] = [curbside, talent, insurance, convenience, hidden]

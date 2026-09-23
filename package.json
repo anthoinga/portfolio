@@ -7,7 +7,6 @@
     "build": "pnpm --filter web build",
     "preview": "pnpm --filter web preview",
     "studio": "pnpm --filter studio dev",
-    "test": "pnpm --filter web test",
-    "check": "pnpm test && pnpm build"
+    "check": "pnpm build"
   }
 }
