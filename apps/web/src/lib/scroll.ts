@@ -109,9 +109,11 @@ export type LastCard = {
 	height: number
 }
 
-export const navMemory: { lastCard: LastCard | null; workspaceOpen: boolean; workspaceScroll: number } = {
+export const navMemory: {
+	lastCard: LastCard | null
+	workspaceScroll: number
+} = {
 	lastCard: null,
-	workspaceOpen: false,
 	workspaceScroll: 0
 }
 

@@ -29,6 +29,9 @@
 		{:else if src}
 			<img {src} {alt} class="h-full w-full object-cover" />
 		{/if}
+		{#if item.stroke}
+			<span class="pointer-events-none absolute inset-0 rounded-[inherit]" style="box-shadow: inset 0 0 0 3pt red"></span>
+		{/if}
 	</div>
 	{#if item.overlay && (item.title || item.text)}
 		<figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-scrim to-transparent p-4 text-light">

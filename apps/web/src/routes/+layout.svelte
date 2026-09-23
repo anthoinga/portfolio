@@ -1,32 +1,27 @@
 <script lang="ts">
 	import '../app.css'
-	import { goto } from '$app/navigation'
+	import { afterNavigate, goto } from '$app/navigation'
 	import { page } from '$app/state'
 	import CursorTakeover from '$lib/components/chrome/CursorTakeover.svelte'
 	import Header from '$lib/components/chrome/Header.svelte'
 	import { bindScroller, viewport } from '$lib/scrollRoot.svelte'
-	import { attachOverscroll, consumeOverscroll, overscroll, topProgress } from '$lib/overscroll.svelte'
+	import { attachOverscroll, bottomProgress, consumeOverscroll, overscroll, topProgress } from '$lib/overscroll.svelte'
 	import { navMemory } from '$lib/scroll'
 
 	let { children }: { children: import('svelte').Snippet } = $props()
 
-	const next = $derived(page.data.next)
 	const pathname = $derived(page.url.pathname)
 	const onProject = $derived(pathname.startsWith('/projects/'))
-	let nextFrame = 0
 
-	function scheduleNextProject(slug: string) {
-		cancelAnimationFrame(nextFrame)
-		nextFrame = requestAnimationFrame(() => {
-			nextFrame = 0
-			void goto(`/projects/${slug}`, { noScroll: true })
-		})
-	}
-
-	$effect(() => {
-		pathname
-		if (!onProject) navMemory.workspaceOpen = false
-		return () => cancelAnimationFrame(nextFrame)
+	afterNavigate(() => {
+		if (onProject) return
+		const y = navMemory.workspaceScroll
+		const apply = () => {
+			if (viewport.scroller) viewport.scroller.scrollTop = y
+			viewport.scrollY = y
+		}
+		apply()
+		requestAnimationFrame(apply)
 	})
 
 	$effect(() => {
@@ -37,13 +32,13 @@
 
 	$effect(() => {
 		if (!onProject) return
-		if (consumeOverscroll('top')) {
-			void goto('/', { noScroll: true })
-			return
-		}
-		if (overscroll.bottomDone && next?.slug && consumeOverscroll('bottom')) {
-			scheduleNextProject(next.slug)
-		}
+		if (!overscroll.topDone && !overscroll.bottomDone) return
+		const hold = window.setTimeout(() => {
+			if (consumeOverscroll('top') || consumeOverscroll('bottom')) {
+				void goto('/', { noScroll: true })
+			}
+		}, 520)
+		return () => window.clearTimeout(hold)
 	})
 
 	function lockCopy(event: Event) {
@@ -63,10 +58,10 @@
 <div class="scroll-root" use:bindScroller>
 	{#if onProject}
 		<Header
-			{next}
 			overscrollTop={topProgress()}
 			overscrollTopStarted={overscroll.topStarted}
-			hideChrome={overscroll.bottomStarted}
+			overscrollBottom={bottomProgress()}
+			overscrollBottomStarted={overscroll.bottomStarted}
 		/>
 	{/if}
 	{@render children()}

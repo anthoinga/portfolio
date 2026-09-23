@@ -9,16 +9,14 @@ describe('visible fixture cards', () => {
 		expect(visible().map((p) => p.title)).toEqual([
 			'Conversational Convenience',
 			'Curbside Pickup',
-			'Aviator',
-			'Talent'
+			'Insurance Aggregator',
+			'Talent Marketplace',
 		])
 	})
 
-	it('omit a link on coming soon; others have http(s)', () => {
-		const cards = visible()
-		expect(cards[0]?.externalUrl).toBeUndefined()
-		for (const project of cards.slice(1)) {
-			expect(project.externalUrl, project.slug).toMatch(/^https?:\/\//)
+	it('give every visible card a slug', () => {
+		for (const project of visible()) {
+			expect(project.slug).toBeTruthy()
 		}
 	})
 })

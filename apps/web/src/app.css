@@ -163,6 +163,19 @@ img {
 	background: var(--chrome-hover);
 }
 
+/* Cover pixels in the glyphs. #meta-ink snaps those pixels to black or white. */
+.meta-ink :is(p, dt, dd) {
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+	opacity: 1 !important;
+}
+
+.meta-ink {
+	filter: url(#meta-ink);
+}
+
 .project-article {
 	background-color: var(--bg);
 	color: var(--fg);
@@ -216,6 +229,11 @@ img {
 	*::after {
 		animation: none !important;
 		transition: none !important;
+	}
+
+	/* Page color still eases. The site rule above would otherwise cut it. */
+	.project-article {
+		transition: background-color 760ms var(--ease), color 760ms var(--ease) !important;
 	}
 }
 

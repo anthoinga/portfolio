@@ -62,10 +62,17 @@ describe('sitemap vs prerender slugs', () => {
 	})
 })
 
-describe('tabled public sitemap', () => {
-	it('lists the origin only', () => {
-		const urls = sitemapUrls('https://example.com')
-		expect(urls).toEqual(['https://example.com'])
-		expect(urls.join('')).not.toContain('/projects/')
+describe('public sitemap', () => {
+	it('lists the origin plus project URLs for the given slugs', () => {
+		const urls = sitemapUrls('https://example.com', ['atlas-kitchen', 'night-bus'])
+		expect(urls).toEqual([
+			'https://example.com',
+			'https://example.com/projects/atlas-kitchen',
+			'https://example.com/projects/night-bus'
+		])
+	})
+
+	it('lists the origin only when there are no slugs', () => {
+		expect(sitemapUrls('https://example.com', [])).toEqual(['https://example.com'])
 	})
 })

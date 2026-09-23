@@ -30,9 +30,8 @@ export function slugsForSitemap(projects: { slug: string; hidden: boolean }[]) {
 	return projects.filter((p) => !p.hidden).map((p) => p.slug)
 }
 
-// Tabled: origin only. Use slugsForSitemap when /projects is public again.
-export function sitemapUrls(base: string) {
-	return [base]
+export function sitemapUrls(base: string, slugs: string[]) {
+	return [base, ...slugs.map((slug) => `${base}/projects/${slug}`)]
 }
 
 export function slugsForPrerender(projects: { slug: string }[]) {

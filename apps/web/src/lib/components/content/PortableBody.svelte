@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { setContext } from 'svelte'
 	import { PortableText } from '@portabletext/svelte'
 	import FullImage from './FullImage.svelte'
 	import LayoutBlock from './LayoutBlock.svelte'
@@ -10,9 +11,11 @@
 	import Spacer from './Spacer.svelte'
 	import Block from './Block.svelte'
 	import Heading from './Heading.svelte'
-	import type { PortableBlock } from '$lib/sanity/types'
+	import type { PageColorStop, PortableBlock } from '$lib/sanity/types'
 
-	let { value }: { value: PortableBlock[] } = $props()
+	let { value, stops = [] }: { value: PortableBlock[]; stops?: PageColorStop[] } = $props()
+
+	setContext('page-stops', () => stops)
 
 	const components = {
 		block: {

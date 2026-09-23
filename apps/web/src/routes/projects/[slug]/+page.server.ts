@@ -9,5 +9,5 @@ export const entries: EntryGenerator = async () => {
 
 export const load: PageServerLoad = async ({ params }) => {
 	const project = await loadProjectBySlug(params.slug)
-	return { project, next: project.nextProject }
+	return { project }
 }

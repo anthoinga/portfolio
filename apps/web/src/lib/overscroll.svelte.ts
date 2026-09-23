@@ -1,7 +1,7 @@
 import { clamp } from './scroll'
 
-const TOP_THRESHOLD = 750
-const BOTTOM_THRESHOLD = 80
+const CLOSE_THRESHOLD = 7500
+const CLOSE_TICK = CLOSE_THRESHOLD / 60
 
 export const overscroll = $state({
 	top: 0,
@@ -30,11 +30,11 @@ export function consumeOverscroll(direction: 'top' | 'bottom') {
 }
 
 export function topProgress() {
-	return clamp(overscroll.top / TOP_THRESHOLD, 0, 1)
+	return clamp(overscroll.top / CLOSE_THRESHOLD, 0, 1)
 }
 
 export function bottomProgress() {
-	return clamp(overscroll.bottom / BOTTOM_THRESHOLD, 0, 1)
+	return clamp(overscroll.bottom / CLOSE_THRESHOLD, 0, 1)
 }
 
 export function attachOverscroll(scroller: HTMLElement) {
@@ -47,37 +47,44 @@ export function attachOverscroll(scroller: HTMLElement) {
 
 	resetOverscroll()
 
+	const pull = (edge: 'top' | 'bottom', delta: number) => {
+		const started = edge === 'top' ? 'topStarted' : 'bottomStarted'
+		const done = edge === 'top' ? 'topDone' : 'bottomDone'
+		overscroll[started] = true
+		overscroll[edge] = clamp(overscroll[edge] + delta, 0, CLOSE_THRESHOLD)
+		if (overscroll[edge] >= CLOSE_THRESHOLD) {
+			complete = true
+			overscroll[edge] = CLOSE_THRESHOLD
+			overscroll[done] = true
+			return
+		}
+		scheduleReset()
+	}
+
+	const scheduleReset = () => {
+		window.clearTimeout(resetTimer)
+		resetTimer = window.setTimeout(() => {
+			if (complete) return
+			overscroll.top = 0
+			overscroll.bottom = 0
+			overscroll.topStarted = false
+			overscroll.bottomStarted = false
+		}, 180)
+	}
+
 	const onWheel = (e: WheelEvent) => {
 		if (!enabled || complete) return
-		const dy = clamp(e.deltaY, -50, 50)
+		const dy = clamp(e.deltaY, -CLOSE_TICK, CLOSE_TICK)
 		const atTop = scroller.scrollTop <= 1
 		const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2
 
-		if (atTop && dy < 0) {
-			overscroll.topStarted = true
-			overscroll.top = clamp(overscroll.top - dy, 0, TOP_THRESHOLD + 40)
-			if (overscroll.top >= TOP_THRESHOLD) {
-				complete = true
-				overscroll.top = TOP_THRESHOLD
-				overscroll.topDone = true
-			}
-		} else if (atBottom && dy > 0) {
-			overscroll.bottomStarted = true
-			overscroll.bottom = clamp(overscroll.bottom + dy, 0, 120)
-			if (overscroll.bottom >= BOTTOM_THRESHOLD) {
-				complete = true
-				overscroll.bottom = BOTTOM_THRESHOLD
-				overscroll.bottomDone = true
-			}
-		} else {
-			window.clearTimeout(resetTimer)
-			resetTimer = window.setTimeout(() => {
-				if (complete) return
-				overscroll.top = 0
-				overscroll.bottom = 0
-				overscroll.topStarted = false
-				overscroll.bottomStarted = false
-			}, 140)
+		if (atTop && dy < 0) pull('top', -dy)
+		else if (atBottom && dy > 0) pull('bottom', dy)
+		else if (!complete) {
+			overscroll.top = 0
+			overscroll.bottom = 0
+			overscroll.topStarted = false
+			overscroll.bottomStarted = false
 		}
 	}
 

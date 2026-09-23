@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { seekOnScroll } from '$lib/actions/seekOnScroll'
 	import { isFinePointer, prefersReducedMotion } from '$lib/motion'
-	import type { MediaRef } from '$lib/sanity/types'
+	import { getContext } from 'svelte'
+	import { stopAttrs } from '$lib/pageColor'
+	import type { MediaRef, PageColorStop } from '$lib/sanity/types'
 
 	let {
 		portableText
 	}: {
 		portableText: {
 			value: {
+				_key?: string
 				file?: MediaRef | null
 				poster?: MediaRef | null
 				canScrub?: boolean
@@ -18,7 +21,9 @@
 		}
 	} = $props()
 
+	const stopsOf = getContext<(() => PageColorStop[]) | undefined>('page-stops')
 	const value = $derived(portableText.value)
+	const mark = $derived(stopAttrs(value._key, stopsOf?.()))
 
 	let videoEl: HTMLVideoElement | undefined = $state()
 	let hovering = $state(false)
@@ -68,7 +73,7 @@
 	}
 </script>
 
-<div class="col-span-full relative my-16 w-full overflow-hidden rounded-media" style="aspect-ratio: {value.width && value.height ? `${value.width} / ${value.height}` : '16 / 9'}">
+<div {...mark} class="col-span-full relative my-16 w-full overflow-hidden rounded-media" style="aspect-ratio: {value.width && value.height ? `${value.width} / ${value.height}` : '16 / 9'}">
 	{#if src}
 		<video
 			bind:this={videoEl}
@@ -76,7 +81,7 @@
 			poster={value.poster?.url}
 			playsinline
 			preload="auto"
-			controls={native || !value.canScrub}
+			controls={native || Boolean(value.seekOnScroll)}
 			controlslist="nodownload noremoteplayback"
 			disablepictureinpicture
 			muted={!value.canScrub}

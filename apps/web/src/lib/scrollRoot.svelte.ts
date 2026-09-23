@@ -1,4 +1,4 @@
-import { cardMetrics, type CardMetrics } from './scroll'
+import { cardMetrics, navMemory, type CardMetrics } from './scroll'
 
 export const viewport = $state({
 	scrollY: 0,
@@ -15,6 +15,9 @@ export function bindScroller(node: HTMLElement) {
 	viewport.scroller = node
 	const onScroll = () => {
 		viewport.scrollY = node.scrollTop
+		if (!window.location.pathname.startsWith('/projects/')) {
+			navMemory.workspaceScroll = node.scrollTop
+		}
 	}
 	const onResize = () => {
 		viewport.viewW = window.innerWidth

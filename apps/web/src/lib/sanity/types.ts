@@ -71,14 +71,19 @@ export type CaptionFlags = {
 	topPadding?: boolean
 	fillHeight?: boolean
 	rowSpan?: number
+	stroke?: boolean
 }
 
 export type MediaItem = CaptionFlags & {
 	_key: string
-	kind: 'image' | 'video'
+	kind: 'image' | 'video' | 'copy'
 	image?: MediaRef | null
 	video?: MediaRef | null
 	poster?: MediaRef | null
+	heading?: string
+	paragraphs?: string[]
+	lead?: boolean
+	span?: boolean
 }
 
 export type PortableBlock =
@@ -107,10 +112,19 @@ export type PortableBlock =
 	| { _type: 'slideShow'; _key: string; label?: string; text?: string; slides: MediaRef[] }
 	| { _type: 'spacer'; _key: string }
 
+export type PageWhen = 'cross' | 'reveal' | 'past' | 'center' | 'enter'
+
+export type PageColorStop = { at: string; color: string; when?: PageWhen; line?: number }
+
+export type ProjectFact = { label: string; items: string[] }
+
 export type Project = ProjectCard & {
 	seoTitle?: string
 	seoDescription?: string
 	ogImage?: MediaRef | null
 	nextProject?: NextProjectPreview | null
+	pageColor?: string
+	colorStops?: PageColorStop[]
+	brief?: { paragraphs: string[]; facts: ProjectFact[] }
 	body: PortableBlock[]
 }

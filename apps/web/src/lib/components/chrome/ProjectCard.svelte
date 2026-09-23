@@ -3,7 +3,7 @@
 	import { tilt } from '$lib/actions/tilt'
 	import CardMeta from '$lib/components/ui/CardMeta.svelte'
 	import { subscribeMedia } from '$lib/motion'
-	import { collapseRange, mapRange } from '$lib/scroll'
+	import { collapseRange, mapRange, navMemory, rememberCard } from '$lib/scroll'
 	import { metrics, viewport } from '$lib/scrollRoot.svelte'
 	import { projectCssVars, projectSurface } from '$lib/theme'
 	import type { ProjectCard } from '$lib/sanity/types'
@@ -17,6 +17,7 @@
 	let hovering = $state(false)
 	let near = $state(false)
 	let reduced = $state(false)
+	let root: HTMLElement | undefined = $state()
 
 	$effect(() => subscribeMedia('(prefers-reduced-motion: reduce)', (matches) => (reduced = matches)))
 
@@ -34,7 +35,6 @@
 			(isFirst || (hovering && near))
 	)
 	const surface = $derived(projectSurface(project))
-	const href = $derived(project.externalUrl)
 </script>
 
 <div
@@ -94,23 +94,21 @@
 			</div>
 		{/snippet}
 
-		{#if href}
-			<a
-				{href}
-				class="project-card-link relative block h-full"
-				data-cursor="case-study"
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="{project.title}, opens in a new tab"
-				onmouseenter={() => (hovering = true)}
-				onmouseleave={() => (hovering = false)}
-			>
-				{@render body()}
-			</a>
-		{:else}
-			<div class="project-card-link relative block h-full" data-cursor="coming-soon">
-				{@render body()}
-			</div>
-		{/if}
+		<a
+			bind:this={root}
+			href="/projects/{project.slug}"
+			class="project-card-link relative block h-full"
+			data-cursor="case-study"
+			data-sveltekit-noscroll
+			aria-label={project.title}
+			onmouseenter={() => (hovering = true)}
+			onmouseleave={() => (hovering = false)}
+			onclick={() => {
+				if (root) rememberCard(root, project.slug)
+				navMemory.workspaceScroll = viewport.scrollY
+			}}
+		>
+			{@render body()}
+		</a>
 	</div>
 </div>

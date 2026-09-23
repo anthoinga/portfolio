@@ -1,11 +1,7 @@
 import { prefersReducedMotion } from '$lib/motion'
 
 export function seekOnScroll(node: HTMLVideoElement, enabled: boolean) {
-	if (!enabled || prefersReducedMotion()) {
-		return {
-			destroy() {}
-		}
-	}
+	if (!enabled || prefersReducedMotion()) return
 
 	let raf = 0
 
