@@ -1267,6 +1267,7 @@ export function mountGalaga(els: GalagaEls) {
 				startBoot()
 				return
 			}
+			;(btn as HTMLElement).classList.add('is-down')
 			keys[k] = true
 			if (k === 'fire') {
 				if (state === 'paused') togglePause()
@@ -1275,6 +1276,7 @@ export function mountGalaga(els: GalagaEls) {
 		}
 		const off = (e: Event) => {
 			e.preventDefault()
+			;(btn as HTMLElement).classList.remove('is-down')
 			keys[k] = false
 		}
 		btn.addEventListener('pointerdown', on)

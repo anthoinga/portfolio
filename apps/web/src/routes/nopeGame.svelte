@@ -72,10 +72,19 @@
 		</div>
 	</div>
 
-	<div class="pad" bind:this={pad} aria-hidden="true">
-		<button type="button" data-k="left">◀</button>
-		<button type="button" data-k="fire" class="fire">FIRE</button>
-		<button type="button" data-k="right">▶</button>
+	<div
+		class="pad"
+		class:is-live={!onTitle}
+		bind:this={pad}
+		aria-hidden={onTitle}
+	>
+		<div class="pad-move">
+			<button type="button" data-k="left" aria-label="Move left"></button>
+			<button type="button" data-k="right" aria-label="Move right"></button>
+		</div>
+		<button type="button" data-k="fire" class="fire" aria-label="Fire">
+			<span class="fire-dot"></span>
+		</button>
 	</div>
 </div>
 
@@ -296,34 +305,90 @@
 
 	.pad {
 		display: none;
-		position: relative;
-		z-index: 1;
-		width: 100%;
-		max-width: 560px;
-		gap: 0.6rem;
-		padding: 0.4rem 1rem 1rem;
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 15;
+		align-items: flex-end;
+		justify-content: space-between;
+		pointer-events: none;
+		padding: 0 max(1.25rem, env(safe-area-inset-right, 0px))
+			max(1.75rem, env(safe-area-inset-bottom, 0px)) max(1.25rem, env(safe-area-inset-left, 0px));
+	}
+	.pad-move {
+		display: flex;
+		gap: 0.85rem;
+		pointer-events: none;
 	}
 	.pad button {
-		flex: 1;
-		font: inherit;
-		font-size: 1.6rem;
-		padding: 0.7rem 0;
-		border-radius: 12px;
-		background: transparent;
-		color: var(--ink);
-		border: 2px solid var(--dim);
+		pointer-events: auto;
+		appearance: none;
+		-webkit-appearance: none;
+		display: grid;
+		place-items: center;
+		width: 4.75rem;
+		height: 4.75rem;
+		margin: 0;
+		padding: 0;
+		border-radius: 999px;
+		border: 2px solid rgba(255, 255, 255, 0.28);
+		background: rgba(255, 255, 255, 0.1);
+		-webkit-backdrop-filter: blur(12px) saturate(1.2);
+		backdrop-filter: blur(12px) saturate(1.2);
+		box-shadow:
+			inset 0 1px 0 rgba(255, 255, 255, 0.22),
+			0 8px 24px rgba(0, 0, 0, 0.35);
+		color: rgba(255, 255, 255, 0.92);
 		touch-action: none;
+		-webkit-user-select: none;
+		user-select: none;
+		-webkit-touch-callout: none;
+	}
+	.pad button[data-k='left']::after,
+	.pad button[data-k='right']::after {
+		content: '';
+		width: 0.7rem;
+		height: 0.7rem;
+		border: solid currentColor;
+		border-width: 0 0 2.5px 2.5px;
+	}
+	.pad button[data-k='left']::after {
+		transform: translateX(0.12rem) rotate(45deg);
+	}
+	.pad button[data-k='right']::after {
+		transform: translateX(-0.12rem) rotate(-135deg);
 	}
 	.pad button.fire {
-		flex: 1.6;
+		width: 5.75rem;
+		height: 5.75rem;
+		border-color: rgba(255, 107, 74, 0.55);
+		background: rgba(255, 107, 74, 0.22);
 		color: var(--shot);
-		border-color: var(--shot);
 	}
-	.pad button:active {
-		background: rgba(255, 255, 255, 0.08);
+	.pad button.fire::after {
+		display: none;
+	}
+	.fire-dot {
+		display: block;
+		width: 1.15rem;
+		height: 1.15rem;
+		margin: 0 auto;
+		border-radius: 999px;
+		background: currentColor;
+		box-shadow: 0 0 16px rgba(255, 107, 74, 0.8);
+	}
+	.pad button:active,
+	.pad button:global(.is-down) {
+		transform: scale(0.94);
+		background: rgba(255, 255, 255, 0.2);
+	}
+	.pad button.fire:active,
+	.pad button.fire:global(.is-down) {
+		background: rgba(255, 107, 74, 0.38);
 	}
 	@media (hover: none) and (pointer: coarse) {
-		.pad {
+		.pad.is-live {
 			display: flex;
 		}
 	}

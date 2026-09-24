@@ -8,7 +8,8 @@ const config = {
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',
-			fallback: undefined,
+			// Vercel serves build/404.html for unknown paths (with status 404).
+			fallback: '404.html',
 			precompress: true,
 			strict: true
 		})
