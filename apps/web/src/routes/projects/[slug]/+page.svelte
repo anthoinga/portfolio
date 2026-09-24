@@ -17,6 +17,15 @@
 	const opening = $derived(project.pageColor ?? surface.background)
 	const background = $derived(tone ?? opening)
 	const shell = $derived(inkFor(background, project))
+	// iOS will not decode or paint <video> under an ancestor transform / will-change.
+	const motionIdle = $derived(
+		motion.articleX === 0 && motion.articleY === 0 && Math.abs(motion.articleScale - 1) < 0.001
+	)
+	const motionStyle = $derived(
+		motionIdle
+			? `opacity:${motion.articleOpacity}; transition:${motion.articleTransition}`
+			: `transform:translate3d(${motion.articleX}px, ${motion.articleY}px, 0) scale(${motion.articleScale}); opacity:${motion.articleOpacity}; transform-origin:${motion.transformOrigin}; transition:${motion.articleTransition}; will-change:transform, opacity`
+	)
 
 	$effect(() => {
 		const stops = project.colorStops
@@ -109,7 +118,7 @@
 	bind:this={article}
 	class="project-article relative z-10 overflow-hidden rounded-card pb-24"
 	data-type={project.type}
-	style="{projectCssVars(project)}; --bg:{background}; --fg:{shell}; background-color:{background}; color:{shell}; transform:translate3d({motion.articleX}px, {motion.articleY}px, 0) scale({motion.articleScale}); opacity:{motion.articleOpacity}; transform-origin:{motion.transformOrigin}; transition:{motion.articleTransition}; will-change:transform, opacity;"
+	style="{projectCssVars(project)}; --bg:{background}; --fg:{shell}; background-color:{background}; color:{shell}; {motionStyle}"
 >
 	{#snippet projectMeta(blend: boolean)}
 		<div

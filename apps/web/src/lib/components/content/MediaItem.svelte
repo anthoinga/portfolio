@@ -1,5 +1,9 @@
 <script lang="ts">
+	import { autoplayInline } from '$lib/actions/autoplayInline'
+	import { isFinePointer } from '$lib/motion'
 	import type { MediaItem } from '$lib/sanity/types'
+
+	const touch = $derived(typeof window === 'undefined' ? true : !isFinePointer())
 
 	let { item }: { item: MediaItem } = $props()
 
@@ -21,10 +25,12 @@
 				muted
 				loop
 				playsinline
-				autoplay
+				preload="none"
+				controls={touch}
 				controlslist="nodownload noremoteplayback"
 				disablepictureinpicture
-				class="h-full w-full object-cover"
+				class="aspect-video w-full object-cover"
+				use:autoplayInline
 			></video>
 		{:else if src}
 			<img {src} {alt} class="h-full w-full object-cover" />

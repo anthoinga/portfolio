@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { autoplayInline } from '$lib/actions/autoplayInline'
 	import { seekOnScroll } from '$lib/actions/seekOnScroll'
 	import { isFinePointer, prefersReducedMotion } from '$lib/motion'
 	import { getContext } from 'svelte'
@@ -33,6 +34,7 @@
 
 	const native = $derived(typeof window === 'undefined' ? true : prefersReducedMotion() || !isFinePointer())
 	const customScrub = $derived(Boolean(value.canScrub) && !native && !value.seekOnScroll)
+	const loopPlay = $derived(!value.canScrub && !value.seekOnScroll)
 	const src = $derived(value.file?.url)
 
 	function fmt(t: number) {
@@ -80,13 +82,12 @@
 			src={src}
 			poster={value.poster?.url}
 			playsinline
-			preload="auto"
+			preload={loopPlay ? 'none' : 'metadata'}
 			controls={native || Boolean(value.seekOnScroll)}
 			controlslist="nodownload noremoteplayback"
 			disablepictureinpicture
 			muted={!value.canScrub}
-			loop={!value.canScrub}
-			autoplay={!value.canScrub && !value.seekOnScroll}
+			loop={loopPlay}
 			class="h-full w-full object-cover"
 			class:cursor-none={customScrub}
 			onpointerdown={onPointerDown}
@@ -96,6 +97,7 @@
 			onpointerenter={() => (hovering = true)}
 			ontimeupdate={onTime}
 			use:seekOnScroll={Boolean(value.seekOnScroll)}
+			use:autoplayInline={loopPlay}
 		></video>
 	{:else if value.poster?.url}
 		<img src={value.poster.url} alt={value.poster.alt || ''} class="h-full w-full object-cover" />
