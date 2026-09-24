@@ -75,9 +75,12 @@
 		/>
 	{/if}
 	{#if showShell}
-		<main class="home-shell relative z-[1] mx-6 grid gap-4 text-chrome-ink lg:grid-cols-9">
+		<main
+			class="home-shell relative z-[1] mx-6 grid gap-4 text-chrome-ink lg:grid-cols-9"
+			class:home-shell--nope={is404}
+		>
 			<HomeRail settings={data.settings} faded={railFaded} lists={!is404} bio={!is404} />
-			<div class="home-feed min-w-0 lg:col-span-7">
+			<div class="home-feed min-w-0 lg:col-span-7" class:home-feed--nope={is404}>
 				{@render children()}
 			</div>
 		</main>

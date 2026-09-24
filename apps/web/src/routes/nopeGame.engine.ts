@@ -76,34 +76,33 @@ export function mountGalaga(els: GalagaEls) {
 
 	function resize() {
 		const st = getComputedStyle(stage)
-		const W = stage.clientWidth - parseFloat(st.paddingLeft) - parseFloat(st.paddingRight)
+		const W = Math.max(
+			1,
+			stage.clientWidth - parseFloat(st.paddingLeft) - parseFloat(st.paddingRight)
+		)
 		const H = Math.max(
 			1,
 			stage.clientHeight - parseFloat(st.paddingTop) - parseFloat(st.paddingBottom)
 		)
 		ctx.font = `100px ${FAMILY}`
 		const ratio = ctx.measureText('M').width / 100 || 0.5
-		// Fill the padded stage height; only shrink if the grid would overflow width.
-		let cellH = H / ROWS
-		if (cellH * ratio * CELL_TRACK * COLS > W) cellH = W / (COLS * ratio * CELL_TRACK)
-		fontPx = Math.max(8, cellH)
-		cw = fontPx * ratio * CELL_TRACK
-		chH = fontPx
+		// Fill the stage exactly; cell aspect follows the viewport so glyphs scale with it.
+		cw = W / COLS
+		chH = H / ROWS
+		fontPx = Math.max(8, Math.min(chH, cw / (ratio * CELL_TRACK)))
 		glyphPx = Math.max(7, Math.round(fontPx * GLYPH_SCALE))
 		const dpr = window.devicePixelRatio || 1
-		const w = cw * COLS
-		const h = chH * ROWS
-		canvas.style.width = w + 'px'
-		canvas.style.height = h + 'px'
-		canvas.width = Math.round(w * dpr)
-		canvas.height = Math.round(h * dpr)
-		glowCv.style.width = w + 'px'
-		glowCv.style.height = h + 'px'
+		canvas.style.width = W + 'px'
+		canvas.style.height = H + 'px'
+		canvas.width = Math.round(W * dpr)
+		canvas.height = Math.round(H * dpr)
+		glowCv.style.width = W + 'px'
+		glowCv.style.height = H + 'px'
 		glowCv.width = Math.ceil(canvas.width / 2)
 		glowCv.height = Math.ceil(canvas.height / 2)
 		glowCv.style.filter = `blur(${Math.max(2, fontPx * 0.3).toFixed(1)}px) saturate(2) brightness(2)`
-		glow2Cv.style.width = w + 'px'
-		glow2Cv.style.height = h + 'px'
+		glow2Cv.style.width = W + 'px'
+		glow2Cv.style.height = H + 'px'
 		glow2Cv.width = Math.ceil(canvas.width / 4)
 		glow2Cv.height = Math.ceil(canvas.height / 4)
 		glow2Cv.style.filter = `blur(${Math.max(6, fontPx * 1.3).toFixed(1)}px) saturate(2.4) brightness(2.6)`
@@ -1308,6 +1307,9 @@ export function mountGalaga(els: GalagaEls) {
 	const ro = new ResizeObserver(() => resize())
 	ro.observe(stage)
 	ro.observe(root)
+	const onVV = () => resize()
+	visualViewport?.addEventListener('resize', onVV)
+	visualViewport?.addEventListener('scroll', onVV)
 
 	player = { x: COLS / 2, y: SHIP_Y, dead: false, respawn: 0, inv: 0 }
 	pBul = []
@@ -1350,6 +1352,8 @@ export function mountGalaga(els: GalagaEls) {
 	return () => {
 		cancelAnimationFrame(raf)
 		ro.disconnect()
+		visualViewport?.removeEventListener('resize', onVV)
+		visualViewport?.removeEventListener('scroll', onVV)
 		if (bgHome) {
 			bgHome.insertBefore(bgCv, bgHome.firstChild)
 			bgHome.insertBefore(edgeEl, bgHome.firstChild)

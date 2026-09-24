@@ -60,7 +60,7 @@
 		</a>
 	{/if}
 
-	<div class="stage py-8 lg:py-10" bind:this={stage}>
+	<div class="stage" bind:this={stage}>
 		<div class="screen" class:is-live={!onTitle} bind:this={screen}>
 			<canvas class="glow2" bind:this={glow2} aria-hidden="true"></canvas>
 			<canvas class="glow" bind:this={glow} aria-hidden="true"></canvas>
@@ -117,7 +117,7 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		align-items: stretch;
 		height: 100%;
 		width: 100%;
 		min-height: 100dvh;
@@ -128,6 +128,18 @@
 	}
 	.galaga.is-title {
 		background: var(--bg);
+	}
+	/* Escape the home-shell gutters and fill the device viewport on mobile. */
+	@media (max-width: 1023px) {
+		.galaga {
+			position: fixed;
+			inset: 0;
+			z-index: 0;
+			width: 100%;
+			height: 100%;
+			min-height: 100dvh;
+			min-height: 100svh;
+		}
 	}
 
 	.fx {
@@ -270,13 +282,18 @@
 		flex: 1;
 		min-height: 0;
 		width: 100%;
+		height: 100%;
 		display: flex;
-		align-items: center;
+		align-items: stretch;
 		justify-content: center;
 	}
 
 	.screen {
 		position: relative;
+		flex: 1;
+		width: 100%;
+		height: 100%;
+		min-height: 0;
 		line-height: 0;
 		overflow: hidden;
 	}
@@ -292,12 +309,15 @@
 	.play {
 		display: block;
 		position: relative;
+		width: 100%;
+		height: 100%;
 	}
 	.glow,
 	.glow2 {
 		position: absolute;
-		left: 0;
-		top: 0;
+		inset: 0;
+		width: 100%;
+		height: 100%;
 		pointer-events: none;
 		mix-blend-mode: var(--blend);
 		opacity: 0;

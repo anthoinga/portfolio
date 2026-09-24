@@ -205,6 +205,31 @@ img {
 	}
 }
 
+/* 404 game: full-bleed stage under the rail on small screens. */
+@media (max-width: 1023px) {
+	.home-shell--nope {
+		margin-left: 0;
+		margin-right: 0;
+		display: block;
+		min-height: 100dvh;
+		min-height: 100svh;
+	}
+	.home-shell--nope .home-rail {
+		position: relative;
+		z-index: 5;
+		padding-left: 1.5rem;
+		padding-right: 1.5rem;
+	}
+	.home-feed--nope {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+	.home-feed--nope > :global(*) {
+		pointer-events: auto;
+	}
+}
+
 @keyframes home-enter {
 	from {
 		opacity: 0;
