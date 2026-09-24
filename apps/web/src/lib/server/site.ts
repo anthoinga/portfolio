@@ -1,7 +1,16 @@
-import { PUBLIC_SITE_URL } from '$env/static/public'
+import { env } from '$env/dynamic/public'
+
+function vercelOrigin() {
+	const preferred =
+		process.env.VERCEL_ENV === 'production'
+			? process.env.VERCEL_PROJECT_PRODUCTION_URL
+			: process.env.VERCEL_URL
+	const host = (preferred || process.env.VERCEL_URL || '').trim().replace(/^https?:\/\//, '')
+	return host ? `https://${host}` : ''
+}
 
 function readSiteUrl() {
-	const raw = PUBLIC_SITE_URL?.trim()
+	const raw = env.PUBLIC_SITE_URL?.trim() || vercelOrigin()
 	if (!raw) {
 		throw new Error('PUBLIC_SITE_URL is required. Set it in apps/web/.env (see .env.example).')
 	}
