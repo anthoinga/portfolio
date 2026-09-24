@@ -73,8 +73,7 @@ const curbside: Project = {
 	},
 	seoDescription:
 		'A case study on the on-device app that standardized curbside picking, staging, and handoff for a national grocer.',
-	externalUrl:
-		'https://app.notion.com/p/anthonyi/Designing-for-new-norms-259037de3129805b9822d688be9175ea?v=257037de312980cdac76000ce32240a1&source=copy_link',
+	ogImage: { url: '/og/curbside.png', alt: 'Handheld scanner showing a retail picking workflow' },
 	body: [
 		{
 			_type: 'layoutBlock',
@@ -354,8 +353,7 @@ const talent: Project = {
 	},
 	seoDescription:
 		'A case study on time-report status and a self-updating profile for Robert Half temporary workers.',
-	externalUrl:
-		'https://app.notion.com/p/anthonyi/Talent-in-Your-Pocket-25c037de312980b4815ef54e253f85dd?v=257037de312980cdac76000ce32240a1&source=copy_link',
+	ogImage: { url: '/og/talent.png', alt: 'Phone showing commute distance for a talent app' },
 	body: [
 		{
 			_type: 'layoutBlock',
@@ -733,8 +731,7 @@ const insurance: Project = {
 	},
 	seoDescription:
 		'A case study on splitting a brittle insurance CRM into an agent workflow and a short client path to purchase.',
-	externalUrl:
-		'https://app.notion.com/p/anthonyi/Demystifying-coverage-marketplace-257037de31298000bd68fa954cb48ec1?v=257037de312980cdac76000ce32240a1&source=copy_link',
+	ogImage: { url: '/og/insurance.png', alt: 'Insurance quote comparison dashboard' },
 	body: [
 		{
 			_type: 'layoutBlock',
@@ -1092,6 +1089,7 @@ const convenience: Project = {
 	},
 	seoDescription:
 		'A case study on search that reorganizes a convenience catalogue instead of shopping for the customer.',
+	ogImage: { url: '/og/convenience.png', alt: '7-Eleven app with a late-night craving prompt' },
 	body: [
 		{
 			_type: 'layoutBlock',

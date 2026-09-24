@@ -4,14 +4,22 @@
 	import { page } from '$app/state'
 	import CursorTakeover from '$lib/components/chrome/CursorTakeover.svelte'
 	import Header from '$lib/components/chrome/Header.svelte'
+	import HomeRail from '$lib/components/chrome/HomeRail.svelte'
+	import Seo from '$lib/components/chrome/Seo.svelte'
+	import { nopeChrome } from '$lib/nopeChrome.svelte'
 	import { bindScroller, viewport } from '$lib/scrollRoot.svelte'
 	import { attachOverscroll, bottomProgress, consumeOverscroll, overscroll, topProgress } from '$lib/overscroll.svelte'
 	import { navMemory } from '$lib/scroll'
+	import type { LayoutData } from './$types'
 
-	let { children }: { children: import('svelte').Snippet } = $props()
+	let { children, data }: { children: import('svelte').Snippet; data: LayoutData } = $props()
 
 	const pathname = $derived(page.url.pathname)
 	const onProject = $derived(pathname.startsWith('/projects/'))
+	const onHome = $derived(pathname === '/')
+	const is404 = $derived(page.status === 404)
+	const showShell = $derived(onHome || is404)
+	const railFaded = $derived(is404 && !nopeChrome.onTitle)
 
 	afterNavigate(() => {
 		if (onProject) return
@@ -55,6 +63,8 @@
 	oncut={lockCopy}
 />
 
+<Seo settings={data.settings} siteUrl={data.siteUrl} />
+
 <div class="scroll-root" use:bindScroller>
 	{#if onProject}
 		<Header
@@ -64,6 +74,15 @@
 			overscrollBottomStarted={overscroll.bottomStarted}
 		/>
 	{/if}
-	{@render children()}
+	{#if showShell}
+		<main class="home-shell relative z-[1] mx-6 grid gap-4 text-chrome-ink lg:grid-cols-9">
+			<HomeRail settings={data.settings} faded={railFaded} lists={!is404} bio={!is404} />
+			<div class="home-feed min-w-0 lg:col-span-7">
+				{@render children()}
+			</div>
+		</main>
+	{:else}
+		{@render children()}
+	{/if}
 </div>
 <CursorTakeover />

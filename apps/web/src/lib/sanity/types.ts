@@ -42,7 +42,6 @@ export type ProjectCard = {
 	colorDarkest: string
 	previewVideo?: MediaRef | null
 	poster?: MediaRef | null
-	externalUrl?: string
 }
 
 export type NextProjectPreview = Pick<

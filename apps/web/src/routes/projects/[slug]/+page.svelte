@@ -105,19 +105,6 @@
 	</filter>
 </svg>
 
-<svelte:head>
-	<title>{project.seoTitle || project.title}</title>
-	<meta name="description" content={project.seoDescription || project.description || ''} />
-	{#if project.hidden}
-		<meta name="robots" content="noindex" />
-	{/if}
-	{#if project.ogImage?.url || project.poster?.url}
-		<meta property="og:image" content={project.ogImage?.url || project.poster?.url} />
-	{/if}
-	<meta property="og:title" content={project.seoTitle || project.title} />
-	<meta property="og:description" content={project.seoDescription || project.description || ''} />
-</svelte:head>
-
 <article
 	bind:this={article}
 	class="project-article relative z-10 overflow-hidden rounded-card pb-24"

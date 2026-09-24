@@ -36,7 +36,7 @@
 	{#if item.overlay && (item.title || item.text)}
 		<figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-scrim to-transparent p-4 text-light">
 			{#if item.label}<span class="text-[11px] tracking-widest uppercase">{item.label}</span>{/if}
-			{#if item.title}<p class="font-display text-2xl">{item.title}</p>{/if}
+			{#if item.title}<p class="font-sans text-2xl">{item.title}</p>{/if}
 		</figcaption>
 	{:else if item.label || item.title || item.text}
 		<figcaption class="mt-4 flex gap-4 text-sm leading-5 tracking-normal" class:mt-8={item.wideSpacing}>

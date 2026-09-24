@@ -14,7 +14,6 @@ const projectCardProjection = `
   _id,
   title,
   "slug": slug.current,
-  externalUrl,
   description,
   tags,
   type,

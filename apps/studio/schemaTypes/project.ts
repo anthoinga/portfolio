@@ -12,12 +12,6 @@ export const project = defineType({
 			options: { source: 'title' },
 			validation: (r) => r.required()
 		}),
-		defineField({
-			name: 'externalUrl',
-			title: 'Case study URL',
-			type: 'url',
-			description: 'Optional live URL. Homepage cards open the in-site project page.'
-		}),
 		defineField({ name: 'description', type: 'string', title: 'Tagline' }),
 		defineField({ name: 'tags', type: 'array', of: [{ type: 'string' }], options: { layout: 'tags' } }),
 		defineField({

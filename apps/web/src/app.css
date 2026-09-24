@@ -42,7 +42,6 @@
 
 @theme {
 	--font-sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
-	--font-display: 'Syne', 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
 	--font-mono: 'Inconsolata', ui-monospace, monospace;
 	--color-canvas: var(--bg);
 	--color-ink: var(--fg);
