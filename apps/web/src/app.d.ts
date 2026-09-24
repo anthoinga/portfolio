@@ -10,6 +10,11 @@ declare module '*.png?url' {
 	export default src
 }
 
+declare module '*.jpg?url' {
+	const src: string
+	export default src
+}
+
 declare global {
 	namespace App {
 		// interface Error {}

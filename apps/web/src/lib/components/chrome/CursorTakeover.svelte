@@ -18,8 +18,9 @@
 	let idle = $state(false)
 	let caseStudy = $state(false)
 	let comingSoon = $state(false)
+	let visitDemo = $state(false)
 	const copied = $derived(cursorNotice.copied)
-	const pill = $derived(caseStudy || comingSoon || copied)
+	const pill = $derived(caseStudy || comingSoon || visitDemo || copied)
 	let surface = $state(readCursorSurface(null))
 	let node: HTMLElement | undefined = $state()
 	let canvas: HTMLCanvasElement | undefined = $state()
@@ -39,6 +40,7 @@
 			idle = false
 			caseStudy = false
 			comingSoon = false
+			visitDemo = false
 			return
 		}
 		if (!canvas) return
@@ -73,7 +75,7 @@
 				const dy = y - ly
 				const dist = Math.hypot(dx, dy)
 				if (dist >= TRAIL.stampAfter) {
-					const expanded = caseStudy || comingSoon || cursorNotice.copied
+					const expanded = caseStudy || comingSoon || visitDemo || cursorNotice.copied
 					const radius = expanded ? TRAIL.radius.pill : TRAIL.radius.rest
 					const amount = expanded ? TRAIL.amount.pill : TRAIL.amount.rest
 					const steps = Math.max(1, Math.ceil(dist / TRAIL.step))
@@ -120,12 +122,14 @@
 			const hit = document.elementFromPoint(e.clientX, e.clientY)
 			const study = hit?.closest('[data-cursor="case-study"]') ?? null
 			const soon = hit?.closest('[data-cursor="coming-soon"]') ?? null
+			const demo = hit?.closest('[data-cursor="visit-demo"]') ?? null
 			caseStudy = Boolean(study)
 			comingSoon = Boolean(soon)
-			const owner = study ?? soon ?? (hit instanceof Element ? hit : null)
+			visitDemo = Boolean(demo)
+			const owner = study ?? soon ?? demo ?? (hit instanceof Element ? hit : null)
 			if (owner !== lastOwner) {
 				lastOwner = owner
-				surface = readCursorSurface(study ?? soon ?? hit)
+				surface = readCursorSurface(study ?? soon ?? demo ?? hit)
 			}
 			kick()
 			markMoving()
@@ -137,6 +141,7 @@
 			clearTimeout(idleTimer)
 			caseStudy = false
 			comingSoon = false
+			visitDemo = false
 			lastOwner = null
 			surface = readCursorSurface(null)
 			wipe()
@@ -215,6 +220,9 @@
 						<span>COPIED TO CLIPBOARD</span>
 					{:else if comingSoon}
 						<span>COMING SOON</span>
+					{:else if visitDemo}
+						<span class="cursor-icon"><IconView /></span>
+						<span>VISIT DEMO</span>
 					{:else}
 						<span class="cursor-icon"><IconView /></span>
 						<span>VIEW CASE STUDY</span>

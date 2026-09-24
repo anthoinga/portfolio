@@ -108,6 +108,11 @@ p,
 	font-variation-settings: 'wdth' 100;
 }
 
+.home-shell {
+	width: min(1985px, calc(100% - 2 * var(--home-pad-x)));
+	margin-inline: auto;
+}
+
 @media (min-width: 120rem) {
 	.home-shell {
 		grid-template-columns: var(--home-rail-max) minmax(0, 1fr);
@@ -208,6 +213,7 @@ img {
 /* 404 game: full-bleed stage under the rail on small screens. */
 @media (max-width: 1023px) {
 	.home-shell--nope {
+		width: 100%;
 		margin-left: 0;
 		margin-right: 0;
 		display: block;

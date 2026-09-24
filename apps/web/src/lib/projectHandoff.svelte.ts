@@ -1,13 +1,26 @@
 import { PAGE_FADE } from '$lib/pageColor'
 import { prefersReducedMotion } from '$lib/motion'
 import { bottomProgress, overscroll, topProgress } from '$lib/overscroll.svelte'
-import { lerp, mapRange, navMemory } from '$lib/scroll'
+import { lerp, mapRange, navMemory, type LastCard } from '$lib/scroll'
 import { viewport } from '$lib/scrollRoot.svelte'
 
-const ENTER_MS = 720
+export const ENTER_MS = 720
 
 export function targetScaleFor(viewW: number) {
 	return 1 - (viewW >= 1536 ? 128 : viewW >= 768 ? 48 : 32) / Math.max(viewW, 1)
+}
+
+/** Shared card → surface enter origin used by case studies. */
+export function cardEnterOrigin(
+	card: Pick<LastCard, 'left' | 'top' | 'width'>,
+	viewW: number,
+	surfaceWidth = viewW
+) {
+	return {
+		scale: card.width / Math.max(surfaceWidth, 1),
+		x: (card.left + card.width / 2 - viewW / 2) * 0.7,
+		y: card.top - 80
+	}
 }
 
 export function createProjectMotion(getProject: () => { slug: string }) {
@@ -40,11 +53,7 @@ export function createProjectMotion(getProject: () => { slug: string }) {
 		entering = true
 		const card = navMemory.lastCard
 		if (card && card.slug === project.slug) {
-			origin = {
-				scale: card.width / Math.max(viewport.viewW, 1),
-				x: (card.left + card.width / 2 - viewport.viewW / 2) * 0.7,
-				y: card.top - 80
-			}
+			origin = cardEnterOrigin(card, viewport.viewW)
 		} else {
 			origin = { scale: targetScale, x: 0, y: 100 }
 		}

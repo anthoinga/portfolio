@@ -25,7 +25,7 @@ export const HOME = {
 	lg: 1024,
 	/** 120rem */
 	max: 1920,
-	/** `.home-shell` `mx-6` on both sides */
+	/** `.home-shell` side gutters (`--home-pad-x` each side) */
 	shellPad: 48,
 	/** `.home-shell` `gap-4` */
 	gap: 16,

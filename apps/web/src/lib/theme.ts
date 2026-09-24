@@ -73,7 +73,9 @@ export function readCursorSurface(hit: Element | null): CursorSurface {
 	}
 	if (!hit) return fallback
 
-	const study = hit.closest('[data-cursor="case-study"], [data-cursor="coming-soon"]')
+	const study = hit.closest(
+		'[data-cursor="case-study"], [data-cursor="coming-soon"], [data-cursor="visit-demo"]'
+	)
 	const cs = getComputedStyle(study ?? hit)
 	const accent = cs.getPropertyValue('--accent').trim() || fallback.accent
 	const bg = cs.getPropertyValue('--bg').trim()

@@ -76,7 +76,7 @@
 	{/if}
 	{#if showShell}
 		<main
-			class="home-shell relative z-[1] mx-6 grid gap-4 text-chrome-ink lg:grid-cols-9"
+			class="home-shell relative z-[1] grid gap-4 text-chrome-ink lg:grid-cols-9"
 			class:home-shell--nope={is404}
 		>
 			<HomeRail settings={data.settings} faded={railFaded} lists={!is404} bio={!is404} />
