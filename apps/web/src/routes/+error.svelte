@@ -9,9 +9,9 @@
 {#if is404}
 	<NopeGame />
 {:else}
-	<main class="grid min-h-screen place-items-center px-6 text-chrome-ink">
+	<main id="main" class="grid min-h-screen place-items-center px-6">
 		<div>
-			<div class="mb-6 size-7 text-chrome-ink" aria-hidden="true">
+			<div class="mb-6 size-7" aria-hidden="true">
 				<LogoMark />
 			</div>
 			<p class="text-[11px] tracking-[0.2em] uppercase opacity-50">{page.status}</p>

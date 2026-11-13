@@ -11,7 +11,7 @@
 
 <svelte:element
 	this={tag}
-	class="project-copy col-span-full pt-48 leading-[1.3em] md:text-xl md:leading-[1.16em]"
+	class="project-copy col-span-full pt-48 font-display text-3xl leading-[1.05] tracking-[-0.02em] md:text-5xl"
 >
 	{@render children?.()}
 </svelte:element>

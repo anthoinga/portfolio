@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { sound } from '$lib/actions/sfx'
 	import PortableBody from '$lib/components/content/PortableBody.svelte'
 	import { activePageColor, inkFor, PAGE_COLOR_LINE } from '$lib/pageColor'
 	import { createProjectMotion } from '$lib/projectHandoff.svelte'
@@ -81,10 +82,13 @@
 			const url = `url("${img.currentSrc}")`
 			for (const el of root.querySelectorAll<HTMLElement>('p, dt, dd')) {
 				const box = el.getBoundingClientRect()
+				// The article can be scaled (card handoff). Measurements above are screen
+				// pixels; backgrounds are laid out in the element's own, unscaled pixels.
+				const s = el.offsetWidth ? box.width / el.offsetWidth : 1
 				el.style.backgroundImage = url
 				el.style.backgroundRepeat = 'no-repeat'
-				el.style.backgroundSize = `${dw}px ${dh}px`
-				el.style.backgroundPosition = `${poster.left - cropX - box.left}px ${poster.top - cropY - box.top}px`
+				el.style.backgroundSize = `${dw / s}px ${dh / s}px`
+				el.style.backgroundPosition = `${(poster.left - cropX - box.left) / s}px ${(poster.top - cropY - box.top) / s}px`
 			}
 		}
 
@@ -114,7 +118,7 @@
 	</filter>
 </svg>
 
-<article
+<article id="main"
 	bind:this={article}
 	class="project-article relative z-10 overflow-hidden rounded-card pb-24"
 	data-type={project.type}
@@ -155,7 +159,7 @@
 	<header
 		class="relative z-20 grid grid-cols-[1fr_1fr_4fr] gap-4 px-4 py-5 md:grid-cols-[1fr_1fr_2fr] lg:absolute lg:inset-x-0 lg:top-0 lg:grid-cols-[1fr_auto] lg:px-8 lg:py-8"
 	>
-		<div class="text-lg leading-none tracking-[-0.035em] lg:text-2xl">
+		<div class="font-display text-2xl leading-none tracking-[-0.02em] lg:text-4xl">
 			<h1>{project.title}</h1>
 		</div>
 		<div class="col-start-3 justify-self-end lg:hidden">
@@ -181,4 +185,49 @@
 	{/if}
 
 	<PortableBody value={project.body} stops={project.colorStops} />
+
+	{#if project.nextProject}
+		<a
+			class="next project-copy"
+			href="/projects/{project.nextProject.slug}"
+			data-sveltekit-noscroll
+			use:sound
+		>
+			<span class="font-label">Next case study</span>
+			<span class="next-title">{project.nextProject.title}</span>
+			<span class="next-arrow" aria-hidden="true">→</span>
+		</a>
+	{/if}
 </article>
+
+<style>
+	.next {
+		display: grid;
+		gap: 0.5rem;
+		margin: 12rem 1rem 0;
+		padding: 2rem 0 0;
+		border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+		color: inherit;
+	}
+	.next .font-label {
+		opacity: 0.6;
+	}
+	.next-title {
+		font-family: var(--font-display);
+		font-size: clamp(2.25rem, 1.2rem + 4vw, 5rem);
+		line-height: 1;
+		letter-spacing: -0.025em;
+		transition: transform 400ms var(--ease);
+	}
+	.next:hover .next-title {
+		transform: translateX(0.5rem);
+	}
+	.next-arrow {
+		font-size: 1.5rem;
+	}
+	@media (min-width: 1024px) {
+		.next {
+			margin-inline: 0;
+		}
+	}
+</style>

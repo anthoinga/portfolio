@@ -19,18 +19,14 @@ export type CardMetrics = {
 	wideFirst: boolean
 }
 
-/** Keep in lockstep with the home shell in `app.css`. */
+/** Keep in lockstep with `.page-shell` / `--page-max` in `app.css`. */
 export const HOME = {
 	md: 768,
 	lg: 1024,
-	/** 120rem */
-	max: 1920,
-	/** `.home-shell` side gutters (`--home-pad-x` each side) */
+	/** `--page-max` is 88rem */
+	pageMax: 1408,
+	/** `.page-shell` side gutters (`--home-pad-x` each side) */
 	shellPad: 48,
-	/** `.home-shell` `gap-4` */
-	gap: 16,
-	cols: 9,
-	feedCols: 7,
 	/** Feed `gap-3` */
 	cardGutter: 12,
 	/** Sticky `top-4` */
@@ -41,15 +37,9 @@ export const HOME = {
 	heroRatio: 2 / 3
 } as const
 
-function spanWidth(shell: number, tracks: number) {
-	const fr = (shell - (HOME.cols - 1) * HOME.gap) / HOME.cols
-	return tracks * fr + (tracks - 1) * HOME.gap
-}
-
+/** Width of the selected-work feed: the page column, centred. */
 export function homeFeedWidth(viewW: number) {
-	const shell = Math.max(0, viewW - HOME.shellPad)
-	if (viewW < HOME.lg) return shell
-	return Math.min(spanWidth(shell, HOME.feedCols), spanWidth(HOME.max - HOME.shellPad, HOME.feedCols))
+	return Math.min(Math.max(0, viewW - HOME.shellPad), HOME.pageMax)
 }
 
 function gridCardWidth(viewW: number, cols: number) {
@@ -64,11 +54,17 @@ function ratioHeight(cardWidth: number, ratio: number, viewH?: number) {
 	return Math.min(height, Math.max(0, viewH - HOME.stickyTop))
 }
 
-export function cardMetrics(width: number, height: number): CardMetrics {
+/**
+ * `wideFirst` makes the first card span the whole row on large screens (the
+ * home feed). Pass `false` for an even two-column grid, as on /work.
+ */
+export function cardMetrics(width: number, height: number, wideFirst = true): CardMetrics {
 	if (width >= HOME.lg) {
+		const normal = ratioHeight(gridCardWidth(width, 2), HOME.cardRatio)
+		if (!wideFirst) return { first: normal, normal, cols: 2, wideFirst: false }
 		return {
 			first: ratioHeight(homeFeedWidth(width), HOME.heroRatio, height),
-			normal: ratioHeight(gridCardWidth(width, 2), HOME.cardRatio),
+			normal,
 			cols: 2,
 			wideFirst: true
 		}
@@ -112,12 +108,16 @@ export type LastCard = {
 export const navMemory: {
 	lastCard: LastCard | null
 	workspaceScroll: number
+	/** Page the visitor opened the case study from, so closing it goes back there. */
+	returnTo: string
 } = {
 	lastCard: null,
-	workspaceScroll: 0
+	workspaceScroll: 0,
+	returnTo: '/'
 }
 
 export function rememberCard(node: HTMLElement, slug: string) {
 	const r = node.getBoundingClientRect()
 	navMemory.lastCard = { slug, top: r.top, left: r.left, width: r.width, height: r.height }
+	navMemory.returnTo = window.location.pathname || '/'
 }

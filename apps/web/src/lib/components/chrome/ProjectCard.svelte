@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { loadWhenNear } from '$lib/actions/loadWhenNear'
+	import { sfx } from '$lib/sfx/palette'
 	import { tilt } from '$lib/actions/tilt'
 	import { subscribeMedia } from '$lib/motion'
 	import { collapseRange, mapRange, navMemory, rememberCard } from '$lib/scroll'
@@ -10,8 +11,9 @@
 	let {
 		project,
 		index = 0,
-		topOffset = 0
-	}: { project: ProjectCard; index?: number; topOffset?: number } = $props()
+		topOffset = 0,
+		wideFirst = true
+	}: { project: ProjectCard; index?: number; topOffset?: number; wideFirst?: boolean } = $props()
 
 	let hovering = $state(false)
 	let near = $state(false)
@@ -21,7 +23,7 @@
 	$effect(() => subscribeMedia('(prefers-reduced-motion: reduce)', (matches) => (reduced = matches)))
 
 	const isFirst = $derived(index === 0)
-	const m = $derived(metrics())
+	const m = $derived(metrics(wideFirst))
 	const cardHeight = $derived(isFirst ? m.first : m.normal)
 	const range = $derived(collapseRange(index, cardHeight, m, topOffset))
 	const collapse = $derived(mapRange(viewport.scrollY, range.start, range.end, 1, 0))
@@ -105,6 +107,7 @@
 			onclick={() => {
 				if (root) rememberCard(root, project.slug)
 				navMemory.workspaceScroll = viewport.scrollY
+				sfx.whooshUp()
 			}}
 		>
 			{@render body()}

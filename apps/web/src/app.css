@@ -1,31 +1,87 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/instrument-sans/wght.css';
+@import '@fontsource-variable/instrument-sans/wght-italic.css';
+@import '@fontsource/instrument-serif/latin-400.css';
+@import '@fontsource/instrument-serif/latin-400-italic.css';
+@import '@fontsource-variable/inconsolata/wdth.css';
 
+/*
+ * Theme tokens. Light is the default; dark is `[data-theme='dark']`, set before
+ * first paint by the script in app.html. The media query keeps no-JS visitors
+ * on their OS theme. Case-study pages override --bg/--fg/--accent inline.
+ */
 :root {
-	--bg: #0e1010;
-	--fg: #9feedc;
-	--accent: #9feedc;
-	--light: #9feedc;
-	--dark: #0e1010;
+	--bg: #f3f1ec;
+	--fg: #14181a;
+	--fg-muted: rgb(20 24 26 / 0.62);
+	--accent: #0b6b5a; /* text-safe on light (>= 5:1) */
+	--accent-fill: #9feedc; /* mint, for fills and glows only */
+	--light: #f3f1ec;
+	--dark: #14181a;
 	--darkest: #0e1010;
+
+	/* Floating chrome (nav, pills on the home shell). */
+	--surface: rgb(255 255 255 / 0.72);
+	--surface-hover: rgb(255 255 255 / 0.92);
+	--surface-border: rgb(0 0 0 / 0.08);
+	--surface-shadow: 0 8px 24px rgb(20 24 26 / 0.08);
+	--surface-blur: 18px;
+	--rule: rgb(20 24 26 / 0.12);
+
+	/* Dark glass chrome that sits over case-study imagery. Theme independent. */
 	--chrome: rgba(50, 50, 50, 0.6);
 	--chrome-hover: rgba(60, 60, 60, 0.9);
 	--chrome-muted: rgba(120, 120, 120, 0.9);
 	--chrome-ink: #fff;
 	--scrim: rgb(0 0 0 / 0.6);
-	--scroll-track: #222;
-	--scroll-thumb: #666;
+
+	--scroll-track: #e4e1da;
+	--scroll-thumb: #b9b5ab;
 	--ease: cubic-bezier(0.33, 1, 0.68, 1);
 	--ease-enter: cubic-bezier(0.81, 0.03, 0.06, 1);
 	--home-stagger: 140ms;
 	--home-max: 120rem;
 	--home-pad-x: 1.5rem;
 	--home-gap: 1rem;
-	--home-feed-max: calc(
-		(var(--home-max) - 2 * var(--home-pad-x) - 8 * var(--home-gap)) * 7 / 9 + 6 * var(--home-gap)
-	);
-	/* Settled rail width at 120rem; leftover space is for centering the feed. */
-	--home-rail-max: 24.1rem;
+	--page-max: 88rem;
+	color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+	--bg: #0e1010;
+	--fg: #e9efed;
+	--fg-muted: rgb(233 239 237 / 0.6);
+	--accent: #9feedc;
+	--accent-fill: #9feedc;
+	--light: #9feedc;
+	--dark: #0e1010;
+	--darkest: #0e1010;
+	--surface: rgb(28 32 32 / 0.66);
+	--surface-hover: rgb(40 46 46 / 0.9);
+	--surface-border: rgb(255 255 255 / 0.1);
+	--surface-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+	--rule: rgb(233 239 237 / 0.14);
+	--scroll-track: #222;
+	--scroll-thumb: #666;
 	color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) {
+		--bg: #0e1010;
+		--fg: #e9efed;
+		--fg-muted: rgb(233 239 237 / 0.6);
+		--accent: #9feedc;
+		--light: #9feedc;
+		--surface: rgb(28 32 32 / 0.66);
+		--surface-hover: rgb(40 46 46 / 0.9);
+		--surface-border: rgb(255 255 255 / 0.1);
+		--surface-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+		--rule: rgb(233 239 237 / 0.14);
+		--scroll-track: #222;
+		--scroll-thumb: #666;
+		color-scheme: dark;
+	}
 }
 
 @property --cursor-accent {
@@ -41,22 +97,47 @@
 }
 
 @theme {
-	--font-sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
-	--font-mono: 'Inconsolata', ui-monospace, monospace;
+	--font-sans: 'Instrument Sans Variable', 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+	--font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+	--font-mono: 'Inconsolata Variable', 'Inconsolata', ui-monospace, monospace;
+
 	--color-canvas: var(--bg);
 	--color-ink: var(--fg);
+	--color-muted: var(--fg-muted);
 	--color-accent: var(--accent);
+	--color-accent-fill: var(--accent-fill);
 	--color-light: var(--light);
 	--color-dark: var(--dark);
 	--color-darkest: var(--darkest);
+	--color-rule: var(--rule);
+	--color-surface: var(--surface);
 	--color-chrome: var(--chrome);
 	--color-chrome-hover: var(--chrome-hover);
 	--color-chrome-muted: var(--chrome-muted);
 	--color-chrome-ink: var(--chrome-ink);
 	--color-scrim: var(--scrim);
+
 	--radius-card: 1.25rem;
 	--radius-home-card: 1.5rem;
 	--radius-media: 0.75rem;
+
+	/* Editorial type scale: serif for display, sans for reading, mono for labels. */
+	--text-display: clamp(3.25rem, 2rem + 6.4vw, 8rem);
+	--text-display--line-height: 0.94;
+	--text-display--letter-spacing: -0.03em;
+	--text-h1: clamp(2.5rem, 1.6rem + 3.6vw, 5rem);
+	--text-h1--line-height: 1;
+	--text-h1--letter-spacing: -0.025em;
+	--text-h2: clamp(1.875rem, 1.3rem + 2vw, 3.25rem);
+	--text-h2--line-height: 1.05;
+	--text-h2--letter-spacing: -0.02em;
+	--text-h3: clamp(1.25rem, 1.05rem + 0.8vw, 1.75rem);
+	--text-h3--line-height: 1.2;
+	--text-lead: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+	--text-lead--line-height: 1.4;
+	--text-label: 0.75rem;
+	--text-label--line-height: 1.2;
+	--text-label--letter-spacing: 0.06em;
 }
 
 html,
@@ -72,10 +153,10 @@ body {
 	font-size: 16px;
 	letter-spacing: -0.01em;
 	-webkit-font-smoothing: antialiased;
-	text-rendering: geometricPrecision;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	user-select: none;
+	text-rendering: optimizeLegibility;
+	transition:
+		background-color 300ms var(--ease),
+		color 300ms var(--ease);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -96,37 +177,41 @@ body {
 }
 
 ::selection {
-	background: var(--bg);
-	color: #e08925;
+	background: #e08925;
+	color: #0e1010;
 }
 
-p,
-.home-rail {
+.font-label {
 	font-family: var(--font-mono);
-	font-optical-sizing: auto;
-	font-style: normal;
-	font-variation-settings: 'wdth' 100;
+	font-size: var(--text-label);
+	letter-spacing: var(--text-label--letter-spacing);
+	text-transform: uppercase;
 }
 
-.home-shell {
-	width: min(1985px, calc(100% - 2 * var(--home-pad-x)));
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+.skip-link {
+	position: fixed;
+	left: 1rem;
+	top: 1rem;
+	z-index: 100;
+	padding: 0.5rem 0.9rem;
+	border-radius: 999px;
+	background: var(--fg);
+	color: var(--bg);
+	transform: translateY(-200%);
+}
+.skip-link:focus {
+	transform: none;
+}
+
+.page-shell {
+	width: min(var(--page-max), calc(100% - 2 * var(--home-pad-x)));
 	margin-inline: auto;
-}
-
-@media (min-width: 120rem) {
-	.home-shell {
-		grid-template-columns: var(--home-rail-max) minmax(0, 1fr);
-		column-gap: 0;
-	}
-
-	.home-rail {
-		grid-column: 1;
-		width: 100%;
-	}
-
-	.home-feed {
-		grid-column: 2;
-	}
 }
 
 @layer base {
@@ -136,25 +221,10 @@ p,
 	}
 }
 
-a,
-input,
-textarea,
-[contenteditable='true'] {
-	-webkit-user-select: text;
-	user-select: text;
-}
-
 img,
 video {
 	max-width: 100%;
 	display: block;
-	-webkit-user-drag: none;
-	user-select: none;
-	-webkit-touch-callout: none;
-}
-
-img {
-	pointer-events: none;
 }
 
 .close-btn {
@@ -193,47 +263,21 @@ img {
 		opacity 400ms var(--ease);
 }
 
-.home-rail,
-.home-feed {
-	animation: home-enter 700ms var(--ease-enter) backwards;
-}
-
-.home-feed {
-	animation-delay: var(--home-stagger);
-}
-
-@media (min-width: 1024px) {
-	.home-feed {
-		justify-self: center;
-		width: 100%;
-		max-width: var(--home-feed-max);
+@keyframes rise {
+	from {
+		opacity: 0;
+		transform: translateY(18px);
 	}
 }
 
-/* 404 game: full-bleed stage under the rail on small screens. */
-@media (max-width: 1023px) {
-	.home-shell--nope {
-		width: 100%;
-		margin-left: 0;
-		margin-right: 0;
-		display: block;
-		min-height: 100dvh;
-		min-height: 100svh;
-	}
-	.home-shell--nope .home-rail {
-		position: relative;
-		z-index: 5;
-		padding-left: 1.5rem;
-		padding-right: 1.5rem;
-	}
-	.home-feed--nope {
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-	}
-	.home-feed--nope > :global(*) {
-		pointer-events: auto;
-	}
+/* Staggered entrance. Held back while the intro is up, then plays when it ends. */
+.reveal {
+	animation: rise 800ms var(--ease-enter) backwards;
+	animation-delay: calc(var(--i, 0) * 90ms);
+}
+html.intro-pending .reveal {
+	animation: none;
+	opacity: 0;
 }
 
 @keyframes home-enter {

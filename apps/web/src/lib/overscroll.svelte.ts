@@ -1,4 +1,5 @@
 import { clamp } from './scroll'
+import { sfx } from './sfx/palette'
 
 const CLOSE_THRESHOLD = 7500
 const CLOSE_TICK = CLOSE_THRESHOLD / 60
@@ -52,7 +53,9 @@ export function attachOverscroll(scroller: HTMLElement) {
 		const done = edge === 'top' ? 'topDone' : 'bottomDone'
 		overscroll[started] = true
 		overscroll[edge] = clamp(overscroll[edge] + delta, 0, CLOSE_THRESHOLD)
+		sfx.pull(overscroll[edge] / CLOSE_THRESHOLD)
 		if (overscroll[edge] >= CLOSE_THRESHOLD) {
+			sfx.thud()
 			complete = true
 			overscroll[edge] = CLOSE_THRESHOLD
 			overscroll[done] = true

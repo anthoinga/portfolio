@@ -2,34 +2,72 @@
 	import '../app.css'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { page } from '$app/state'
+	import { onMount } from 'svelte'
 	import CursorTakeover from '$lib/components/chrome/CursorTakeover.svelte'
+	import Footer from '$lib/components/chrome/Footer.svelte'
 	import Header from '$lib/components/chrome/Header.svelte'
-	import HomeRail from '$lib/components/chrome/HomeRail.svelte'
 	import Seo from '$lib/components/chrome/Seo.svelte'
+	import SiteNav from '$lib/components/chrome/SiteNav.svelte'
+	import { closeIntro, intro, startIntro } from '$lib/intro.svelte'
 	import { nopeChrome } from '$lib/nopeChrome.svelte'
 	import { bindScroller, viewport } from '$lib/scrollRoot.svelte'
 	import { attachOverscroll, bottomProgress, consumeOverscroll, overscroll, topProgress } from '$lib/overscroll.svelte'
 	import { navMemory } from '$lib/scroll'
+	import { unlockAudio } from '$lib/sfx/engine'
+	import { sfx } from '$lib/sfx/palette'
+	import { loadSoundPreference } from '$lib/sfx/sound.svelte'
+	import { syncTheme } from '$lib/theme.svelte'
 	import type { LayoutData } from './$types'
 
 	let { children, data }: { children: import('svelte').Snippet; data: LayoutData } = $props()
 
 	const pathname = $derived(page.url.pathname)
 	const onProject = $derived(pathname.startsWith('/projects/'))
-	const onHome = $derived(pathname === '/')
 	const is404 = $derived(page.status === 404)
-	const showShell = $derived(onHome || is404)
-	const railFaded = $derived(is404 && !nopeChrome.onTitle)
+	const navFaded = $derived(is404 && !nopeChrome.onTitle)
 
-	afterNavigate(() => {
+	onMount(() => {
+		syncTheme()
+		loadSoundPreference()
+		void startIntro()
+		// Browsers only allow audio from a gesture: unlock on the first one.
+		const unlock = () => void unlockAudio()
+		window.addEventListener('pointerdown', unlock, { once: true })
+		window.addEventListener('keydown', unlock, { once: true })
+		return () => {
+			window.removeEventListener('pointerdown', unlock)
+			window.removeEventListener('keydown', unlock)
+		}
+	})
+
+	let bottomArmed = true
+
+	afterNavigate(({ from }) => {
+		bottomArmed = true
 		if (onProject) return
-		const y = navMemory.workspaceScroll
+		// Only coming back from a case study restores the old position.
+		const y = from?.url.pathname.startsWith('/projects/') ? navMemory.workspaceScroll : 0
 		const apply = () => {
 			if (viewport.scroller) viewport.scroller.scrollTop = y
 			viewport.scrollY = y
 		}
 		apply()
 		requestAnimationFrame(apply)
+	})
+
+	// A soft thud on reaching the very bottom of a page; re-arms after scrolling back up.
+	$effect(() => {
+		const y = viewport.scrollY
+		const el = viewport.scroller
+		if (!el || onProject) return
+		const max = el.scrollHeight - el.clientHeight
+		if (max < 120) return
+		if (bottomArmed && max - y <= 2) {
+			bottomArmed = false
+			sfx.thud()
+		} else if (!bottomArmed && max - y > 200) {
+			bottomArmed = true
+		}
 	})
 
 	$effect(() => {
@@ -43,27 +81,21 @@
 		if (!overscroll.topDone && !overscroll.bottomDone) return
 		const hold = window.setTimeout(() => {
 			if (consumeOverscroll('top') || consumeOverscroll('bottom')) {
-				void goto('/', { noScroll: true })
+				sfx.whooshDown()
+				void goto(navMemory.returnTo, { noScroll: true })
 			}
 		}, 520)
 		return () => window.clearTimeout(hold)
 	})
-
-	function lockCopy(event: Event) {
-		const t = event.target
-		if (t instanceof Element && t.closest('a, input, textarea, [contenteditable="true"]')) return
-		event.preventDefault()
-	}
 </script>
 
-<svelte:window
-	oncontextmenu={(e) => e.preventDefault()}
-	ondragstart={(e) => e.preventDefault()}
-	oncopy={lockCopy}
-	oncut={lockCopy}
-/>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <Seo settings={data.settings} siteUrl={data.siteUrl} />
+
+{#if !onProject}
+	<SiteNav faded={navFaded} dark={is404} />
+{/if}
 
 <div class="scroll-root" use:bindScroller>
 	{#if onProject}
@@ -74,18 +106,34 @@
 			overscrollBottomStarted={overscroll.bottomStarted}
 		/>
 	{/if}
-	{#if showShell}
-		<main
-			class="home-shell relative z-[1] grid gap-4 text-chrome-ink lg:grid-cols-9"
-			class:home-shell--nope={is404}
-		>
-			<HomeRail settings={data.settings} faded={railFaded} lists={!is404} bio={!is404} />
-			<div class="home-feed min-w-0 lg:col-span-7" class:home-feed--nope={is404}>
-				{@render children()}
-			</div>
-		</main>
-	{:else}
-		{@render children()}
+	{@render children()}
+	{#if !onProject && !is404}
+		<Footer settings={data.settings} />
 	{/if}
 </div>
 <CursorTakeover />
+
+<!-- Painted before first paint (see app.html) for first-time visitors; the terminal loads into it. -->
+<div class="intro-shell">
+	{#if intro.Component}
+		<intro.Component onclose={closeIntro} />
+	{/if}
+</div>
+
+<style>
+	.intro-shell {
+		display: none;
+	}
+	:global(html.intro-pending) .intro-shell {
+		display: block;
+		position: fixed;
+		inset: 0;
+		z-index: 70;
+		background: var(--bg);
+	}
+	/* The page waits underneath: hidden from sight and from assistive tech until the intro ends. */
+	:global(html.intro-pending) .scroll-root,
+	:global(html.intro-pending) :global(.site-nav) {
+		visibility: hidden;
+	}
+</style>

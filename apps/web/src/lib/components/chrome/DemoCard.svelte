@@ -14,18 +14,27 @@
 	let {
 		demo,
 		index = 0,
-		topOffset = 0
-	}: { demo: UiDemo; index?: number; topOffset?: number } = $props()
+		topOffset = 0,
+		wideFirst = true,
+		sticky = true
+	}: {
+		demo: UiDemo
+		index?: number
+		topOffset?: number
+		wideFirst?: boolean
+		/** `false` renders a plain tile that does not collapse on scroll. */
+		sticky?: boolean
+	} = $props()
 
 	let weatherOpen = $state(false)
 	let reduced = $state(false)
 
 	$effect(() => subscribeMedia('(prefers-reduced-motion: reduce)', (matches) => (reduced = matches)))
 
-	const m = $derived(metrics())
+	const m = $derived(metrics(wideFirst))
 	const cardHeight = $derived(m.normal)
 	const range = $derived(collapseRange(index, cardHeight, m, topOffset))
-	const collapse = $derived(mapRange(viewport.scrollY, range.start, range.end, 1, 0))
+	const collapse = $derived(sticky ? mapRange(viewport.scrollY, range.start, range.end, 1, 0) : 1)
 	const visualH = $derived(Math.max(0, collapse * cardHeight))
 	const imageY = $derived(-(1 - collapse) * cardHeight)
 	const surface = $derived(projectSurface(demo))
@@ -39,7 +48,12 @@
 	)
 </script>
 
-<div class="pointer-events-none sticky top-4 overflow-hidden" style:height="{cardHeight}px">
+<div
+	class="pointer-events-none overflow-hidden"
+	class:sticky={sticky}
+	class:top-4={sticky}
+	style:height="{cardHeight}px"
+>
 	<svelte:element
 		this={demo.href ? 'a' : 'div'}
 		class="pointer-events-auto relative block overflow-hidden rounded-home-card"

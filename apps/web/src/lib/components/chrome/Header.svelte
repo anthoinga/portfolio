@@ -2,6 +2,7 @@
 	import ScrollProgressRing from './ScrollProgressRing.svelte'
 	import Pill from '$lib/components/ui/Pill.svelte'
 	import IconClose from '$lib/components/ui/IconClose.svelte'
+	import { navMemory } from '$lib/scroll'
 
 	let {
 		overscrollTop = 0,
@@ -20,10 +21,10 @@
 	class="pointer-events-none sticky top-0 z-20 flex items-start px-6 pt-6 pb-4 text-chrome-ink 2xl:px-16"
 >
 	<Pill
-		href="/"
+		href={navMemory.returnTo}
 		class="close-btn cursor-pointer p-2"
 		style="opacity:{overscrollTopStarted ? 0 : 1}; transition: opacity 200ms var(--ease)"
-		aria-label="Back to all projects"
+		aria-label="Close case study"
 	>
 		<IconClose />
 	</Pill>

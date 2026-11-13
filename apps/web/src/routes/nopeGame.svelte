@@ -43,7 +43,7 @@
 	})
 </script>
 
-<div class="galaga" class:is-title={onTitle} bind:this={root}>
+<div id="main" class="galaga" class:is-title={onTitle} bind:this={root}>
 	<div class="fx edge" bind:this={edge}></div>
 	<div class="fx flash" bind:this={flash}></div>
 	<canvas class="bg" bind:this={bg} aria-hidden="true"></canvas>
@@ -121,15 +121,13 @@
 		height: 100%;
 		width: 100%;
 		min-height: 100dvh;
-		background: transparent;
+		/* The game is always dark, whatever theme the rest of the site is in. */
+		background: #0e1010;
 		color: var(--ink);
 		font-family: var(--font-mono);
 		touch-action: manipulation;
 	}
-	.galaga.is-title {
-		background: var(--bg);
-	}
-	/* Escape the home-shell gutters and fill the device viewport on mobile. */
+	/* Fill the device viewport on mobile. */
 	@media (max-width: 1023px) {
 		.galaga {
 			position: fixed;

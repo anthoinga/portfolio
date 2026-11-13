@@ -5,6 +5,7 @@
 	let { settings, siteUrl }: { settings: SiteSettings; siteUrl: string } = $props()
 
 	const project = $derived((page.data as { project?: Project }).project)
+	const seo = $derived((page.data as { seo?: { title?: string; description?: string } }).seo)
 	const pathname = $derived(page.url.pathname)
 	const isError = $derived(page.status >= 400)
 	const isHome = $derived(!project && !isError && pathname === '/')
@@ -18,12 +19,15 @@
 	const title = $derived.by(() => {
 		if (isError) return page.status === 404 ? 'Not found' : 'Error'
 		if (project) return project.seoTitle || project.title
+		if (seo?.title) return `${seo.title} — ${settings?.name ?? ''}`.replace(/ — $/, '')
+		if (isHome && settings?.name) return settings.role ? `${settings.name} — ${settings.role}` : settings.name
 		return settings?.name ?? 'Portfolio'
 	})
 
 	const description = $derived.by(() => {
 		if (isError) return ''
 		if (project) return project.seoDescription || project.description || ''
+		if (seo?.description) return seo.description
 		return settings?.bio ?? ''
 	})
 

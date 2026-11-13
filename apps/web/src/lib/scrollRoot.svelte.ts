@@ -7,8 +7,8 @@ export const viewport = $state({
 	scroller: null as HTMLElement | null
 })
 
-export function metrics(): CardMetrics {
-	return cardMetrics(viewport.viewW, viewport.viewH)
+export function metrics(wideFirst = true): CardMetrics {
+	return cardMetrics(viewport.viewW, viewport.viewH, wideFirst)
 }
 
 export function bindScroller(node: HTMLElement) {
