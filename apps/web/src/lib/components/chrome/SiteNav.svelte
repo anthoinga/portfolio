@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state'
 	import { sound as soundAction } from '$lib/actions/sfx'
+	import AgentPanel from '$lib/components/chrome/AgentPanel.svelte'
 	import LogoMark from '$lib/components/ui/LogoMark.svelte'
 	import { currentLang, href, switchPath, t } from '$lib/i18n'
 	import { unlockAudio } from '$lib/sfx/engine'
@@ -20,6 +21,7 @@
 	].map((l) => ({ ...l, href: href(l.path, lang) })))
 
 	let menuOpen = $state(false)
+	let agentOpen = $state(false)
 	const path = $derived(page.url.pathname)
 	const otherLang = $derived(lang === 'es' ? 'en' : 'es')
 	const switchHref = $derived(switchPath(path, otherLang))
@@ -52,9 +54,17 @@
 		void unlockAudio().then(() => sfx.ready())
 	}
 
+	function toggleAgent() {
+		agentOpen = !agentOpen
+		sfx.pop(agentOpen ? 1 : 0.75)
+		history.replaceState(history.state, '', agentOpen ? '#agent' : location.pathname + location.search)
+	}
+
+	// A #agent link opens the panel, so it can be shared.
 	$effect(() => {
 		path
 		menuOpen = false
+		agentOpen = location.hash === '#agent'
 	})
 </script>
 
@@ -118,6 +128,17 @@
 			</svg>
 		</button>
 
+		<button
+			type="button"
+			class="agent-btn"
+			class:on={agentOpen}
+			aria-expanded={agentOpen}
+			onclick={toggleAgent}
+			use:soundAction={{ click: false }}
+		>
+			{t('agent.button')}
+		</button>
+
 		<a
 			href={switchHref}
 			class="lang-btn"
@@ -148,6 +169,10 @@
 			</svg>
 		</button>
 	</nav>
+
+	{#if agentOpen}
+		<AgentPanel onclose={() => { agentOpen = false; history.replaceState(history.state, '', location.pathname + location.search) }} />
+	{/if}
 
 	{#if menuOpen}
 		<div id="site-menu" class="sheet">
@@ -249,6 +274,27 @@
 		stroke-width: 1.75;
 		stroke-linecap: round;
 		stroke-linejoin: round;
+	}
+
+	.agent-btn {
+		height: 2.5rem;
+		padding: 0 0.85rem;
+		border: 0;
+		border-radius: 999px;
+		background: transparent;
+		color: var(--fg-muted);
+		font: inherit;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition:
+			background-color 200ms var(--ease),
+			color 200ms var(--ease);
+	}
+	.agent-btn:hover,
+	.agent-btn.on {
+		background: var(--surface-hover);
+		color: var(--fg);
 	}
 
 	.lang-btn {

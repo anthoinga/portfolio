@@ -1,3 +1,5 @@
+import { en, es, type MessageKey } from './messages'
+
 /** Pure language helpers: safe to import from server code and from components alike. */
 export type Lang = 'en' | 'es'
 
@@ -24,4 +26,11 @@ export function localePath(path: string, lang: Lang) {
 export function switchPath(pathname: string, to: Lang) {
 	const bare = pathname === '/es' ? '/' : pathname.startsWith('/es/') ? pathname.slice(3) : pathname
 	return localePath(bare, to)
+}
+
+/** Looks up an interface string. Pure: the language is always explicit. */
+export function translate(lang: Lang, key: MessageKey, vars?: Record<string, string>) {
+	let text: string = (lang === 'es' ? es : en)[key]
+	if (vars) for (const [k, v] of Object.entries(vars)) text = text.replace(`{${k}}`, v)
+	return text
 }

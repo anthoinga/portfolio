@@ -4,5 +4,184 @@
 	"installCommand": "pnpm install",
 	"buildCommand": "pnpm --filter web build",
 	"outputDirectory": "apps/web/build",
-	"ignoreCommand": "node apps/web/scripts/ignore-build.mjs"
+	"ignoreCommand": "node apps/web/scripts/ignore-build.mjs",
+	"cleanUrls": true,
+	"trailingSlash": false,
+	"rewrites": [
+		{
+			"source": "/api/v1/:name(profile|experience|skills|projects|playground|services)",
+			"has": [
+				{
+					"type": "query",
+					"key": "lang",
+					"value": "es"
+				}
+			],
+			"destination": "/es/api/v1/:name.json"
+		},
+		{
+			"source": "/api/v1/:name(profile|experience|skills|projects|playground|services)",
+			"destination": "/api/v1/:name.json"
+		},
+		{
+			"source": "/",
+			"has": [
+				{
+					"type": "header",
+					"key": "accept",
+					"value": "(.*)text/markdown(.*)"
+				}
+			],
+			"destination": "/index.md"
+		},
+		{
+			"source": "/es",
+			"has": [
+				{
+					"type": "header",
+					"key": "accept",
+					"value": "(.*)text/markdown(.*)"
+				}
+			],
+			"destination": "/es/index.md"
+		},
+		{
+			"source": "/:path((?!api/|_app/|\\.well-known/)[^.]*)",
+			"has": [
+				{
+					"type": "header",
+					"key": "accept",
+					"value": "(.*)text/markdown(.*)"
+				}
+			],
+			"destination": "/:path.md"
+		},
+		{
+			"source": "/",
+			"has": [
+				{
+					"type": "query",
+					"key": "mode",
+					"value": "agent"
+				}
+			],
+			"destination": "/index.md"
+		},
+		{
+			"source": "/es",
+			"has": [
+				{
+					"type": "query",
+					"key": "mode",
+					"value": "agent"
+				}
+			],
+			"destination": "/es/index.md"
+		},
+		{
+			"source": "/:path((?!api/|_app/|\\.well-known/)[^.]*)",
+			"has": [
+				{
+					"type": "query",
+					"key": "mode",
+					"value": "agent"
+				}
+			],
+			"destination": "/:path.md"
+		}
+	],
+	"headers": [
+		{
+			"source": "/llms.txt",
+			"headers": [
+				{
+					"key": "Content-Type",
+					"value": "text/plain; charset=utf-8"
+				},
+				{
+					"key": "Access-Control-Allow-Origin",
+					"value": "*"
+				}
+			]
+		},
+		{
+			"source": "/es/llms.txt",
+			"headers": [
+				{
+					"key": "Content-Type",
+					"value": "text/plain; charset=utf-8"
+				},
+				{
+					"key": "Access-Control-Allow-Origin",
+					"value": "*"
+				}
+			]
+		},
+		{
+			"source": "/(.*)\\.md",
+			"headers": [
+				{
+					"key": "Content-Type",
+					"value": "text/markdown; charset=utf-8"
+				},
+				{
+					"key": "Access-Control-Allow-Origin",
+					"value": "*"
+				}
+			]
+		},
+		{
+			"source": "/openapi.json",
+			"headers": [
+				{
+					"key": "Access-Control-Allow-Origin",
+					"value": "*"
+				}
+			]
+		},
+		{
+			"source": "/api/v1/(.*)",
+			"headers": [
+				{
+					"key": "Access-Control-Allow-Origin",
+					"value": "*"
+				},
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, s-maxage=3600"
+				}
+			]
+		},
+		{
+			"source": "/.well-known/api-catalog",
+			"headers": [
+				{
+					"key": "Content-Type",
+					"value": "application/linkset+json"
+				},
+				{
+					"key": "Access-Control-Allow-Origin",
+					"value": "*"
+				}
+			]
+		},
+		{
+			"source": "/",
+			"headers": [
+				{
+					"key": "Link",
+					"value": "</llms.txt>; rel=\"llms\", </index.md>; rel=\"alternate\"; type=\"text/markdown\", </openapi.json>; rel=\"service-desc\"; type=\"application/vnd.oai.openapi+json\""
+				}
+			]
+		},
+		{
+			"source": "/:path((?!_app/|api/)[^.]*)",
+			"headers": [
+				{
+					"key": "Vary",
+					"value": "Accept"
+				}
+			]
+		}
+	]
 }

@@ -1,6 +1,6 @@
 import { page } from '$app/state'
-import { type Lang, localePath as localePathFor, pathLang } from './core'
-import { en, es, type MessageKey } from './messages'
+import { type Lang, localePath as localePathFor, pathLang, translate } from './core'
+import type { MessageKey } from './messages'
 
 export { HTML_LANG, isProjectPath, pathLang, switchPath, type Lang } from './core'
 export type { MessageKey }
@@ -12,9 +12,7 @@ export function currentLang(): Lang {
 }
 
 export function t(key: MessageKey, vars?: Record<string, string>, lang: Lang = currentLang()) {
-	let text: string = (lang === 'es' ? es : en)[key]
-	if (vars) for (const [k, v] of Object.entries(vars)) text = text.replace(`{${k}}`, v)
-	return text
+	return translate(lang, key, vars)
 }
 
 /** Picks the string for the current language from `{ en, es }`. */

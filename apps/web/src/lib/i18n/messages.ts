@@ -64,6 +64,19 @@ export const en = {
 	'contact.awards': 'Awards',
 	'contact.cv': 'CV (PDF)',
 
+	'agent.button': 'Agent',
+	'agent.title': 'Use this site from your agent',
+	'agent.body':
+		'Everything here is readable by AI agents and scripts: no key, no signup. Paste one of these into your agent, or copy a ready-made prompt.',
+	'agent.prompt': 'Copy a prompt',
+	'agent.promptText':
+		'Read {url}/llms.txt and tell me who Anthony Inga is, what he has built, and whether he would be a good fit for a design-engineering role at my company. Use the Markdown pages linked there if you need detail.',
+	'agent.cmdIndex': 'Everything as plain text',
+	'agent.cmdMarkdown': 'Any page as Markdown',
+	'agent.cmdApi': 'Structured profile (JSON)',
+	'agent.portal': 'Developer portal →',
+	'agent.close': 'Close',
+
 	'lang.suggest': 'Prefer to read this in Spanish?',
 	'lang.yes': 'Sí, en español',
 	'lang.no': 'No, thanks',
@@ -96,6 +109,7 @@ export const en = {
 	'intro.help.skills': 'what I design and build with',
 	'intro.help.services': 'ways to work together',
 	'intro.help.contact': 'say hello',
+	'intro.help.agent': 'use this site from your agent',
 	'intro.help.theme': 'toggle light / dark',
 	'intro.help.sound': 'on | off',
 	'intro.help.clear': 'clear the screen',
@@ -165,6 +179,19 @@ export const es = {
 	'contact.awards': 'Premios',
 	'contact.cv': 'CV (PDF)',
 
+	'agent.button': 'Agente',
+	'agent.title': 'Usa este sitio desde tu agente',
+	'agent.body':
+		'Todo lo que ves aquí lo pueden leer agentes de IA y scripts: sin key y sin registro. Pega uno de estos comandos en tu agente, o copia un prompt ya armado.',
+	'agent.prompt': 'Copiar un prompt',
+	'agent.promptText':
+		'Lee {url}/es/llms.txt y cuéntame quién es Anthony Inga, qué ha construido y si encajaría en un rol de design engineering en mi empresa. Si necesitas detalle, usa las páginas en Markdown que se enlazan ahí.',
+	'agent.cmdIndex': 'Todo en texto plano',
+	'agent.cmdMarkdown': 'Cualquier página en Markdown',
+	'agent.cmdApi': 'Perfil estructurado (JSON)',
+	'agent.portal': 'Portal para desarrolladores →',
+	'agent.close': 'Cerrar',
+
 	'lang.suggest': '¿Prefieres leer esto en español?',
 	'lang.yes': 'Sí, en español',
 	'lang.no': 'No, gracias',
@@ -197,6 +224,7 @@ export const es = {
 	'intro.help.skills': 'con qué diseño y construyo',
 	'intro.help.services': 'formas de trabajar juntos',
 	'intro.help.contact': 'escríbeme',
+	'intro.help.agent': 'usa este sitio desde tu agente',
 	'intro.help.theme': 'cambiar claro / oscuro',
 	'intro.help.sound': 'on | off',
 	'intro.help.clear': 'limpiar la pantalla',

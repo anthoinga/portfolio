@@ -31,6 +31,7 @@
 		{ id: 'skills', en: 'skills', es: 'habilidades', to: '/skills' },
 		{ id: 'services', en: 'services', es: 'servicios', to: '/work-with-me' },
 		{ id: 'contact', en: 'contact', es: 'contacto', to: '/contact' },
+		{ id: 'agent', en: 'agent', es: 'agente', to: '/developers' },
 		{ id: 'theme', en: 'theme', es: 'tema' },
 		{ id: 'sound', en: 'sound', es: 'sonido' },
 		{ id: 'clear', en: 'clear', es: 'limpiar' },
@@ -39,7 +40,7 @@
 	] as const
 	type CommandId = (typeof COMMANDS)[number]['id']
 
-	const HELP_IDS: CommandId[] = ['work', 'playground', 'skills', 'services', 'contact', 'theme', 'sound', 'clear', 'enter']
+	const HELP_IDS: CommandId[] = ['work', 'playground', 'skills', 'services', 'contact', 'agent', 'theme', 'sound', 'clear', 'enter']
 	const nameOf = (id: CommandId) => COMMANDS.find((c) => c.id === id)![lang]
 	const resolve = (word: string) =>
 		COMMANDS.find((c) => c.en === word || c.es === word) ??

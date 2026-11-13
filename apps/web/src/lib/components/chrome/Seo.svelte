@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state'
-	import { pathLang, switchPath } from '$lib/i18n/core'
+	import { HTML_LANG, pathLang, switchPath } from '$lib/i18n/core'
 	import type { Project, SiteSettings } from '$lib/sanity/types'
 
 	let { settings, siteUrl }: { settings: SiteSettings; siteUrl: string } = $props()
@@ -34,6 +34,10 @@
 
 	const lang = $derived(pathLang(pathname))
 	const canonical = $derived(`${siteUrl}${pathname === '/' ? '/' : pathname}`)
+	/** The page's URL without extension, so `.md` can be added: `/` and `/es` are `index`. */
+	const mdBase = $derived(
+		pathname === '/' ? `${siteUrl}/index` : pathname === '/es' ? `${siteUrl}/es/index` : `${siteUrl}${pathname}`
+	)
 	const alternates = $derived({
 		en: `${siteUrl}${switchPath(pathname, 'en')}`,
 		es: `${siteUrl}${switchPath(pathname, 'es')}`
@@ -50,19 +54,67 @@
 		return ''
 	})
 
-	const personJson = $derived.by(() => {
-		if (!isHome || !settings?.name) return ''
+	/** Structured data: the person everywhere they matter, plus the page's own entity. */
+	const jsonLd = $derived.by(() => {
+		if (isError || !settings?.name) return ''
+		const personId = `${siteUrl}/#person`
 		const sameAs = [settings.linkedin, settings.github].filter(Boolean) as string[]
-		const data: Record<string, unknown> = {
-			'@context': 'https://schema.org',
+		const person: Record<string, unknown> = {
 			'@type': 'Person',
+			'@id': personId,
 			name: settings.name,
-			url: siteUrl
+			url: siteUrl,
+			knowsLanguage: ['en', 'es'],
+			knowsAbout: ['Product design', 'Design systems', 'Prototyping', 'Front-end engineering', 'Motion design']
 		}
-		if (settings.role) data.jobTitle = settings.role
-		if (settings.email) data.email = settings.email
-		if (sameAs.length) data.sameAs = sameAs
-		return JSON.stringify(data)
+		if (settings.role) person.jobTitle = settings.role
+		if (settings.bio) person.description = settings.bio
+		if (settings.email) person.email = settings.email
+		if (sameAs.length) person.sameAs = sameAs
+		if (settings.awards?.length) {
+			person.award = settings.awards.map((a) => `${a.org}${a.role ? ` (${a.role})` : ''}`)
+		}
+		const inLanguage = HTML_LANG[lang]
+
+		if (isHome) {
+			return JSON.stringify({
+				'@context': 'https://schema.org',
+				'@graph': [
+					person,
+					{
+						'@type': 'WebSite',
+						'@id': `${siteUrl}/#website`,
+						url: siteUrl,
+						name: settings.name,
+						inLanguage: ['en', 'es-PE'],
+						author: { '@id': personId }
+					},
+					{
+						'@type': 'ProfilePage',
+						'@id': `${canonical}#profile`,
+						url: canonical,
+						inLanguage,
+						mainEntity: { '@id': personId }
+					}
+				]
+			})
+		}
+		if (project && !project.hidden) {
+			const work: Record<string, unknown> = {
+				'@type': 'CreativeWork',
+				'@id': `${canonical}#work`,
+				url: canonical,
+				name: project.title,
+				description: description || undefined,
+				inLanguage: 'en',
+				author: { '@id': personId },
+				keywords: project.tags?.join(', ') || undefined,
+				image: image || undefined
+			}
+			if (project.year) work.dateCreated = String(project.year)
+			return JSON.stringify({ '@context': 'https://schema.org', '@graph': [person, work] })
+		}
+		return ''
 	})
 </script>
 
@@ -99,7 +151,12 @@
 			<meta name="twitter:image" content={image} />
 		{/if}
 	{/if}
-	{#if personJson}
-		{@html `<script type="application/ld+json">${personJson.replace(/</g, '\\u003c')}</script>`}
+	{#if jsonLd}
+		{@html `<script type="application/ld+json">${jsonLd.replace(/</g, '\\u003c')}</script>`}
 	{/if}
+	{#if !isError}
+		<link rel="alternate" type="text/markdown" href={`${mdBase}.md`} />
+	{/if}
+	<link rel="llms" href={lang === 'es' ? '/es/llms.txt' : '/llms.txt'} type="text/plain" title="LLM context" />
+	<link rel="help" href={lang === 'es' ? '/es/developers' : '/developers'} />
 </svelte:head>
