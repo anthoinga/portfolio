@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
+	import { t } from '$lib/i18n'
 	import { subscribeMedia } from '$lib/motion'
 	import photo from '$lib/assets/dither/01.jpg?url'
 
@@ -343,7 +344,6 @@
 		onpointerleave={onLeave}
 		onpointerdown={onPointerDown}
 		aria-pressed={open}
-		aria-label="{copy.title}. {finePointer ? 'Hover to reveal' : 'Tap to reveal'}."
 	>
 		<canvas class="layer" use:canvasAction aria-hidden="true"></canvas>
 		<img class="photo" src={photoSrc} alt="" aria-hidden="true" style:opacity={photoOpacity} />
@@ -353,6 +353,7 @@
 			<span class="title">{copy.title}</span>
 			<span class="body">{copy.body}</span>
 		</span>
+		<span class="sr-only">{finePointer ? t('playground.hover') : t('playground.tap')}</span>
 	</button>
 </div>
 

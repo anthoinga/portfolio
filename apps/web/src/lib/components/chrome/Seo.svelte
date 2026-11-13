@@ -50,8 +50,8 @@
 			const src = project.ogImage?.url || project.poster?.url
 			return src ? abs(src) : ''
 		}
-		if (isHome) return abs('/og/home.png')
-		return ''
+		// Every other page falls back to the site card.
+		return abs('/og/home.png')
 	})
 
 	/** Structured data: the person everywhere they matter, plus the page's own entity. */

@@ -26,10 +26,11 @@ export const en = {
 	'nav.soundOn': 'Turn sound on',
 	'nav.soundOff': 'Turn sound off',
 	'nav.lang': 'Español',
-	'nav.langLabel': 'Leer en español',
+	'nav.langLabel': 'ES: leer en español',
 
 	'footer.email': 'Email',
 	'footer.cv': 'CV',
+	'footer.privacy': 'Privacy',
 
 	'project.close': 'Close case study',
 	'project.next': 'Next case study',
@@ -44,6 +45,10 @@ export const en = {
 	'playground.lead':
 		'Small, self-contained experiments. They are not client work. Each one tests a single question about how an interface should feel. Press, drag and tap them.',
 	'playground.testing': 'Testing',
+	'playground.visit': 'Visit the {title} demo (opens in a new tab)',
+	'playground.demo': '{title} demo',
+	'playground.hover': 'Hover to reveal.',
+	'playground.tap': 'Tap to reveal.',
 
 	'skills.label': 'Skills',
 	'skills.title': 'Design and engineering, in one pair of hands',
@@ -141,10 +146,11 @@ export const es = {
 	'nav.soundOn': 'Activar sonido',
 	'nav.soundOff': 'Silenciar sonido',
 	'nav.lang': 'English',
-	'nav.langLabel': 'Read in English',
+	'nav.langLabel': 'EN: read in English',
 
 	'footer.email': 'Correo',
 	'footer.cv': 'CV',
+	'footer.privacy': 'Privacidad',
 
 	'project.close': 'Cerrar caso de estudio',
 	'project.next': 'Siguiente caso de estudio',
@@ -159,6 +165,10 @@ export const es = {
 	'playground.lead':
 		'Experimentos pequeños y autónomos, no son trabajo para clientes. Cada uno responde una sola pregunta sobre cómo debería sentirse una interfaz. Tócalos, arrástralos, juega con ellos.',
 	'playground.testing': 'Pregunta',
+	'playground.visit': 'Visitar la demo de {title} (se abre en una pestaña nueva)',
+	'playground.demo': 'Demo de {title}',
+	'playground.hover': 'Pasa el cursor para revelar.',
+	'playground.tap': 'Toca para revelar.',
 
 	'skills.label': 'Habilidades',
 	'skills.title': 'Diseño e ingeniería en las mismas manos',

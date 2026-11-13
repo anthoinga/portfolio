@@ -32,6 +32,7 @@
 		syncTheme()
 		loadSoundPreference()
 		void startIntro()
+		if (data.analytics === 'vercel') void import('@vercel/analytics').then((m) => m.inject())
 		// Browsers only allow audio from a gesture: unlock on the first one.
 		const unlock = () => void unlockAudio()
 		window.addEventListener('pointerdown', unlock, { once: true })

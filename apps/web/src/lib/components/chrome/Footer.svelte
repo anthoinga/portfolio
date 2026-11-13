@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { sound } from '$lib/actions/sfx'
-	import { t } from '$lib/i18n'
+	import { href, t } from '$lib/i18n'
 	import type { SiteSettings } from '$lib/sanity/types'
 
 	let { settings }: { settings: SiteSettings } = $props()
@@ -11,7 +11,8 @@
 			settings.email && { href: `mailto:${settings.email}`, label: t('footer.email') },
 			settings.linkedin && { href: settings.linkedin, label: 'LinkedIn' },
 			settings.github && { href: settings.github, label: 'GitHub' },
-			settings.cv && { href: settings.cv, label: t('footer.cv') }
+			settings.cv && { href: settings.cv, label: t('footer.cv') },
+			{ href: href('/privacy'), label: t('footer.privacy') }
 		].filter(Boolean) as { href: string; label: string }[]
 	)
 </script>

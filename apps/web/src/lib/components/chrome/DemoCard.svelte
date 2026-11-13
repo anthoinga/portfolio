@@ -6,6 +6,7 @@
 	import WeatherForecast from '$lib/components/chrome/WeatherForecast.svelte'
 	import dockBg from '$lib/assets/dock-bg.jpg?url'
 	import weatherBg from '$lib/assets/weather-mountains.jpg?url'
+	import { t } from '$lib/i18n'
 	import { subscribeMedia } from '$lib/motion'
 	import { collapseRange, mapRange } from '$lib/scroll'
 	import { metrics, viewport } from '$lib/scrollRoot.svelte'
@@ -61,7 +62,7 @@
 		target={demo.href ? '_blank' : undefined}
 		rel={demo.href ? 'noopener noreferrer' : undefined}
 		data-cursor={demo.href ? 'visit-demo' : undefined}
-		aria-label={demo.href ? 'Visit demo' : undefined}
+		aria-label={demo.href ? t('playground.visit', { title: demo.title }) : undefined}
 		style="{vars}; height:{visualH}px; background:{surface.background}; color:{surface.color}"
 	>
 		<div
@@ -70,7 +71,7 @@
 			style:height="{cardHeight}px"
 			style:transform="translateY({imageY}px)"
 			role="group"
-			aria-label="{demo.title} demo"
+			aria-label={t('playground.demo', { title: demo.title })}
 		>
 			<div
 				class="demo-stage"

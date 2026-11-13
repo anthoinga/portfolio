@@ -18,8 +18,11 @@ jobs:
         run: |
           SANITY_STUDIO_PROJECT_ID=ci000000 pnpm --filter studio validate
           pnpm --filter web verify:sanity
-      - name: Verify the agent-readable surface
+      - name: Serve the build, then check the agent surface, the browser and accessibility
         run: |
           pnpm --filter web exec vite preview --port 4173 --host 127.0.0.1 &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
           node apps/web/scripts/verify-agentic.mjs http://127.0.0.1:4173 --direct
+          npm i -g playwright@1.63.0
+          playwright install --with-deps chromium
+          NODE_PATH=$(npm root -g) node apps/web/scripts/smoke.mjs http://127.0.0.1:4173
