@@ -7,6 +7,8 @@
     "build": "pnpm --filter web build",
     "preview": "pnpm --filter web preview",
     "studio": "pnpm --filter studio dev",
-    "check": "pnpm build"
+    "check": "pnpm build",
+    "export:sanity": "pnpm --filter web export:sanity",
+    "verify:sanity": "pnpm --filter web verify:sanity"
   }
 }

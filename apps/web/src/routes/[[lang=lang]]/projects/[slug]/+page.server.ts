@@ -1,3 +1,4 @@
+import { pathLang } from '$lib/i18n/core'
 import { loadAllProjects, loadProjectBySlug } from '$lib/server/content'
 import { slugsForPrerender } from '$lib/nextProject'
 import type { EntryGenerator, PageServerLoad } from './$types'
@@ -11,7 +12,7 @@ export const entries: EntryGenerator = async () => {
 	])
 }
 
-export const load: PageServerLoad = async ({ params }) => {
-	const project = await loadProjectBySlug(params.slug)
+export const load: PageServerLoad = async ({ params, url }) => {
+	const project = await loadProjectBySlug(params.slug, pathLang(url.pathname))
 	return { project }
 }

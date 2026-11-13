@@ -1,7 +1,14 @@
+/**
+ * Spanish lives beside English as `fooEs` fields. With `$lang == "es"` a
+ * filled-in Spanish field wins; an empty one falls back to English, so a
+ * half-translated document never renders blank.
+ */
+const L = (field: string) => `select($lang == "es" => coalesce(${field}Es, ${field}), ${field})`
+
 export const siteSettingsQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0]{
   name,
-  role,
-  bio,
+  "role": ${L('role')},
+  "bio": ${L('bio')},
   email,
   github,
   linkedin,
@@ -14,10 +21,10 @@ const projectCardProjection = `
   _id,
   title,
   "slug": slug.current,
-  description,
+  "description": ${L('description')},
   tags,
   type,
-  scope,
+  "scope": ${L('scope')},
   year,
   weight,
   hidden,
@@ -27,14 +34,8 @@ const projectCardProjection = `
   "colorDark": coalesce(colorDark.hex, colorDark),
   "colorDarkest": coalesce(colorDarkest.hex, colorDarkest),
   "previewVideo": previewVideo.asset->{ "url": url },
-  "poster": {
-    "url": poster.asset->url,
-    "alt": poster.alt
-  },
-  "ogImage": {
-    "url": ogImage.asset->url,
-    "alt": ogImage.alt
-  }
+  "poster": select(defined(poster.asset) => { "url": poster.asset->url, "alt": poster.alt }),
+  "ogImage": select(defined(ogImage.asset) => { "url": ogImage.asset->url, "alt": ogImage.alt })
 `
 
 const nextProjectProjection = `
@@ -43,7 +44,7 @@ const nextProjectProjection = `
   "colorLight": coalesce(colorLight.hex, colorLight),
   "colorDark": coalesce(colorDark.hex, colorDark),
   "colorDarkest": coalesce(colorDarkest.hex, colorDarkest),
-  "poster": { "url": poster.asset->url, "alt": poster.alt }
+  "poster": select(defined(poster.asset) => { "url": poster.asset->url, "alt": poster.alt })
 `
 
 const bodyProjection = `
@@ -80,9 +81,15 @@ const projectFields = `
   "nextProject": nextProject->{
     ${nextProjectProjection}
   },
-  seoTitle,
-  seoDescription,
-  body[]{
+  "seoTitle": ${L('seoTitle')},
+  "seoDescription": ${L('seoDescription')},
+  "pageColor": coalesce(pageColor.hex, pageColor),
+  "colorStops": colorStops[]{ at, "color": coalesce(color.hex, color), when, line },
+  "brief": select($lang == "es" && defined(briefEs.paragraphs) => briefEs, brief){
+    paragraphs,
+    facts[]{ label, items }
+  },
+  "body": select($lang == "es" && count(bodyEs) > 0 => bodyEs, body)[]{
     ${bodyProjection}
   }
 `

@@ -24,9 +24,9 @@ export type SiteModel = {
 }
 
 export async function loadSiteModel(lang: Lang): Promise<SiteModel> {
-	const [settings, visible] = await Promise.all([loadSiteSettings(lang), loadVisibleProjects()])
+	const [settings, visible] = await Promise.all([loadSiteSettings(lang), loadVisibleProjects(lang)])
 	// Full bodies, so the Markdown for a case study contains the case study.
-	const projects = await Promise.all(visible.map((p) => loadProjectBySlug(p.slug)))
+	const projects = await Promise.all(visible.map((p) => loadProjectBySlug(p.slug, lang)))
 	const notes = playgroundNotes(lang)
 	return {
 		lang,

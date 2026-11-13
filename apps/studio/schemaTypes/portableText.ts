@@ -8,8 +8,11 @@ const captionFields = [
 	defineField({ name: 'overlay', type: 'boolean' }),
 	defineField({ name: 'topPadding', type: 'boolean' }),
 	defineField({ name: 'fillHeight', type: 'boolean' }),
-	defineField({ name: 'rowSpan', type: 'number' })
+	defineField({ name: 'rowSpan', type: 'number' }),
+	defineField({ name: 'stroke', type: 'boolean', description: 'Outline the media instead of filling it' })
 ]
+
+const isCopy = ({ parent }: { parent?: { kind?: string } }) => parent?.kind !== 'copy'
 
 export const mediaItem = defineType({
 	name: 'mediaItem',
@@ -19,14 +22,21 @@ export const mediaItem = defineType({
 		defineField({
 			name: 'kind',
 			type: 'string',
-			options: { list: ['image', 'video'], layout: 'radio' },
+			options: {
+				list: [
+					{ title: 'Image', value: 'image' },
+					{ title: 'Video', value: 'video' },
+					{ title: 'Text', value: 'copy' }
+				],
+				layout: 'radio'
+			},
 			initialValue: 'image'
 		}),
 		defineField({
 			name: 'image',
 			type: 'image',
 			options: { hotspot: true },
-			hidden: ({ parent }) => parent?.kind === 'video',
+			hidden: ({ parent }) => parent?.kind !== 'image' && parent?.kind != null,
 			fields: [{ name: 'alt', type: 'string' }]
 		}),
 		defineField({
@@ -41,11 +51,24 @@ export const mediaItem = defineType({
 			hidden: ({ parent }) => parent?.kind !== 'video',
 			fields: [{ name: 'alt', type: 'string' }]
 		}),
+		// Text-only cell: a heading and paragraphs set in the grid.
+		defineField({ name: 'heading', type: 'string', hidden: isCopy }),
+		defineField({
+			name: 'paragraphs',
+			type: 'array',
+			of: [defineArrayMember({ type: 'text', rows: 4 })],
+			hidden: isCopy
+		}),
+		defineField({ name: 'lead', type: 'boolean', description: 'Larger lead text', hidden: isCopy }),
+		defineField({ name: 'span', type: 'boolean', description: 'Span the full row', hidden: isCopy }),
 		...captionFields
 	],
 	preview: {
-		select: { title: 'title', label: 'label', media: 'image' },
-		prepare: ({ title, label, media }) => ({ title: title || label || 'Media', media })
+		select: { title: 'title', label: 'label', heading: 'heading', kind: 'kind', media: 'image' },
+		prepare: ({ title, label, heading, kind, media }) => ({
+			title: title || heading || label || (kind === 'copy' ? 'Text' : 'Media'),
+			media
+		})
 	}
 })
 
@@ -126,6 +149,7 @@ export const team = defineType({
 			of: [
 				{
 					type: 'object',
+					name: 'teamMember',
 					fields: [
 						{ name: 'name', type: 'string' },
 						{ name: 'position', type: 'string' }
@@ -148,6 +172,7 @@ export const listBlock = defineType({
 			of: [
 				{
 					type: 'object',
+					name: 'listItem',
 					fields: [
 						{ name: 'label', type: 'string' },
 						{ name: 'text', type: 'text', rows: 3 }
@@ -197,6 +222,7 @@ export const spacer = defineType({
 	name: 'spacer',
 	title: 'Spacer',
 	type: 'object',
-	fields: [],
-	preview: { prepare: () => ({ title: 'Spacer' }) }
+	// Sanity needs at least one field on an object; this note is for editors only.
+	fields: [defineField({ name: 'note', type: 'string', title: 'Note (not shown on the site)' })],
+	preview: { select: { subtitle: 'note' }, prepare: ({ subtitle }) => ({ title: 'Spacer', subtitle }) }
 })
