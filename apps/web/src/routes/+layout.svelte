@@ -6,8 +6,10 @@
 	import CursorTakeover from '$lib/components/chrome/CursorTakeover.svelte'
 	import Footer from '$lib/components/chrome/Footer.svelte'
 	import Header from '$lib/components/chrome/Header.svelte'
+	import LangSuggest from '$lib/components/chrome/LangSuggest.svelte'
 	import Seo from '$lib/components/chrome/Seo.svelte'
 	import SiteNav from '$lib/components/chrome/SiteNav.svelte'
+	import { HTML_LANG, currentLang, isProjectPath, t } from '$lib/i18n'
 	import { closeIntro, intro, startIntro } from '$lib/intro.svelte'
 	import { nopeChrome } from '$lib/nopeChrome.svelte'
 	import { bindScroller, viewport } from '$lib/scrollRoot.svelte'
@@ -22,7 +24,7 @@
 	let { children, data }: { children: import('svelte').Snippet; data: LayoutData } = $props()
 
 	const pathname = $derived(page.url.pathname)
-	const onProject = $derived(pathname.startsWith('/projects/'))
+	const onProject = $derived(isProjectPath(pathname))
 	const is404 = $derived(page.status === 404)
 	const navFaded = $derived(is404 && !nopeChrome.onTitle)
 
@@ -40,13 +42,18 @@
 		}
 	})
 
+	// Keep <html lang> right after client-side navigation (the server sets it for first loads).
+	$effect(() => {
+		document.documentElement.lang = HTML_LANG[currentLang()]
+	})
+
 	let bottomArmed = true
 
 	afterNavigate(({ from }) => {
 		bottomArmed = true
 		if (onProject) return
 		// Only coming back from a case study restores the old position.
-		const y = from?.url.pathname.startsWith('/projects/') ? navMemory.workspaceScroll : 0
+		const y = from && isProjectPath(from.url.pathname) ? navMemory.workspaceScroll : 0
 		const apply = () => {
 			if (viewport.scroller) viewport.scroller.scrollTop = y
 			viewport.scrollY = y
@@ -89,7 +96,7 @@
 	})
 </script>
 
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{t('common.skip')}</a>
 
 <Seo settings={data.settings} siteUrl={data.siteUrl} />
 
@@ -112,6 +119,9 @@
 	{/if}
 </div>
 <CursorTakeover />
+{#if !onProject && !is404}
+	<LangSuggest />
+{/if}
 
 <!-- Painted before first paint (see app.html) for first-time visitors; the terminal loads into it. -->
 <div class="intro-shell">

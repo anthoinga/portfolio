@@ -3,16 +3,19 @@
 	import ProjectCard from '$lib/components/chrome/ProjectCard.svelte'
 	import Button from '$lib/components/ui/Button.svelte'
 	import { sound } from '$lib/actions/sfx'
-	import { homeCopy as copy } from '$lib/data/home'
+	import { homeCopy } from '$lib/data/home'
+	import { currentLang, href } from '$lib/i18n'
 	import { uiDemos } from '$lib/data/uiDemos'
 	import { viewport } from '$lib/scrollRoot.svelte'
 	import type { PageData } from './$types'
 
 	let { data }: { data: PageData } = $props()
 
+	const lang = $derived(currentLang())
+	const copy = $derived(homeCopy[lang])
 	const featured = $derived(data.projects.slice(0, 3))
 	const teaser = uiDemos.slice(0, 2)
-	const lines = copy.headline.split('\n')
+	const lines = $derived(copy.headline.split('\n'))
 
 	// The sticky-collapse cards measure scroll position from the top of the feed.
 	let main: HTMLElement | undefined = $state()
@@ -46,8 +49,8 @@
 		</h1>
 		<p class="lead reveal" style="--i:2">{copy.lead}</p>
 		<div class="ctas reveal" style="--i:3">
-			<Button href="/work">{copy.ctaPrimary}</Button>
-			<Button href="/contact" variant="ghost">{copy.ctaSecondary}</Button>
+			<Button href={href('/work')}>{copy.ctaPrimary}</Button>
+			<Button href={href('/contact')} variant="ghost">{copy.ctaSecondary}</Button>
 		</div>
 	</section>
 
@@ -65,7 +68,7 @@
 	<section class="page-shell block" aria-labelledby="work-h">
 		<header class="row">
 			<h2 id="work-h" class="font-label">{copy.work.label}</h2>
-			<a href="/work" class="more" use:sound>{copy.work.all} →</a>
+			<a href={href('/work')} class="more" use:sound>{copy.work.all} →</a>
 		</header>
 		<div bind:this={feed} class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
 			{#each featured as project, i (project._id)}
@@ -77,7 +80,7 @@
 	<section class="page-shell block" aria-labelledby="play-h">
 		<header class="row">
 			<h2 id="play-h" class="font-label">{copy.playground.label}</h2>
-			<a href="/playground" class="more" use:sound>{copy.playground.all} →</a>
+			<a href={href('/playground')} class="more" use:sound>{copy.playground.all} →</a>
 		</header>
 		<p class="statement">{copy.playground.title}</p>
 		<div class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
@@ -106,8 +109,8 @@
 		<h2>{copy.cta.title}</h2>
 		<p>{copy.cta.body}</p>
 		<div class="ctas">
-			<Button href="/work-with-me">{copy.cta.primary}</Button>
-			<Button href="/contact" variant="ghost">{copy.cta.secondary}</Button>
+			<Button href={href('/work-with-me')}>{copy.cta.primary}</Button>
+			<Button href={href('/contact')} variant="ghost">{copy.cta.secondary}</Button>
 		</div>
 	</section>
 </main>

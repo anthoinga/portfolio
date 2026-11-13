@@ -1,20 +1,18 @@
 <script lang="ts">
 	import PageHeader from '$lib/components/ui/PageHeader.svelte'
 	import { skillGroups } from '$lib/data/skills'
+	import { currentLang, href, t } from '$lib/i18n'
 	import { sound } from '$lib/actions/sfx'
 
-	const hrefFor = (slug: string) => (slug.startsWith('/') ? slug : `/projects/${slug}`)
+	const groups = $derived(skillGroups(currentLang()))
+	const hrefFor = (slug: string) => href(slug.startsWith('/') ? slug : `/projects/${slug}`)
 </script>
 
 <main id="main">
 	<div class="page-shell">
-		<PageHeader
-			label="Skills"
-			title="Design and engineering, in one pair of hands"
-			lead="What I work with, grouped by the kind of problem it solves. Each group links to work that shows it in use."
-		/>
+		<PageHeader label={t('skills.label')} title={t('skills.title')} lead={t('skills.lead')} />
 		<ul class="groups">
-			{#each skillGroups as group, i (group.id)}
+			{#each groups as group, i (group.id)}
 				<li class="reveal" style="--i:{i}">
 					<h2>{group.title}</h2>
 					<p class="summary">{group.summary}</p>
@@ -22,7 +20,7 @@
 						{#each group.skills as skill (skill)}<li>{skill}</li>{/each}
 					</ul>
 					<p class="proof font-label">
-						<span>See it in</span>
+						<span>{t('skills.seeIn')}</span>
 						{#each group.proof as p (p.slug)}
 							<a href={hrefFor(p.slug)} use:sound>{p.label}</a>
 						{/each}

@@ -30,8 +30,11 @@ export function slugsForSitemap(projects: { slug: string; hidden: boolean }[]) {
 	return projects.filter((p) => !p.hidden).map((p) => p.slug)
 }
 
-export function sitemapUrls(base: string, slugs: string[]) {
-	return [base, ...slugs.map((slug) => `${base}/projects/${slug}`)]
+/** Site paths in English form; each is listed in both languages with hreflang alternates. */
+export const STATIC_PATHS = ['/', '/work', '/playground', '/skills', '/work-with-me', '/contact']
+
+export function sitemapPaths(slugs: string[]) {
+	return [...STATIC_PATHS, ...slugs.map((slug) => `/projects/${slug}`)]
 }
 
 export function slugsForPrerender(projects: { slug: string }[]) {

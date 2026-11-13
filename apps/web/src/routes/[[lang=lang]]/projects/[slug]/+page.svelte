@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { sound } from '$lib/actions/sfx'
+	import { currentLang, href, t } from '$lib/i18n'
 	import PortableBody from '$lib/components/content/PortableBody.svelte'
 	import { activePageColor, inkFor, PAGE_COLOR_LINE } from '$lib/pageColor'
 	import { createProjectMotion } from '$lib/projectHandoff.svelte'
@@ -121,6 +122,7 @@
 <article id="main"
 	bind:this={article}
 	class="project-article relative z-10 overflow-hidden rounded-card pb-24"
+	lang={currentLang() === 'es' ? 'en' : undefined}
 	data-type={project.type}
 	style="{projectCssVars(project)}; --bg:{background}; --fg:{shell}; background-color:{background}; color:{shell}; {motionStyle}"
 >
@@ -189,11 +191,11 @@
 	{#if project.nextProject}
 		<a
 			class="next project-copy"
-			href="/projects/{project.nextProject.slug}"
+			href={href(`/projects/${project.nextProject.slug}`)}
 			data-sveltekit-noscroll
 			use:sound
 		>
-			<span class="font-label">Next case study</span>
+			<span class="font-label" lang={currentLang() === 'es' ? 'es-PE' : undefined}>{t('project.next')}</span>
 			<span class="next-title">{project.nextProject.title}</span>
 			<span class="next-arrow" aria-hidden="true">→</span>
 		</a>

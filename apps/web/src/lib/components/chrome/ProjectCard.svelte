@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { loadWhenNear } from '$lib/actions/loadWhenNear'
+	import { href } from '$lib/i18n'
 	import { sfx } from '$lib/sfx/palette'
 	import { tilt } from '$lib/actions/tilt'
 	import { subscribeMedia } from '$lib/motion'
@@ -97,7 +98,7 @@
 
 		<a
 			bind:this={root}
-			href="/projects/{project.slug}"
+			href={href(`/projects/${project.slug}`)}
 			class="project-card-link relative block h-full"
 			data-cursor="case-study"
 			data-sveltekit-noscroll

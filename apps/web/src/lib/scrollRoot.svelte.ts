@@ -1,3 +1,4 @@
+import { isProjectPath } from './i18n/core'
 import { cardMetrics, navMemory, type CardMetrics } from './scroll'
 
 export const viewport = $state({
@@ -15,7 +16,7 @@ export function bindScroller(node: HTMLElement) {
 	viewport.scroller = node
 	const onScroll = () => {
 		viewport.scrollY = node.scrollTop
-		if (!window.location.pathname.startsWith('/projects/')) {
+		if (!isProjectPath(window.location.pathname)) {
 			navMemory.workspaceScroll = node.scrollTop
 		}
 	}

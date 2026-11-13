@@ -10,6 +10,8 @@ export type GalagaEls = {
 	flash: HTMLElement
 	pad: HTMLElement
 	onTitleChange: (onTitle: boolean) => void
+	/** Title-screen copy. Defaults to English. */
+	strings?: { title: string; start: string; startTouch: string }
 }
 
 export function mountGalaga(els: GalagaEls) {
@@ -989,10 +991,12 @@ export function mountGalaga(els: GalagaEls) {
 		text(`WAVE ${wave}`, COLS - 8, 0, 'hurt')
 	}
 	const TOUCH = matchMedia('(hover:none) and (pointer:coarse)').matches
-	const CTA = TOUCH ? 'TAP ANYWHERE TO START' : 'PRESS ANY KEY TO START'
+	const CTA = TOUCH
+		? (els.strings?.startTouch ?? 'TAP ANYWHERE TO START')
+		: (els.strings?.start ?? 'PRESS ANY KEY TO START')
 	const CTA_ROW = Math.floor(ROWS / 2) + 2
 	const TITLE = '404'
-	const SUB = 'THIS PAGE IS NOT HERE.'
+	const SUB = els.strings?.title ?? 'THIS PAGE IS NOT HERE.'
 	const SHIP_Y = ROWS - 1 - PLAYER_ROWS - 1
 	const TITLE_SHIP_Y = SHIP_Y + 2
 	const SHIP_MOVE_DUR = reduceMotion ? 0.2 : 0.85

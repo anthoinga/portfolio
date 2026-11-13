@@ -29,6 +29,12 @@ export const siteSettingsFixture: SiteSettings = {
 	]
 }
 
+/** Spanish overrides. Roles and award names stay in English, as they are on a Peruvian CV. */
+export const siteSettingsEs: Partial<SiteSettings> = {
+	role: 'Creative Developer',
+	bio: 'Creative developer que se mueve en la intersección entre diseño y tecnología. Me enfoco en la interacción humano-computadora, los medios y la cultura. Me gusta experimentar, salirme de lo convencional y meterme de lleno en el código cuando hace falta.'
+}
+
 const curbside: Project = {
 	_id: 'proj-curbside',
 	title: 'Curbside Pickup',

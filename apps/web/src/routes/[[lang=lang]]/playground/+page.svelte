@@ -2,11 +2,13 @@
 	import DemoCard from '$lib/components/chrome/DemoCard.svelte'
 	import PageHeader from '$lib/components/ui/PageHeader.svelte'
 	import { playgroundNotes } from '$lib/data/playground'
+	import { currentLang, t } from '$lib/i18n'
 	import { feedEndDemo, uiDemos } from '$lib/data/uiDemos'
 	import { viewport } from '$lib/scrollRoot.svelte'
 
 	const demos = [...uiDemos, feedEndDemo]
-	const noteFor = (id: string) => playgroundNotes.find((n) => n.id === id)
+	const notes = $derived(playgroundNotes(currentLang()))
+	const noteFor = (id: string) => notes.find((n) => n.id === id)
 
 	let main: HTMLElement | undefined = $state()
 	let feed: HTMLElement | undefined = $state()
@@ -30,11 +32,7 @@
 
 <main id="main" bind:this={main}>
 	<div class="page-shell">
-		<PageHeader
-			label="Playground"
-			title="Things I make to learn"
-			lead="Small, self-contained experiments. They are not client work. Each one tests a single question about how an interface should feel. Press, drag and tap them."
-		/>
+		<PageHeader label={t('playground.label')} title={t('playground.title')} lead={t('playground.lead')} />
 		<div bind:this={feed} class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
 			{#each demos as demo, i (demo.id)}
 				<DemoCard {demo} index={i} topOffset={feedTop} wideFirst={false} />
@@ -48,7 +46,7 @@
 					<li>
 						<h2>{demo.title}</h2>
 						<p>{n.note}</p>
-						<p class="testing"><span class="font-label">Testing</span> {n.testing}</p>
+						<p class="testing"><span class="font-label">{t('playground.testing')}</span> {n.testing}</p>
 						<p class="stack font-label">{n.stack.join(' · ')}</p>
 					</li>
 				{/if}

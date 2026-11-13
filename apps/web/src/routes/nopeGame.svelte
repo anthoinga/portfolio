@@ -1,5 +1,6 @@
 <script lang="ts">
 	import LogoMark from '$lib/components/ui/LogoMark.svelte'
+	import { t } from '$lib/i18n'
 	import { nopeChrome } from '$lib/nopeChrome.svelte'
 	import { mountGalaga } from './nopeGame.engine'
 
@@ -31,6 +32,11 @@
 			edge,
 			flash,
 			pad,
+			strings: {
+				title: t('notFound.title'),
+				start: t('notFound.start'),
+				startTouch: t('notFound.startTouch')
+			},
 			onTitleChange: (v) => {
 				onTitle = v
 				nopeChrome.onTitle = v

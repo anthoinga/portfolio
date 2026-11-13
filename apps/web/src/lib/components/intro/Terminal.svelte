@@ -1,44 +1,53 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
 	import { onMount, tick } from 'svelte'
+	import { currentLang, href, t, type Lang } from '$lib/i18n'
 	import { finishIntro } from '$lib/intro.svelte'
 	import { startDrone, unlockAudio } from '$lib/sfx/engine'
 	import { sfx } from '$lib/sfx/palette'
 	import { setSound, sound } from '$lib/sfx/sound.svelte'
-	import { theme, toggleTheme } from '$lib/theme.svelte'
+	import { toggleTheme } from '$lib/theme.svelte'
 
 	let { onclose }: { onclose: () => void } = $props()
 
 	type Line = { kind: 'cmd' | 'ok' | 'ready' | 'out' | 'err' | 'blank'; label?: string; text: string }
 
+	const lang: Lang = currentLang()
 	const PROMPT = 'anthony@inga ~ %'
 	const COMMAND = 'npx inga'
+
 	const BOOT: Line[] = [
-		{ kind: 'ok', label: 'designer', text: 'Persimmony · 7-Eleven R&D · Bottle Rocket' },
-		{ kind: 'ok', label: 'developer', text: 'Svelte · TypeScript · motion · prototypes' },
-		{ kind: 'ok', label: 'awards', text: 'W3 Visual & UX 2022 · W3 Best UX Practices 2021' },
-		{ kind: 'ok', label: 'status', text: 'open to design-engineering roles' },
-		{ kind: 'ready', label: 'ready', text: 'type help, or press ⏎ to enter' }
+		{ kind: 'ok', label: t('intro.designer'), text: 'Persimmony · 7-Eleven R&D · Bottle Rocket' },
+		{ kind: 'ok', label: t('intro.developer'), text: t('intro.developerText') },
+		{ kind: 'ok', label: t('intro.awards'), text: t('intro.awardsText') },
+		{ kind: 'ok', label: t('intro.status'), text: t('intro.statusText') },
+		{ kind: 'ready', label: t('intro.ready'), text: t('intro.readyText') }
 	]
-	const HELP: [string, string][] = [
-		['work', 'case studies'],
-		['playground', 'interface experiments'],
-		['skills', 'what I design and build with'],
-		['services', 'ways to work together'],
-		['contact', 'say hello'],
-		['theme', 'toggle light / dark'],
-		['sound', 'on | off'],
-		['clear', 'clear the screen'],
-		['enter', 'go to the site']
-	]
-	const ROUTES: Record<string, string> = {
-		work: '/work',
-		playground: '/playground',
-		skills: '/skills',
-		services: '/work-with-me',
-		contact: '/contact'
-	}
-	const NAMES = [...Object.keys(ROUTES), 'help', 'theme', 'sound', 'clear', 'enter']
+
+	/** Every command in both languages, so `work` and `trabajo` both run. */
+	const COMMANDS = [
+		{ id: 'work', en: 'work', es: 'trabajo', to: '/work' },
+		{ id: 'playground', en: 'playground', es: 'playground', to: '/playground' },
+		{ id: 'skills', en: 'skills', es: 'habilidades', to: '/skills' },
+		{ id: 'services', en: 'services', es: 'servicios', to: '/work-with-me' },
+		{ id: 'contact', en: 'contact', es: 'contacto', to: '/contact' },
+		{ id: 'theme', en: 'theme', es: 'tema' },
+		{ id: 'sound', en: 'sound', es: 'sonido' },
+		{ id: 'clear', en: 'clear', es: 'limpiar' },
+		{ id: 'enter', en: 'enter', es: 'entrar' },
+		{ id: 'help', en: 'help', es: 'ayuda' }
+	] as const
+	type CommandId = (typeof COMMANDS)[number]['id']
+
+	const HELP_IDS: CommandId[] = ['work', 'playground', 'skills', 'services', 'contact', 'theme', 'sound', 'clear', 'enter']
+	const nameOf = (id: CommandId) => COMMANDS.find((c) => c.id === id)![lang]
+	const resolve = (word: string) =>
+		COMMANDS.find((c) => c.en === word || c.es === word) ??
+		(word === 'exit' || word === 'salir' ? COMMANDS.find((c) => c.id === 'enter') : undefined)
+	const NAMES = COMMANDS.flatMap((c) => [c.en, c.es])
+	const QUICK: CommandId[] = ['work', 'playground', 'skills', 'contact']
+	const modeWord = (mode: string) =>
+		lang === 'es' ? (mode === 'dark' ? 'oscuro' : 'claro') : mode
 
 	let lines = $state<Line[]>([])
 	let typed = $state('')
@@ -117,41 +126,46 @@
 		}
 		history.unshift(raw)
 		historyAt = -1
-		const [name, arg] = cmd.split(/\s+/)
-		if (name === 'help') {
+		const [word, arg] = cmd.split(/\s+/)
+		const command = resolve(word)
+		if (!command) {
+			sfx.nope()
+			return say(t('intro.notFound', { name: word }), 'err')
+		}
+		if ('to' in command) {
+			sfx.confirm()
+			const target = href(command.to, lang)
+			say(`→ ${target}`)
+			setTimeout(() => void leave(target), 380)
+		} else if (command.id === 'help') {
 			sfx.confirm()
 			push({ kind: 'blank', text: '' })
-			for (const [c, d] of HELP) push({ kind: 'out', label: c, text: d })
+			for (const id of HELP_IDS) {
+				push({ kind: 'out', label: nameOf(id), text: t(`intro.help.${id}` as const) })
+			}
 			push({ kind: 'blank', text: '' })
-		} else if (ROUTES[name]) {
-			sfx.confirm()
-			say(`→ ${ROUTES[name]}`)
-			setTimeout(() => void leave(ROUTES[name]), 380)
-		} else if (name === 'enter' || name === 'exit') {
+		} else if (command.id === 'enter') {
 			sfx.enter()
 			void leave()
-		} else if (name === 'clear') {
+		} else if (command.id === 'clear') {
 			sfx.click()
 			lines = []
-		} else if (name === 'theme') {
+		} else if (command.id === 'theme') {
 			const next = toggleTheme()
 			sfx.pop(next === 'dark' ? 0.75 : 1)
-			say(`theme: ${next}`)
-		} else if (name === 'sound') {
+			say(t('intro.theme', { mode: modeWord(next) }))
+		} else if (command.id === 'sound') {
 			if (arg === 'off') {
 				sfx.pop(0.75)
 				setSound(false)
-				say('sound: off')
+				say(t('intro.soundSet', { state: 'off' }))
 			} else if (arg === 'on' || !arg) {
 				void turnSoundOn()
-				say('sound: on')
+				say(t('intro.soundSet', { state: 'on' }))
 			} else {
 				sfx.nope()
-				say('usage: sound on | off', 'err')
+				say(t('intro.usageSound'), 'err')
 			}
-		} else {
-			sfx.nope()
-			say(`command not found: ${name}. try help`, 'err')
 		}
 	}
 
@@ -234,18 +248,15 @@
 	class:closing
 	role="dialog"
 	aria-modal="true"
-	aria-label="Welcome"
+	aria-label={t('intro.title')}
 	bind:this={dialog}
 >
-	<p class="sr-only">
-		Anthony Inga, designer and developer. Type a command such as work, playground or contact, or press
-		Enter to go to the site. Press Escape to skip.
-	</p>
+	<p class="sr-only">{t('intro.sr')}</p>
 
 	<div class="window" role="presentation" onclick={() => input?.focus()}>
 		<div class="bar" aria-hidden="true">
 			<span></span><span></span><span></span>
-			<i>anthony@inga — zsh</i>
+			<i>{t('intro.windowTitle')}</i>
 		</div>
 
 		<div class="body" bind:this={body}>
@@ -286,21 +297,21 @@
 						autocapitalize="off"
 						autocorrect="off"
 						spellcheck="false"
-						aria-label="Terminal command"
+						aria-label={t('intro.input')}
 					/>
 				</label>
 			{/if}
 		</div>
 
 		{#if phase === 'prompt'}
-			<div class="chips" aria-label="Quick commands">
-				{#each ['work', 'playground', 'skills', 'contact'] as name (name)}
+			<div class="chips" aria-label={t('intro.quick')}>
+				{#each QUICK as id (id)}
 					<button
 						type="button"
 						onclick={() => {
 							sfx.click()
-							run(name)
-						}}>{name}</button
+							run(nameOf(id))
+						}}>{nameOf(id)}</button
 					>
 				{/each}
 				<button
@@ -309,7 +320,7 @@
 					onclick={() => {
 						sfx.enter()
 						void leave()
-					}}>enter ⏎</button
+					}}>{t('intro.enter')}</button
 				>
 			</div>
 		{/if}
@@ -317,11 +328,11 @@
 
 	<div class="foot">
 		<button type="button" onclick={toggleSound} aria-pressed={sound.on}>
-			{sound.on ? 'sound on' : 'sound off · best with sound on'}
+			{sound.on ? t('intro.soundOn') : t('intro.soundOff')}
 		</button>
 		<span aria-hidden="true">·</span>
-		<button type="button" onclick={() => void leave()}>skip intro</button>
-		<span class="sr-only">Theme is {theme.mode}.</span>
+		<button type="button" onclick={() => void leave()}>{t('intro.skip')}</button>
+		
 	</div>
 </div>
 

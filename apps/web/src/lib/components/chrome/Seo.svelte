@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state'
+	import { pathLang, switchPath } from '$lib/i18n/core'
 	import type { Project, SiteSettings } from '$lib/sanity/types'
 
 	let { settings, siteUrl }: { settings: SiteSettings; siteUrl: string } = $props()
@@ -8,7 +9,7 @@
 	const seo = $derived((page.data as { seo?: { title?: string; description?: string } }).seo)
 	const pathname = $derived(page.url.pathname)
 	const isError = $derived(page.status >= 400)
-	const isHome = $derived(!project && !isError && pathname === '/')
+	const isHome = $derived(!project && !isError && (pathname === '/' || pathname === '/es'))
 
 	function abs(pathOrUrl: string) {
 		if (/^https?:\/\//i.test(pathOrUrl)) return pathOrUrl
@@ -31,7 +32,12 @@
 		return settings?.bio ?? ''
 	})
 
+	const lang = $derived(pathLang(pathname))
 	const canonical = $derived(`${siteUrl}${pathname === '/' ? '/' : pathname}`)
+	const alternates = $derived({
+		en: `${siteUrl}${switchPath(pathname, 'en')}`,
+		es: `${siteUrl}${switchPath(pathname, 'es')}`
+	})
 
 	const image = $derived.by(() => {
 		if (isError) return ''
@@ -70,6 +76,11 @@
 	{/if}
 	{#if !isError}
 		<link rel="canonical" href={canonical} />
+		<link rel="alternate" hreflang="en" href={alternates.en} />
+		<link rel="alternate" hreflang="es-PE" href={alternates.es} />
+		<link rel="alternate" hreflang="x-default" href={alternates.en} />
+		<meta property="og:locale" content={lang === 'es' ? 'es_PE' : 'en_US'} />
+		<meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_PE'} />
 		<meta property="og:url" content={canonical} />
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={title} />

@@ -4,7 +4,11 @@ import type { EntryGenerator, PageServerLoad } from './$types'
 
 export const entries: EntryGenerator = async () => {
 	const all = await loadAllProjects()
-	return slugsForPrerender(all).map((slug) => ({ slug }))
+	// Optional `lang` param: '' is English, 'es' is Spanish.
+	return slugsForPrerender(all).flatMap((slug) => [
+		{ slug, lang: '' },
+		{ slug, lang: 'es' }
+	])
 }
 
 export const load: PageServerLoad = async ({ params }) => {

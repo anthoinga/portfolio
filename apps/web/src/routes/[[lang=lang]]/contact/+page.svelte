@@ -3,6 +3,7 @@
 	import Button from '$lib/components/ui/Button.svelte'
 	import PageHeader from '$lib/components/ui/PageHeader.svelte'
 	import { flashCopied } from '$lib/cursorNotice.svelte'
+	import { t } from '$lib/i18n'
 	import { sfx } from '$lib/sfx/palette'
 	import type { PageData } from './$types'
 
@@ -26,25 +27,25 @@
 
 <main id="main">
 	<div class="page-shell">
-		<PageHeader label="Contact" title="Let’s talk" lead={s.bio} />
+		<PageHeader label={t('contact.label')} title={t('contact.title')} lead={s.bio} />
 
-		<section class="reach reveal" style="--i:3" aria-label="Ways to reach me">
+		<section class="reach reveal" style="--i:3" aria-label={t('contact.reach')}>
 			{#if s.email}
 				<button type="button" class="email" onclick={copyEmail} use:sound={{ click: false }}>
 					<span>{s.email}</span>
-					<span class="font-label">{copied ? 'Copied' : 'Copy'}</span>
+					<span class="font-label">{copied ? t('common.copied') : t('common.copy')}</span>
 				</button>
 			{/if}
 			<div class="links">
 				{#if s.linkedin}<Button href={s.linkedin} variant="ghost" target="_blank" rel="noopener noreferrer">LinkedIn</Button>{/if}
 				{#if s.github}<Button href={s.github} variant="ghost" target="_blank" rel="noopener noreferrer">GitHub</Button>{/if}
-				{#if s.cv}<Button href={s.cv} variant="ghost" target="_blank" rel="noopener noreferrer">CV (PDF)</Button>{/if}
+				{#if s.cv}<Button href={s.cv} variant="ghost" target="_blank" rel="noopener noreferrer">{t('contact.cv')}</Button>{/if}
 			</div>
 		</section>
 
 		<section class="lists">
 			<div>
-				<h2 class="font-label">Experience</h2>
+				<h2 class="font-label">{t('contact.experience')}</h2>
 				<ul>
 					{#each s.experiences as x (x.org)}
 						<li><b>{x.org}</b><span>{x.role}</span></li>
@@ -52,7 +53,7 @@
 				</ul>
 			</div>
 			<div>
-				<h2 class="font-label">Awards</h2>
+				<h2 class="font-label">{t('contact.awards')}</h2>
 				<ul>
 					{#each s.awards as a (a.org)}
 						<li><b>{a.org}</b><span>{a.role}</span></li>

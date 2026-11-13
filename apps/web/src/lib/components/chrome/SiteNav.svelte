@@ -2,6 +2,7 @@
 	import { page } from '$app/state'
 	import { sound as soundAction } from '$lib/actions/sfx'
 	import LogoMark from '$lib/components/ui/LogoMark.svelte'
+	import { currentLang, href, switchPath, t } from '$lib/i18n'
 	import { unlockAudio } from '$lib/sfx/engine'
 	import { sfx } from '$lib/sfx/palette'
 	import { setSound, sound } from '$lib/sfx/sound.svelte'
@@ -9,19 +10,31 @@
 
 	let { faded = false, dark = false }: { faded?: boolean; dark?: boolean } = $props()
 
-	const links = [
-		{ href: '/work', label: 'Work' },
-		{ href: '/playground', label: 'Playground' },
-		{ href: '/skills', label: 'Skills' },
-		{ href: '/work-with-me', label: 'Work with me' },
-		{ href: '/contact', label: 'Contact' }
-	]
+	const lang = $derived(currentLang())
+	const links = $derived([
+		{ path: '/work', label: t('nav.work') },
+		{ path: '/playground', label: t('nav.playground') },
+		{ path: '/skills', label: t('nav.skills') },
+		{ path: '/work-with-me', label: t('nav.workWithMe') },
+		{ path: '/contact', label: t('nav.contact') }
+	].map((l) => ({ ...l, href: href(l.path, lang) })))
 
 	let menuOpen = $state(false)
 	const path = $derived(page.url.pathname)
+	const otherLang = $derived(lang === 'es' ? 'en' : 'es')
+	const switchHref = $derived(switchPath(path, otherLang))
 
-	function isActive(href: string) {
-		return path === href || path.startsWith(`${href}/`)
+	function isActive(to: string) {
+		return path === to || path.startsWith(`${to}/`)
+	}
+
+	function onLang() {
+		try {
+			localStorage.setItem('lang', otherLang)
+		} catch {
+			/* ignore */
+		}
+		sfx.pop()
 	}
 
 	function onTheme() {
@@ -46,8 +59,8 @@
 </script>
 
 <header class="site-nav" class:faded class:dark>
-	<nav class="pill" aria-label="Primary">
-		<a href="/" class="logo" aria-label="Home" use:soundAction>
+	<nav class="pill" aria-label={t('nav.primary')}>
+		<a href={href('/', lang)} class="logo" aria-label={t('nav.home')} use:soundAction>
 			<span class="logo-mark"><LogoMark /></span>
 		</a>
 
@@ -72,7 +85,7 @@
 		<button
 			type="button"
 			class="icon-btn"
-			aria-label={theme.mode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+			aria-label={theme.mode === 'dark' ? t('nav.themeToLight') : t('nav.themeToDark')}
 			onclick={onTheme}
 			use:soundAction={{ click: false }}
 		>
@@ -90,7 +103,7 @@
 		<button
 			type="button"
 			class="icon-btn"
-			aria-label={sound.on ? 'Turn sound off' : 'Turn sound on'}
+			aria-label={sound.on ? t('nav.soundOff') : t('nav.soundOn')}
 			aria-pressed={sound.on}
 			onclick={onSound}
 			use:soundAction={{ click: false }}
@@ -105,10 +118,22 @@
 			</svg>
 		</button>
 
+		<a
+			href={switchHref}
+			class="lang-btn"
+			hreflang={otherLang === 'es' ? 'es-PE' : 'en'}
+			lang={otherLang === 'es' ? 'es-PE' : 'en'}
+			aria-label={t('nav.langLabel')}
+			onclick={onLang}
+			use:soundAction={{ click: false }}
+		>
+			{otherLang.toUpperCase()}
+		</a>
+
 		<button
 			type="button"
 			class="icon-btn menu-btn"
-			aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+			aria-label={menuOpen ? t('nav.menuClose') : t('nav.menuOpen')}
 			aria-expanded={menuOpen}
 			aria-controls="site-menu"
 			onclick={() => (menuOpen = !menuOpen)}
@@ -224,6 +249,26 @@
 		stroke-width: 1.75;
 		stroke-linecap: round;
 		stroke-linejoin: round;
+	}
+
+	.lang-btn {
+		display: grid;
+		place-items: center;
+		height: 2.5rem;
+		min-width: 2.5rem;
+		padding: 0 0.5rem;
+		border-radius: 999px;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.06em;
+		color: var(--fg-muted);
+		transition:
+			background-color 200ms var(--ease),
+			color 200ms var(--ease);
+	}
+	.lang-btn:hover {
+		background: var(--surface-hover);
+		color: var(--fg);
 	}
 
 	.links {

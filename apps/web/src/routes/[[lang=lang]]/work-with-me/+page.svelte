@@ -2,17 +2,16 @@
 	import Button from '$lib/components/ui/Button.svelte'
 	import PageHeader from '$lib/components/ui/PageHeader.svelte'
 	import { services } from '$lib/data/services'
+	import { currentLang, href, t } from '$lib/i18n'
+
+	const list = $derived(services(currentLang()))
 </script>
 
 <main id="main">
 	<div class="page-shell">
-		<PageHeader
-			label="Work with me"
-			title="Have something to build?"
-			lead="I take on a few kinds of work. If yours does not fit one of these, tell me about it anyway."
-		/>
+		<PageHeader label={t('wwm.label')} title={t('wwm.title')} lead={t('wwm.lead')} />
 		<ol class="services">
-			{#each services as s, i (s.id)}
+			{#each list as s, i (s.id)}
 				<li class="reveal" style="--i:{i}">
 					<span class="num font-label">0{i + 1}</span>
 					<div>
@@ -26,7 +25,7 @@
 			{/each}
 		</ol>
 		<div class="cta">
-			<Button href="/contact">Start a conversation</Button>
+			<Button href={href('/contact')}>{t('wwm.cta')}</Button>
 		</div>
 	</div>
 </main>
