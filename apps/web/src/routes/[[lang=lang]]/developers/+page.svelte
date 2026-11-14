@@ -99,7 +99,17 @@
 		border-radius: 0.9rem;
 		background: var(--surface);
 	}
-	code {
+	/* Commands stay in one piece (and copy cleanly); long ones scroll sideways. */
+	.code code {
+		min-width: 0;
+		overflow-x: auto;
+		white-space: nowrap;
+		font-family: var(--font-mono);
+		font-size: 0.9375rem;
+		letter-spacing: 0;
+		scrollbar-width: none;
+	}
+	.rows code {
 		font-family: var(--font-mono);
 		font-size: 0.9375rem;
 		letter-spacing: 0;

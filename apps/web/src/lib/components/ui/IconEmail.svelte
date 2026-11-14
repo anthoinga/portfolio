@@ -1,3 +1,5 @@
+<script lang="ts"></script>
+
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="size-full">
 	<path
 		d="M4 6.5A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5v11a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5v-11Z"

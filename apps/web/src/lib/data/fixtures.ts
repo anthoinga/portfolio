@@ -1,7 +1,7 @@
-import accuPick from '$lib/assets/cover-art/AccuPick.png?url'
-import aviator from '$lib/assets/cover-art/Aviator.png?url'
-import convConv from '$lib/assets/cover-art/ConConv.png?url'
-import talentCover from '$lib/assets/cover-art/RH.png?url'
+import accuPick from '$lib/assets/cover-art/AccuPick.png?w=2000&format=webp&quality=82'
+import aviator from '$lib/assets/cover-art/Aviator.png?w=2000&format=webp&quality=82'
+import convConv from '$lib/assets/cover-art/ConConv.png?w=2000&format=webp&quality=82'
+import talentCover from '$lib/assets/cover-art/RH.png?w=2000&format=webp&quality=82'
 import type { Project, SiteSettings } from '$lib/sanity/types'
 
 const poster = (url: string, alt: string) => ({ url, alt })

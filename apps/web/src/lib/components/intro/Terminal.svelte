@@ -40,7 +40,7 @@
 	] as const
 	type CommandId = (typeof COMMANDS)[number]['id']
 
-	const HELP_IDS: CommandId[] = ['work', 'playground', 'skills', 'services', 'contact', 'agent', 'theme', 'sound', 'clear', 'enter']
+	const HELP_IDS: Exclude<CommandId, 'help'>[] = ['work', 'playground', 'skills', 'services', 'contact', 'agent', 'theme', 'sound', 'clear', 'enter']
 	const nameOf = (id: CommandId) => COMMANDS.find((c) => c.id === id)![lang]
 	const resolve = (word: string) =>
 		COMMANDS.find((c) => c.en === word || c.es === word) ??

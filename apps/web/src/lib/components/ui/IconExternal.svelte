@@ -1,3 +1,5 @@
+<script lang="ts"></script>
+
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="size-full">
 	<path
 		d="M8 16 16 8M10 8h6v6"

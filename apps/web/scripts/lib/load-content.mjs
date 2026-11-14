@@ -9,6 +9,7 @@ export const webRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url))
  * resolve exactly as they do in the app) and returns the requested exports.
  */
 export async function loadModules(...ids) {
+	process.env.CONTENT_TOOLING = '1' // read by vite.config.ts
 	const server = await createServer({
 		root: webRoot,
 		appType: 'custom',

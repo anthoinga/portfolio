@@ -140,10 +140,13 @@
 		border-radius: 0.8rem;
 	}
 	code {
+		min-width: 0;
+		overflow-x: auto;
+		white-space: nowrap;
 		font-family: var(--font-mono);
 		font-size: 0.8125rem;
 		letter-spacing: 0;
-		overflow-wrap: anywhere;
+		scrollbar-width: none;
 	}
 	.code button,
 	.prompt {

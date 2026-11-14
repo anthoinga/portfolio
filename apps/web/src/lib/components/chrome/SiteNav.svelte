@@ -357,7 +357,8 @@
 		padding: 0.5rem;
 		border: 1px solid var(--surface-border);
 		border-radius: 1.5rem;
-		background: var(--surface);
+		/* More opaque than the pill: it sits over body text. */
+		background: var(--surface-hover);
 		box-shadow: var(--surface-shadow);
 		-webkit-backdrop-filter: blur(var(--surface-blur)) saturate(1.4);
 		backdrop-filter: blur(var(--surface-blur)) saturate(1.4);

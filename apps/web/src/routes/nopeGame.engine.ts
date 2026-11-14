@@ -46,7 +46,7 @@ export function mountGalaga(els: GalagaEls) {
 	function setFont(k: CanvasRenderingContext2D, px: number, weight = WEIGHT) {
 		k.font = `${weight} ${px}px ${FAMILY}`
 		// Variable fonts on canvas ignore font-weight unless wght is set explicitly.
-		k.fontVariationSettings = `'wght' ${weight}`
+		;(k as CanvasRenderingContext2D & { fontVariationSettings: string }).fontVariationSettings = `'wght' ${weight}`
 	}
 
 	function readColors() {
@@ -282,7 +282,7 @@ export function mountGalaga(els: GalagaEls) {
 			const f = Math.max(0, p.life / p.max),
 				col = (C[p.col] as string) || p.col
 			if (p.k === 'flash') {
-				const R = p.size * cw * (1.2 - f * 0.4)
+				const R = (p.size ?? 1) * cw * (1.2 - f * 0.4)
 				const g = k.createRadialGradient(PX(p.x), PY(p.y), 0, PX(p.x), PY(p.y), R)
 				g.addColorStop(0, C.hot as string)
 				g.addColorStop(0.25, col)
@@ -294,7 +294,7 @@ export function mountGalaga(els: GalagaEls) {
 				k.fill()
 			} else if (p.k === 'ring') {
 				const e = 1 - Math.pow(f, 2.2),
-					R = e * p.size * cw
+					R = e * (p.size ?? 1) * cw
 				const n = p.n!,
 					ch = f > 0.5 ? 'o' : f > 0.25 ? '*' : '.'
 				k.globalAlpha = f
