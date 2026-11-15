@@ -5,7 +5,7 @@
 	import { currentLang, href, t } from '$lib/i18n'
 	import { sfx } from '$lib/sfx/palette'
 
-	/** `onback` is set when the panel replaced the phone menu's page list. */
+	/** `onback` returns to the menu's page list, which this panel replaces in place. */
 	let { onclose, onback }: { onclose: () => void; onback?: () => void } = $props()
 	let first = $state<HTMLButtonElement>()
 
@@ -131,12 +131,6 @@
 		stroke-width: 1.75;
 		stroke-linecap: round;
 		stroke-linejoin: round;
-	}
-	/* The pill shows every page on desktop, so there is no list to go back to. */
-	@media (min-width: 900px) {
-		.back {
-			display: none;
-		}
 	}
 	header {
 		display: flex;

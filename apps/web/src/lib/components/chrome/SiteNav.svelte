@@ -17,17 +17,17 @@
 		{ path: '/', label: t('nav.work') },
 		{ path: '/playground', label: t('nav.playground') },
 		{ path: '/skills', label: t('nav.skills') },
-		{ path: '/work-with-me', label: t('nav.workWithMe') }
+		{ path: '/work-with-me', label: t('nav.services') }
 	].map((l) => ({ ...l, href: href(l.path, lang) })))
+	/** Agent is the last numbered row, after the pages. */
+	const agentNumber = $derived(String(links.length + 1).padStart(2, '0'))
 
 	/**
-	 * One overlay under the pill. On phones `menu` is the page list and `agent` replaces it
-	 * in place, with a back button. On desktop the pages live in the pill, so only `agent` shows.
+	 * The menu sheet, at every width. `menu` is the numbered page list; `agent` replaces it in
+	 * place, with a back button to the list.
 	 */
 	type View = 'closed' | 'menu' | 'agent'
 	let view = $state<View>('closed')
-	/** Whether the agent view was reached from the page list (so "back" has somewhere to go). */
-	let fromMenu = $state(false)
 	const menuOpen = $derived(view !== 'closed')
 	const agentOpen = $derived(view === 'agent')
 	let agentRow = $state<HTMLButtonElement>()
@@ -115,17 +115,8 @@
 		}
 	}
 
-	/** Desktop pill: Agent toggles the panel like a dropdown. */
-	function toggleAgent() {
-		const open = view !== 'agent'
-		fromMenu = false
-		setView(open ? 'agent' : 'closed')
-		sfx.pop(open ? 1 : 0.75)
-	}
-
-	/** Phone sheet: Agent swaps the page list for the panel. */
+	/** Agent swaps the page list for the panel. */
 	function openAgentFromMenu() {
-		fromMenu = true
 		setView('agent')
 		sfx.pop()
 	}
@@ -137,7 +128,6 @@
 	}
 
 	function toggleMenu() {
-		fromMenu = false
 		setView(view === 'closed' ? 'menu' : 'closed')
 	}
 
@@ -152,7 +142,6 @@
 	// A #agent link opens the panel, so it can be shared.
 	$effect(() => {
 		path
-		fromMenu = false
 		view = location.hash === '#agent' ? 'agent' : 'closed'
 	})
 </script>
@@ -168,34 +157,6 @@
 
 <header class="site-nav" class:faded class:dark>
 	<nav class="bar" aria-label={t('nav.primary')} bind:this={barEl}>
-		<ul class="pill links">
-			{#each links as link (link.href)}
-				<li>
-					<a
-						href={link.href}
-						class="link"
-						class:active={isActive(link.href)}
-						aria-current={isActive(link.href) ? 'page' : undefined}
-						use:soundAction
-					>
-						{link.label}
-					</a>
-				</li>
-			{/each}
-			<li>
-				<button
-					type="button"
-					class="link"
-					class:active={agentOpen}
-					aria-expanded={agentOpen}
-					aria-controls="agent-panel"
-					onclick={toggleAgent}
-					use:soundAction={{ click: false }}
-				>
-					{t('agent.button')}
-				</button>
-			</li>
-		</ul>
 
 		<button
 			type="button"
@@ -266,12 +227,12 @@
 
 	{#if view === 'agent'}
 		<div id="site-menu" class="overlay">
-			<AgentPanel onclose={closeAll} onback={fromMenu ? backToMenu : undefined} />
+			<AgentPanel onclose={closeAll} onback={backToMenu} />
 		</div>
 	{:else if view === 'menu'}
 		<div id="site-menu" class="sheet">
 			<ul>
-				{#each links as link (link.href)}
+				{#each links as link, i (link.href)}
 					<li>
 						<a
 							href={link.href}
@@ -279,7 +240,8 @@
 							aria-current={isActive(link.href) ? 'page' : undefined}
 							use:soundAction
 						>
-							{link.label}
+							<span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+							<span class="label">{link.label}</span>
 						</a>
 					</li>
 				{/each}
@@ -292,7 +254,8 @@
 						onclick={openAgentFromMenu}
 						use:soundAction={{ click: false }}
 					>
-						<span>{t('agent.button')}</span>
+						<span class="num" aria-hidden="true">{agentNumber}</span>
+						<span class="label">{t('agent.button')}</span>
 						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
 					</button>
 				</li>
@@ -337,7 +300,7 @@
 		z-index: 40;
 		display: flex;
 		flex-direction: column;
-		/* Right-aligned on small screens so the docked name on the home page has the left side. */
+		/* Right-aligned at every width, so the name / logo has the left side. */
 		align-items: flex-end;
 		padding-inline: 0.75rem;
 		gap: 0.5rem;
@@ -364,7 +327,7 @@
 		pointer-events: none;
 	}
 
-	/* The page links share one pill; theme, sound, language and menu each get their own round button. */
+	/* Theme, sound, language and menu: one round button each. */
 	.bar {
 		display: flex;
 		align-items: center;
@@ -372,7 +335,6 @@
 		font-size: 0.8125rem;
 		font-weight: 500;
 	}
-	.pill,
 	.round {
 		border: 1px solid var(--surface-border);
 		border-radius: 999px;
@@ -382,10 +344,6 @@
 		backdrop-filter: blur(var(--surface-blur)) saturate(1.4);
 		color: var(--fg);
 	}
-	.pill {
-		padding: 0.25rem;
-	}
-
 	.icon-btn {
 		display: grid;
 		place-items: center;
@@ -431,43 +389,12 @@
 		color: var(--fg);
 	}
 
-	.links {
-		display: none;
-		align-items: center;
-		gap: 0.125rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-	.link {
-		display: block;
-		border: 0;
-		background: transparent;
-		font: inherit;
-		cursor: pointer;
-		padding: 0.5rem 0.8rem;
-		border-radius: 999px;
-		color: var(--fg-muted);
-		white-space: nowrap;
-		transition:
-			color 200ms var(--ease),
-			background-color 200ms var(--ease);
-	}
-	.link:hover {
-		color: var(--fg);
-		background: var(--surface-hover);
-	}
-	.link.active {
-		color: var(--fg);
-		background: var(--surface-hover);
-	}
-
 	.sheet {
 		width: min(22rem, calc(100% - 2rem));
 		padding: 0.5rem;
 		border: 1px solid var(--surface-border);
 		border-radius: 1.5rem;
-		/* More opaque than the pill: it sits over body text. */
+		/* More opaque than the buttons: it sits over body text. */
 		background: var(--surface-hover);
 		box-shadow: var(--surface-shadow);
 		-webkit-backdrop-filter: blur(var(--surface-blur)) saturate(1.4);
@@ -481,44 +408,74 @@
 	.overlay {
 		display: contents;
 	}
+	/*
+	 * Rows: a small serif number, then the label in the sans (the serif has a single weight).
+	 * State lives in the text, not a background: the current page is heavier and full colour,
+	 * the rest sit slightly transparent until hovered or focused.
+	 */
 	.sheet a,
 	.sheet .sub {
-		display: block;
-		padding: 0.85rem 1rem;
-		border-radius: 1rem;
-		font-family: var(--font-display);
-		font-size: 1.75rem;
-		line-height: 1.1;
-		color: var(--fg);
-	}
-	.sheet .sub {
 		display: flex;
-		align-items: center;
-		justify-content: space-between;
+		align-items: baseline;
+		gap: 0.75rem;
 		width: 100%;
+		padding: 0.75rem 1rem;
 		border: 0;
+		border-radius: 1rem;
 		background: transparent;
+		color: var(--fg);
+		font: inherit;
 		text-align: left;
 		cursor: pointer;
 	}
+	.num {
+		flex: none;
+		min-width: 1.25rem;
+		font-family: var(--font-display);
+		font-size: 1rem;
+		line-height: 1;
+		font-variant-numeric: tabular-nums;
+	}
+	.label {
+		font-family: var(--font-sans);
+		font-size: 1.5rem;
+		font-weight: 400;
+		line-height: 1.15;
+		letter-spacing: -0.02em;
+		transition: font-variation-settings 200ms var(--ease);
+	}
+	.sheet a > span,
+	.sheet .sub > span,
 	.sheet .sub svg {
+		opacity: 0.55;
+		transition: opacity 200ms var(--ease);
+	}
+	.sheet a:hover > span,
+	.sheet a:focus-visible > span,
+	.sheet .sub:hover > *,
+	.sheet .sub:focus-visible > * {
+		opacity: 0.85;
+	}
+	.sheet a.active > span {
+		opacity: 1;
+	}
+	.sheet a.active .label {
+		font-weight: 600;
+	}
+	.sheet .sub svg {
+		align-self: center;
+		margin-left: auto;
 		width: 1.25rem;
 		height: 1.25rem;
 		fill: none;
-		stroke: var(--fg-muted);
+		stroke: currentColor;
 		stroke-width: 1.75;
 		stroke-linecap: round;
 		stroke-linejoin: round;
 	}
-	.sheet a.active,
-	.sheet a:hover,
-	.sheet .sub:hover {
-		background: var(--surface-hover);
-	}
 
-	/* Scoped so it wins over the base .icon-btn / .lang-btn / .links rules above. */
+	/* Scoped so it wins over the base .icon-btn / .lang-btn rules above. */
 	.bar .round {
-		/* Same height as the pill: a 2.5rem button plus 0.25rem padding top and bottom. */
 		width: 3rem;
 		min-width: 3rem;
 		height: 3rem;
@@ -528,20 +485,5 @@
 	.bar .round:hover {
 		background: var(--surface-hover);
 	}
-	.bar .pill.links {
-		padding: 0.25rem;
-	}
 
-	@media (min-width: 900px) {
-		.site-nav {
-			align-items: center;
-		}
-		.links {
-			display: flex;
-		}
-		.menu-btn,
-		.sheet {
-			display: none;
-		}
-	}
 </style>
