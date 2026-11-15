@@ -73,6 +73,8 @@ export const en = {
 	'agent.cmdApi': 'Structured profile (JSON)',
 	'agent.portal': 'Developer portal →',
 	'agent.close': 'Close',
+	'agent.back': 'Pages',
+	'agent.backLabel': 'Back to all pages',
 
 	'lang.suggest': 'Prefer to read this in Spanish?',
 	'lang.yes': 'Sí, en español',
@@ -185,6 +187,8 @@ export const es = {
 	'agent.cmdApi': 'Perfil estructurado (JSON)',
 	'agent.portal': 'Portal para desarrolladores →',
 	'agent.close': 'Cerrar',
+	'agent.back': 'Páginas',
+	'agent.backLabel': 'Volver a todas las páginas',
 
 	'lang.suggest': '¿Prefieres leer esto en español?',
 	'lang.yes': 'Sí, en español',

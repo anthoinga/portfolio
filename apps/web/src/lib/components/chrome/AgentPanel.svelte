@@ -5,7 +5,14 @@
 	import { currentLang, href, t } from '$lib/i18n'
 	import { sfx } from '$lib/sfx/palette'
 
-	let { onclose }: { onclose: () => void } = $props()
+	/** `onback` is set when the panel replaced the phone menu's page list. */
+	let { onclose, onback }: { onclose: () => void; onback?: () => void } = $props()
+	let first = $state<HTMLButtonElement>()
+
+	// Opened from the menu: move focus into the panel so keyboard and screen-reader users follow it.
+	$effect(() => {
+		if (onback) first?.focus()
+	})
 
 	const lang = $derived(currentLang())
 	const base = $derived((page.data as { siteUrl?: string }).siteUrl ?? '')
@@ -36,10 +43,18 @@
 
 <svelte:window onkeydown={onKey} />
 
-<section class="panel" role="dialog" aria-label={t('agent.title')}>
+<section id="agent-panel" class="panel" class:nested={onback} role="dialog" aria-label={t('agent.title')}>
+	{#if onback}
+		<button type="button" class="back" bind:this={first} onclick={onback} aria-label={t('agent.backLabel')} use:sound={{ click: false }}>
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6" /></svg>
+			{t('agent.back')}
+		</button>
+	{/if}
 	<header>
 		<h2>{t('agent.title')}</h2>
-		<button type="button" class="x" aria-label={t('agent.close')} onclick={onclose} use:sound>×</button>
+		{#if !onback}
+			<button type="button" class="x" aria-label={t('agent.close')} onclick={onclose} use:sound>×</button>
+		{/if}
 	</header>
 	<p>{t('agent.body')}</p>
 	<ul>
@@ -83,6 +98,46 @@
 		color: var(--fg);
 		animation: rise 400ms var(--ease-enter) backwards;
 	}
+	/* Swapped in for the page list: no entrance animation, so it reads as the same sheet. */
+	.panel.nested {
+		animation: none;
+	}
+	.back {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		margin: -0.35rem 0 0.5rem -0.5rem;
+		padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+		border: 0;
+		border-radius: 999px;
+		background: transparent;
+		color: var(--fg-muted);
+		font: inherit;
+		font-size: 0.8125rem;
+		cursor: pointer;
+		transition:
+			background-color 200ms var(--ease),
+			color 200ms var(--ease);
+	}
+	.back:hover {
+		background: var(--surface-hover);
+		color: var(--fg);
+	}
+	.back svg {
+		width: 1rem;
+		height: 1rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.75;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	/* The pill shows every page on desktop, so there is no list to go back to. */
+	@media (min-width: 900px) {
+		.back {
+			display: none;
+		}
+	}
 	header {
 		display: flex;
 		align-items: center;
@@ -119,6 +174,8 @@
 	}
 	ul {
 		display: grid;
+		/* minmax(0, 1fr) lets long commands scroll inside their box instead of widening the panel. */
+		grid-template-columns: minmax(0, 1fr);
 		gap: 0.75rem;
 		margin: 0;
 		padding: 0;

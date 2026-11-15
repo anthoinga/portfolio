@@ -16,9 +16,12 @@ type Parts = {
 
 type ScrollTimelineCtor = new (options: { source: Element; axis?: 'block' | 'inline' }) => AnimationTimeline
 
-const DOCK_FONT = 24
-const MIN_FONT = 13
-const GAP = 16
+/** Shared with the site logo in SiteNav, which shows this docked state on every other page. */
+export const DOCK_FONT = 24
+export const MIN_DOCK_FONT = 13
+export const DOCK_GAP = 16
+const MIN_FONT = MIN_DOCK_FONT
+const GAP = DOCK_GAP
 const FALLBACK_MS = 1000
 /** Fade windows, as fractions of the name's travel: each step takes SPAN, all done by END. */
 const FADE_SPAN = 0.3
@@ -57,7 +60,7 @@ export function attachHeroDock(p: Parts): () => void {
 
 	const keyframes = (a: Animation, frames: Keyframe[]) => (a.effect as KeyframeEffect).setKeyframes(frames)
 
-	const pillEl = document.querySelector<HTMLElement>('.site-nav .pill')
+	const pillEl = document.querySelector<HTMLElement>('.site-nav .bar')
 	let max = 1
 
 	function measure() {

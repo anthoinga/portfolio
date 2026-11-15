@@ -6,6 +6,8 @@
 	import { unlockAudio } from '$lib/sfx/engine'
 	import { sfx } from '$lib/sfx/palette'
 	import { setSound, sound } from '$lib/sfx/sound.svelte'
+	import { DOCK_FONT, DOCK_GAP, MIN_DOCK_FONT } from '$lib/heroDock'
+	import { viewport } from '$lib/scrollRoot.svelte'
 	import { theme, toggleTheme } from '$lib/theme.svelte'
 
 	let { faded = false, dark = false }: { faded?: boolean; dark?: boolean } = $props()
@@ -18,13 +20,63 @@
 		{ path: '/work-with-me', label: t('nav.workWithMe') }
 	].map((l) => ({ ...l, href: href(l.path, lang) })))
 
-	let menuOpen = $state(false)
-	let agentOpen = $state(false)
+	/**
+	 * One overlay under the pill. On phones `menu` is the page list and `agent` replaces it
+	 * in place, with a back button. On desktop the pages live in the pill, so only `agent` shows.
+	 */
+	type View = 'closed' | 'menu' | 'agent'
+	let view = $state<View>('closed')
+	/** Whether the agent view was reached from the page list (so "back" has somewhere to go). */
+	let fromMenu = $state(false)
+	const menuOpen = $derived(view !== 'closed')
+	const agentOpen = $derived(view === 'agent')
+	let agentRow = $state<HTMLButtonElement>()
 	const path = $derived(page.url.pathname)
 	const otherLang = $derived(lang === 'es' ? 'en' : 'es')
 	const switchHref = $derived(switchPath(path, otherLang))
 	const homeHref = $derived(href('/', lang))
 	const onHome = $derived(path === homeHref)
+
+	const siteName = $derived((page.data as { settings?: { name?: string } }).settings?.name ?? 'Anthony Inga')
+
+	/*
+	 * Site logo: the home page's name in its docked (scrolled) state, on every other page.
+	 * Same geometry as heroDock: left edge of .page-shell inside the scroller, centred on the
+	 * nav bar, DOCK_FONT px, shrunk only when the bar would crowd it.
+	 */
+	let logoEl = $state<HTMLAnchorElement>()
+	let barEl = $state<HTMLElement>()
+	$effect(() => {
+		const logo = logoEl
+		const bar = barEl
+		const scroller = viewport.scroller
+		if (!logo || !bar) return
+		const text = logo.firstElementChild as HTMLElement
+		function place() {
+			const root = getComputedStyle(document.documentElement)
+			const rem = parseFloat(root.fontSize) || 16
+			const padX = parseFloat(root.getPropertyValue('--home-pad-x')) * rem || 24
+			const pageMax = parseFloat(root.getPropertyValue('--page-max')) * rem || 1408
+			const width = scroller?.clientWidth ?? document.documentElement.clientWidth
+			const left = Math.max(padX, (width - pageMax) / 2)
+			const r = bar!.getBoundingClientRect()
+			const w = text.offsetWidth
+			let s = 1
+			if (r.width && r.left > left) s = Math.min(1, (r.left - DOCK_GAP - left) / w)
+			s = Math.max(s, MIN_DOCK_FONT / DOCK_FONT)
+			logo!.style.left = `${left}px`
+			logo!.style.top = `${r.top}px`
+			logo!.style.height = `${r.height}px`
+			text.style.transform = s < 1 ? `scale(${s})` : ''
+		}
+		const ro = new ResizeObserver(place)
+		ro.observe(bar)
+		ro.observe(text)
+		if (scroller) ro.observe(scroller)
+		place()
+		void document.fonts?.ready.then(place)
+		return () => ro.disconnect()
+	})
 
 	function isActive(to: string) {
 		if (to === homeHref) return onHome
@@ -55,23 +107,68 @@
 		void unlockAudio().then(() => sfx.ready())
 	}
 
+	function setView(next: View) {
+		const wasAgent = view === 'agent'
+		view = next
+		if (wasAgent !== (next === 'agent')) {
+			history.replaceState(history.state, '', next === 'agent' ? '#agent' : location.pathname + location.search)
+		}
+	}
+
+	/** Desktop pill: Agent toggles the panel like a dropdown. */
 	function toggleAgent() {
-		agentOpen = !agentOpen
-		sfx.pop(agentOpen ? 1 : 0.75)
-		history.replaceState(history.state, '', agentOpen ? '#agent' : location.pathname + location.search)
+		const open = view !== 'agent'
+		fromMenu = false
+		setView(open ? 'agent' : 'closed')
+		sfx.pop(open ? 1 : 0.75)
+	}
+
+	/** Phone sheet: Agent swaps the page list for the panel. */
+	function openAgentFromMenu() {
+		fromMenu = true
+		setView('agent')
+		sfx.pop()
+	}
+
+	function backToMenu() {
+		setView('menu')
+		sfx.pop(0.75)
+		queueMicrotask(() => agentRow?.focus())
+	}
+
+	function toggleMenu() {
+		fromMenu = false
+		setView(view === 'closed' ? 'menu' : 'closed')
+	}
+
+	function closeAll() {
+		setView('closed')
+	}
+
+	function onKey(e: KeyboardEvent) {
+		if (e.key === 'Escape' && view === 'menu') closeAll()
 	}
 
 	// A #agent link opens the panel, so it can be shared.
 	$effect(() => {
 		path
-		menuOpen = false
-		agentOpen = location.hash === '#agent'
+		fromMenu = false
+		view = location.hash === '#agent' ? 'agent' : 'closed'
 	})
 </script>
 
+<svelte:window onkeydown={onKey} />
+
+<!-- Outside the header: the header is its own stacking context, so the blend would not reach the page. -->
+{#if !onHome}
+	<a href={homeHref} class="site-logo" class:faded bind:this={logoEl} use:soundAction>
+		<span>{siteName}</span>
+	</a>
+{/if}
+
 <header class="site-nav" class:faded class:dark>
-	<nav class="pill" aria-label={t('nav.primary')}>
-		<ul class="links">
+	<nav class="bar" aria-label={t('nav.primary')} bind:this={barEl}>
+		<ul class="pill links">
 			{#each links as link (link.href)}
 				<li>
 					<a
@@ -85,13 +182,24 @@
 					</a>
 				</li>
 			{/each}
+			<li>
+				<button
+					type="button"
+					class="link"
+					class:active={agentOpen}
+					aria-expanded={agentOpen}
+					aria-controls="agent-panel"
+					onclick={toggleAgent}
+					use:soundAction={{ click: false }}
+				>
+					{t('agent.button')}
+				</button>
+			</li>
 		</ul>
-
-		<span class="divider" aria-hidden="true"></span>
 
 		<button
 			type="button"
-			class="icon-btn"
+			class="icon-btn round"
 			aria-label={theme.mode === 'dark' ? t('nav.themeToLight') : t('nav.themeToDark')}
 			onclick={onTheme}
 			use:soundAction={{ click: false }}
@@ -109,7 +217,7 @@
 
 		<button
 			type="button"
-			class="icon-btn"
+			class="icon-btn round"
 			aria-label={sound.on ? t('nav.soundOff') : t('nav.soundOn')}
 			aria-pressed={sound.on}
 			onclick={onSound}
@@ -125,20 +233,9 @@
 			</svg>
 		</button>
 
-		<button
-			type="button"
-			class="agent-btn"
-			class:on={agentOpen}
-			aria-expanded={agentOpen}
-			onclick={toggleAgent}
-			use:soundAction={{ click: false }}
-		>
-			{t('agent.button')}
-		</button>
-
 		<a
 			href={switchHref}
-			class="lang-btn"
+			class="lang-btn round"
 			hreflang={otherLang === 'es' ? 'es-PE' : 'en'}
 			lang={otherLang === 'es' ? 'es-PE' : 'en'}
 			aria-label={t('nav.langLabel')}
@@ -150,11 +247,11 @@
 
 		<button
 			type="button"
-			class="icon-btn menu-btn"
+			class="icon-btn round menu-btn"
 			aria-label={menuOpen ? t('nav.menuClose') : t('nav.menuOpen')}
 			aria-expanded={menuOpen}
 			aria-controls="site-menu"
-			onclick={() => (menuOpen = !menuOpen)}
+			onclick={toggleMenu}
 			use:soundAction
 		>
 			<svg viewBox="0 0 24 24" aria-hidden="true">
@@ -167,11 +264,11 @@
 		</button>
 	</nav>
 
-	{#if agentOpen}
-		<AgentPanel onclose={() => { agentOpen = false; history.replaceState(history.state, '', location.pathname + location.search) }} />
-	{/if}
-
-	{#if menuOpen}
+	{#if view === 'agent'}
+		<div id="site-menu" class="overlay">
+			<AgentPanel onclose={closeAll} onback={fromMenu ? backToMenu : undefined} />
+		</div>
+	{:else if view === 'menu'}
 		<div id="site-menu" class="sheet">
 			<ul>
 				{#each links as link (link.href)}
@@ -186,12 +283,52 @@
 						</a>
 					</li>
 				{/each}
+				<li>
+					<button
+						type="button"
+						class="sub"
+						aria-controls="agent-panel"
+						bind:this={agentRow}
+						onclick={openAgentFromMenu}
+						use:soundAction={{ click: false }}
+					>
+						<span>{t('agent.button')}</span>
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
+					</button>
+				</li>
 			</ul>
 		</div>
 	{/if}
 </header>
 
 <style>
+	/* Matches the home name once docked: display serif, white under `exclusion` so it reads on any background. */
+	.site-logo {
+		position: fixed;
+		top: max(0.75rem, env(safe-area-inset-top));
+		left: var(--home-pad-x);
+		z-index: 41;
+		display: flex;
+		align-items: center;
+		height: 3rem;
+		color: #fff;
+		mix-blend-mode: exclusion;
+		font-family: var(--font-display);
+		font-size: 24px;
+		line-height: var(--text-display--line-height);
+		letter-spacing: var(--text-display--letter-spacing);
+		font-weight: 400;
+		white-space: nowrap;
+		transition: opacity 400ms var(--ease);
+	}
+	.site-logo > span {
+		display: block;
+		transform-origin: 0 50%;
+	}
+	.site-logo.faded {
+		opacity: 0;
+		pointer-events: none;
+	}
 	.site-nav {
 		position: fixed;
 		top: max(0.75rem, env(safe-area-inset-top));
@@ -227,11 +364,16 @@
 		pointer-events: none;
 	}
 
-	.pill {
+	/* The page links share one pill; theme, sound, language and menu each get their own round button. */
+	.bar {
 		display: flex;
 		align-items: center;
-		gap: 0.25rem;
-		padding: 0.25rem;
+		gap: 0.375rem;
+		font-size: 0.8125rem;
+		font-weight: 500;
+	}
+	.pill,
+	.round {
 		border: 1px solid var(--surface-border);
 		border-radius: 999px;
 		background: var(--surface);
@@ -239,8 +381,9 @@
 		-webkit-backdrop-filter: blur(var(--surface-blur)) saturate(1.4);
 		backdrop-filter: blur(var(--surface-blur)) saturate(1.4);
 		color: var(--fg);
-		font-size: 0.8125rem;
-		font-weight: 500;
+	}
+	.pill {
+		padding: 0.25rem;
 	}
 
 	.icon-btn {
@@ -255,7 +398,8 @@
 		cursor: pointer;
 		transition: background-color 200ms var(--ease);
 	}
-	.icon-btn:hover {
+	.icon-btn:hover,
+	.lang-btn:hover {
 		background: var(--surface-hover);
 	}
 	.icon-btn svg {
@@ -266,27 +410,6 @@
 		stroke-width: 1.75;
 		stroke-linecap: round;
 		stroke-linejoin: round;
-	}
-
-	.agent-btn {
-		height: 2.5rem;
-		padding: 0 0.85rem;
-		border: 0;
-		border-radius: 999px;
-		background: transparent;
-		color: var(--fg-muted);
-		font: inherit;
-		font-size: 0.8125rem;
-		font-weight: 500;
-		cursor: pointer;
-		transition:
-			background-color 200ms var(--ease),
-			color 200ms var(--ease);
-	}
-	.agent-btn:hover,
-	.agent-btn.on {
-		background: var(--surface-hover);
-		color: var(--fg);
 	}
 
 	.lang-btn {
@@ -305,7 +428,6 @@
 			color 200ms var(--ease);
 	}
 	.lang-btn:hover {
-		background: var(--surface-hover);
 		color: var(--fg);
 	}
 
@@ -319,6 +441,10 @@
 	}
 	.link {
 		display: block;
+		border: 0;
+		background: transparent;
+		font: inherit;
+		cursor: pointer;
 		padding: 0.5rem 0.8rem;
 		border-radius: 999px;
 		color: var(--fg-muted);
@@ -334,14 +460,6 @@
 	.link.active {
 		color: var(--fg);
 		background: var(--surface-hover);
-	}
-
-	.divider {
-		display: none;
-		width: 1px;
-		height: 1.25rem;
-		margin: 0 0.25rem;
-		background: var(--rule);
 	}
 
 	.sheet {
@@ -360,7 +478,11 @@
 		padding: 0;
 		list-style: none;
 	}
-	.sheet a {
+	.overlay {
+		display: contents;
+	}
+	.sheet a,
+	.sheet .sub {
 		display: block;
 		padding: 0.85rem 1rem;
 		border-radius: 1rem;
@@ -369,17 +491,52 @@
 		line-height: 1.1;
 		color: var(--fg);
 	}
+	.sheet .sub {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		border: 0;
+		background: transparent;
+		text-align: left;
+		cursor: pointer;
+	}
+	.sheet .sub svg {
+		width: 1.25rem;
+		height: 1.25rem;
+		fill: none;
+		stroke: var(--fg-muted);
+		stroke-width: 1.75;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
 	.sheet a.active,
-	.sheet a:hover {
+	.sheet a:hover,
+	.sheet .sub:hover {
 		background: var(--surface-hover);
+	}
+
+	/* Scoped so it wins over the base .icon-btn / .lang-btn / .links rules above. */
+	.bar .round {
+		/* Same height as the pill: a 2.5rem button plus 0.25rem padding top and bottom. */
+		width: 3rem;
+		min-width: 3rem;
+		height: 3rem;
+		padding: 0;
+		background: var(--surface);
+	}
+	.bar .round:hover {
+		background: var(--surface-hover);
+	}
+	.bar .pill.links {
+		padding: 0.25rem;
 	}
 
 	@media (min-width: 900px) {
 		.site-nav {
 			align-items: center;
 		}
-		.links,
-		.divider {
+		.links {
 			display: flex;
 		}
 		.menu-btn,
