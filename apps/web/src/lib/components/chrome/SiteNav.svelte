@@ -412,7 +412,7 @@
 	 * Rows: a small sans number, then the label in the display serif.
 	 * State lives in the text, not a background: the current page is heavier and full colour,
 	 * the rest sit slightly transparent until hovered or focused. The serif ships one weight,
-	 * so its active state is thickened with a hairline stroke; the number uses a real weight.
+	 * so the active label is thickened with a hairline stroke.
 	 */
 	.sheet a,
 	.sheet .sub {
@@ -452,20 +452,18 @@
 		opacity: 0.55;
 		transition: opacity 200ms var(--ease);
 	}
-	.sheet a:hover > span,
-	.sheet a:focus-visible > span,
-	.sheet .sub:hover > *,
-	.sheet .sub:focus-visible > * {
+	/* Hover and active change the label only; the number looks the same on every row. */
+	.sheet a:hover .label,
+	.sheet a:focus-visible .label,
+	.sheet .sub:hover .label,
+	.sheet .sub:focus-visible .label,
+	.sheet .sub:hover svg,
+	.sheet .sub:focus-visible svg {
 		opacity: 0.85;
 	}
-	.sheet a.active > span {
-		opacity: 1;
-	}
 	.sheet a.active .label {
+		opacity: 1;
 		-webkit-text-stroke: 0.022em currentColor;
-	}
-	.sheet a.active .num {
-		font-weight: 600;
 	}
 	.sheet .sub svg {
 		align-self: center;
