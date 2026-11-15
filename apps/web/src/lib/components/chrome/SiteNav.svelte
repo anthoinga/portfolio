@@ -409,9 +409,10 @@
 		display: contents;
 	}
 	/*
-	 * Rows: a small serif number, then the label in the sans (the serif has a single weight).
+	 * Rows: a small sans number, then the label in the display serif.
 	 * State lives in the text, not a background: the current page is heavier and full colour,
-	 * the rest sit slightly transparent until hovered or focused.
+	 * the rest sit slightly transparent until hovered or focused. The serif ships one weight,
+	 * so its active state is thickened with a hairline stroke; the number uses a real weight.
 	 */
 	.sheet a,
 	.sheet .sub {
@@ -431,18 +432,19 @@
 	.num {
 		flex: none;
 		min-width: 1.25rem;
-		font-family: var(--font-display);
-		font-size: 1rem;
+		font-family: var(--font-sans);
+		font-size: 0.75rem;
+		font-weight: 400;
 		line-height: 1;
+		letter-spacing: 0;
 		font-variant-numeric: tabular-nums;
 	}
 	.label {
-		font-family: var(--font-sans);
-		font-size: 1.5rem;
+		font-family: var(--font-display);
+		font-size: 1.75rem;
 		font-weight: 400;
-		line-height: 1.15;
-		letter-spacing: -0.02em;
-		transition: font-variation-settings 200ms var(--ease);
+		line-height: 1.1;
+		letter-spacing: -0.01em;
 	}
 	.sheet a > span,
 	.sheet .sub > span,
@@ -460,6 +462,9 @@
 		opacity: 1;
 	}
 	.sheet a.active .label {
+		-webkit-text-stroke: 0.022em currentColor;
+	}
+	.sheet a.active .num {
 		font-weight: 600;
 	}
 	.sheet .sub svg {
