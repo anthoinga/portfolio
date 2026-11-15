@@ -26,11 +26,11 @@
 
 	/** Every command in both languages, so `work` and `trabajo` both run. */
 	const COMMANDS = [
-		{ id: 'work', en: 'work', es: 'trabajo', to: '/work' },
+		{ id: 'work', en: 'work', es: 'trabajo', to: '/#work' },
 		{ id: 'playground', en: 'playground', es: 'playground', to: '/playground' },
 		{ id: 'skills', en: 'skills', es: 'habilidades', to: '/skills' },
 		{ id: 'services', en: 'services', es: 'servicios', to: '/work-with-me' },
-		{ id: 'contact', en: 'contact', es: 'contacto', to: '/contact' },
+		{ id: 'contact', en: 'contact', es: 'contacto', to: '/work-with-me#contact' },
 		{ id: 'agent', en: 'agent', es: 'agente', to: '/developers' },
 		{ id: 'theme', en: 'theme', es: 'tema' },
 		{ id: 'sound', en: 'sound', es: 'sonido' },

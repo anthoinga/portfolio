@@ -5,11 +5,10 @@
  */
 export type HomeCopy = {
 	status: string
-	headline: string
 	lead: string
 	ctaPrimary: string
 	ctaSecondary: string
-	work: { label: string; all: string }
+	work: { label: string }
 	playground: { label: string; title: string; all: string }
 	principles: { label: string; items: { title: string; body: string }[] }
 	cta: { title: string; body: string; primary: string; secondary: string }
@@ -18,11 +17,10 @@ export type HomeCopy = {
 export const homeCopy: Record<'en' | 'es', HomeCopy> = {
 	en: {
 		status: 'Open to design-engineering roles',
-		headline: 'I design it.\nThen I build it.',
 		lead: 'A creative developer working where design and technology meet: human-computer interaction, media and culture. Technical when it needs to be.',
 		ctaPrimary: 'See the work',
 		ctaSecondary: 'Get in touch',
-		work: { label: 'Selected work', all: 'All work' },
+		work: { label: 'Case studies' },
 		playground: {
 			label: 'Playground',
 			title: 'Small things I build to learn how an interface should feel.',
@@ -54,11 +52,10 @@ export const homeCopy: Record<'en' | 'es', HomeCopy> = {
 	},
 	es: {
 		status: 'Abierto a roles de design engineering',
-		headline: 'Lo diseño.\nLuego lo programo.',
 		lead: 'Creative developer en el cruce entre diseño y tecnología: interacción humano-computadora, medios y cultura. Con código de sobra cuando el proyecto lo pide.',
 		ctaPrimary: 'Ver mi trabajo',
 		ctaSecondary: 'Escríbeme',
-		work: { label: 'Trabajo seleccionado', all: 'Todo el trabajo' },
+		work: { label: 'Casos de estudio' },
 		playground: {
 			label: 'Playground',
 			title: 'Cosas pequeñas que armo para entender cómo debería sentirse una interfaz.',

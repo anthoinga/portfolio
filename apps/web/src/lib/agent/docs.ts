@@ -18,11 +18,9 @@ function short(text: string, max = 110) {
 
 const NAV_KEY = {
 	index: 'nav.home',
-	work: 'nav.work',
 	playground: 'nav.playground',
 	skills: 'nav.skills',
 	'work-with-me': 'nav.workWithMe',
-	contact: 'nav.contact',
 	developers: 'nav.home'
 } as const
 
@@ -84,31 +82,18 @@ export function pageDoc(m: SiteModel, page: MdPage): Doc {
 					`**${s.role ?? ''}** · ${m.home.status}`,
 					m.home.lead,
 					`## ${m.home.work.label}`,
-					m.projects
-						.map((p) => `- ${link(p.title, m.url(`/projects/${p.slug}`))}${p.description ? ` — ${p.description}` : ''}`)
-						.join('\n'),
-					`## ${en ? 'Elsewhere' : 'En otros lugares'}`,
-					links(m).join('\n'),
-					agentFooter(m)
-				].join('\n\n')
-			}
-		case 'work':
-			return {
-				title: T(m, 'work.title'),
-				description: T(m, 'work.lead'),
-				path,
-				body: [
-					`# ${T(m, 'work.title')}`,
-					T(m, 'work.lead'),
 					...m.projects.map((p) =>
 						[
-							`## ${link(p.title, m.url(`/projects/${p.slug}`))}`,
+							`### ${link(p.title, m.url(`/projects/${p.slug}`))}`,
 							p.description ?? '',
 							[p.scope, p.year, p.tags?.join(', ')].filter(Boolean).join(' · ')
 						]
 							.filter(Boolean)
 							.join('\n\n')
-					)
+					),
+					`## ${en ? 'Elsewhere' : 'En otros lugares'}`,
+					links(m).join('\n'),
+					agentFooter(m)
 				].join('\n\n')
 			}
 		case 'playground':
@@ -160,21 +145,12 @@ export function pageDoc(m: SiteModel, page: MdPage): Doc {
 					...m.services.map((v) =>
 						[`## ${v.title}`, v.summary, v.deliverables.map((d) => `- ${d}`).join('\n')].join('\n\n')
 					),
-					`${en ? 'Start a conversation' : 'Conversemos'}: ${link(T(m, 'contact.label'), m.url('/contact'))}`
-				].join('\n\n')
-			}
-		case 'contact':
-			return {
-				title: T(m, 'contact.title'),
-				description: s.bio ?? '',
-				path,
-				body: [
-					`# ${T(m, 'contact.title')}`,
+					`## ${T(m, 'contact.title')}`,
 					s.bio ?? '',
 					links(m).join('\n'),
-					`## ${T(m, 'contact.experience')}`,
+					`### ${T(m, 'contact.experience')}`,
 					credits(s.experiences),
-					`## ${T(m, 'contact.awards')}`,
+					`### ${T(m, 'contact.awards')}`,
 					credits(s.awards),
 					agentFooter(m)
 				].join('\n\n')
@@ -211,7 +187,7 @@ export function projectDoc(m: SiteModel, slug: string): Doc | null {
 		title: p.seoTitle || p.title,
 		description: p.seoDescription || p.description || '',
 		path: `/projects/${p.slug}`,
-		body: [`# ${p.title}`, projectMarkdown(p, abs), `${link(T(m, 'project.next'), m.url('/work'))}`].join('\n\n')
+		body: [`# ${p.title}`, projectMarkdown(p, abs), `${link(m.home.work.label, m.url('/#work'))}`].join('\n\n')
 	}
 }
 
@@ -240,7 +216,7 @@ export function llmsTxt(m: SiteModel): string {
 		'',
 		en ? '## Key links' : '## Enlaces clave',
 		'',
-		...(['index', 'work', 'playground', 'skills', 'work-with-me', 'contact', 'developers'] as MdPage[]).map(
+		...(['index', 'playground', 'skills', 'work-with-me', 'developers'] as MdPage[]).map(
 			(pg) => {
 				const label = pg === 'developers' ? (en ? 'Developers' : 'Desarrolladores') : T(m, NAV_KEY[pg])
 				return `- [${label}](${m.url(sitePath(pg))}): ${short(pageDoc(m, pg).description)}`
@@ -257,7 +233,7 @@ export function llmsTxt(m: SiteModel): string {
 		'',
 		en ? '## How to call this site' : '## Cómo consultar este sitio',
 		'',
-		`- ${en ? 'Any page as Markdown' : 'Cualquier página en Markdown'}: \`Accept: text/markdown\`, or add \`.md\` (e.g. ${m.url('/work')}.md)`,
+		`- ${en ? 'Any page as Markdown' : 'Cualquier página en Markdown'}: \`Accept: text/markdown\`, or add \`.md\` (e.g. ${m.url('/skills')}.md)`,
 		`- ${en ? 'Structured data' : 'Datos estructurados'}: ${base}/api/v1/profile ${en ? '(add ?lang=es for Spanish)' : '(agrega ?lang=es para español)'}`,
 		`- ${en ? 'Both languages' : 'Ambos idiomas'}: ${base}/llms.txt, ${base}/es/llms.txt`,
 		'',

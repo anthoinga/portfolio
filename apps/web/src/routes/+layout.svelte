@@ -50,14 +50,17 @@
 
 	let bottomArmed = true
 
-	afterNavigate(({ from }) => {
+	afterNavigate(({ from, to }) => {
 		bottomArmed = true
 		if (onProject) return
 		// Only coming back from a case study restores the old position.
 		const y = from && isProjectPath(from.url.pathname) ? navMemory.workspaceScroll : 0
+		const hash = to?.url.hash.slice(1)
 		const apply = () => {
-			if (viewport.scroller) viewport.scroller.scrollTop = y
-			viewport.scrollY = y
+			const target = hash ? document.getElementById(decodeURIComponent(hash)) : null
+			if (target) target.scrollIntoView({ block: 'start' })
+			else if (viewport.scroller) viewport.scroller.scrollTop = y
+			viewport.scrollY = viewport.scroller?.scrollTop ?? y
 		}
 		apply()
 		requestAnimationFrame(apply)

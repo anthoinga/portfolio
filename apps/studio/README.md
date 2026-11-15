@@ -45,7 +45,7 @@ typed copy in `apps/web/src/lib/data/fixtures.ts`, so nothing breaks while you s
 
 *Projects → New.* Fill in the **English** tab (title, slug, tagline, poster, brief, body), pick the
 colours on **Colour & motion**, and publish. After the next rebuild it appears on the home page,
-`/work`, the sitemap, its Markdown twin, `llms.txt` and the JSON API automatically.
+the sitemap, its Markdown twin, `llms.txt` and the JSON API automatically.
 
 The **Español (Perú)** tab is optional. Anything left empty falls back to English, and the project
 list shows *es-PE missing* until the tagline is written. Write it in your own voice rather than

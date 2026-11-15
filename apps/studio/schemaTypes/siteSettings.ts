@@ -36,7 +36,7 @@ export const siteSettings = defineType({
 			name: 'cv',
 			title: 'Curriculum Vitae',
 			type: 'url',
-			description: 'Linked from the footer and the Contact page.',
+			description: 'Linked from the footer and the contact section of Work with me.',
 			validation: (r) => r.uri({ allowRelative: true, scheme: ['http', 'https'] })
 		}),
 		defineField({

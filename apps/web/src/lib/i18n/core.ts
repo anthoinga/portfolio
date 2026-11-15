@@ -15,11 +15,11 @@ export function isProjectPath(pathname: string) {
 	return /^\/(es\/)?projects\//.test(pathname)
 }
 
-/** Prefixes an internal path with the language segment: `/work` → `/es/work`. */
+/** Prefixes an internal path with the language segment: `/skills` → `/es/skills`, `/#work` → `/es#work`. */
 export function localePath(path: string, lang: Lang) {
 	if (!path.startsWith('/') || path.startsWith('//')) return path
 	if (lang === 'en') return path
-	return path === '/' ? '/es' : `/es${path}`
+	return path === '/' || path.startsWith('/#') ? `/es${path.slice(1)}` : `/es${path}`
 }
 
 /** The same page in another language. */

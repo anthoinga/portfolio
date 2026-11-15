@@ -7,6 +7,16 @@
 	"ignoreCommand": "node scripts/ignore-build.mjs",
 	"cleanUrls": true,
 	"trailingSlash": false,
+	"redirects": [
+		{ "source": "/work", "destination": "/#work", "permanent": true },
+		{ "source": "/es/work", "destination": "/es#work", "permanent": true },
+		{ "source": "/work.md", "destination": "/index.md", "permanent": true },
+		{ "source": "/es/work.md", "destination": "/es/index.md", "permanent": true },
+		{ "source": "/contact", "destination": "/work-with-me#contact", "permanent": true },
+		{ "source": "/es/contact", "destination": "/es/work-with-me#contact", "permanent": true },
+		{ "source": "/contact.md", "destination": "/work-with-me.md", "permanent": true },
+		{ "source": "/es/contact.md", "destination": "/es/work-with-me.md", "permanent": true }
+	],
 	"rewrites": [
 		{
 			"source": "/api/v1/:name(profile|experience|skills|projects|playground|services)",

@@ -49,7 +49,7 @@ export function developersContent(lang: Lang, base: string) {
 			},
 			{
 				label: en ? 'Any page as Markdown' : 'Cualquier página en Markdown',
-				cmd: `curl -H 'Accept: text/markdown' ${base}${p}/work`
+				cmd: `curl -H 'Accept: text/markdown' ${base}${p}/skills`
 			},
 			{
 				label: en ? 'Structured profile as JSON' : 'Perfil estructurado en JSON',

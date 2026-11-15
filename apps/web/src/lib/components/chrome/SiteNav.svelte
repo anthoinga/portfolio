@@ -2,7 +2,6 @@
 	import { page } from '$app/state'
 	import { sound as soundAction } from '$lib/actions/sfx'
 	import AgentPanel from '$lib/components/chrome/AgentPanel.svelte'
-	import LogoMark from '$lib/components/ui/LogoMark.svelte'
 	import { currentLang, href, switchPath, t } from '$lib/i18n'
 	import { unlockAudio } from '$lib/sfx/engine'
 	import { sfx } from '$lib/sfx/palette'
@@ -13,11 +12,10 @@
 
 	const lang = $derived(currentLang())
 	const links = $derived([
-		{ path: '/work', label: t('nav.work') },
+		{ path: '/', label: t('nav.work') },
 		{ path: '/playground', label: t('nav.playground') },
 		{ path: '/skills', label: t('nav.skills') },
-		{ path: '/work-with-me', label: t('nav.workWithMe') },
-		{ path: '/contact', label: t('nav.contact') }
+		{ path: '/work-with-me', label: t('nav.workWithMe') }
 	].map((l) => ({ ...l, href: href(l.path, lang) })))
 
 	let menuOpen = $state(false)
@@ -25,8 +23,11 @@
 	const path = $derived(page.url.pathname)
 	const otherLang = $derived(lang === 'es' ? 'en' : 'es')
 	const switchHref = $derived(switchPath(path, otherLang))
+	const homeHref = $derived(href('/', lang))
+	const onHome = $derived(path === homeHref)
 
 	function isActive(to: string) {
+		if (to === homeHref) return onHome
 		return path === to || path.startsWith(`${to}/`)
 	}
 
@@ -70,10 +71,6 @@
 
 <header class="site-nav" class:faded class:dark>
 	<nav class="pill" aria-label={t('nav.primary')}>
-		<a href={href('/', lang)} class="logo" aria-label={t('nav.home')} use:soundAction>
-			<span class="logo-mark"><LogoMark /></span>
-		</a>
-
 		<ul class="links">
 			{#each links as link (link.href)}
 				<li>
@@ -203,7 +200,9 @@
 		z-index: 40;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		/* Right-aligned on small screens so the docked name on the home page has the left side. */
+		align-items: flex-end;
+		padding-inline: 0.75rem;
 		gap: 0.5rem;
 		pointer-events: none;
 		transition: opacity 400ms var(--ease);
@@ -244,7 +243,6 @@
 		font-weight: 500;
 	}
 
-	.logo,
 	.icon-btn {
 		display: grid;
 		place-items: center;
@@ -257,14 +255,8 @@
 		cursor: pointer;
 		transition: background-color 200ms var(--ease);
 	}
-	.logo:hover,
 	.icon-btn:hover {
 		background: var(--surface-hover);
-	}
-	.logo-mark {
-		display: block;
-		width: 1.25rem;
-		height: 1.25rem;
 	}
 	.icon-btn svg {
 		width: 1.125rem;
@@ -383,6 +375,9 @@
 	}
 
 	@media (min-width: 900px) {
+		.site-nav {
+			align-items: center;
+		}
 		.links,
 		.divider {
 			display: flex;

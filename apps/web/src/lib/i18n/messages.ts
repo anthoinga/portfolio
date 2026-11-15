@@ -18,7 +18,6 @@ export const en = {
 	'nav.playground': 'Playground',
 	'nav.skills': 'Skills',
 	'nav.workWithMe': 'Work with me',
-	'nav.contact': 'Contact',
 	'nav.menuOpen': 'Open menu',
 	'nav.menuClose': 'Close menu',
 	'nav.themeToDark': 'Switch to dark theme',
@@ -34,11 +33,6 @@ export const en = {
 
 	'project.close': 'Close case study',
 	'project.next': 'Next case study',
-
-	'work.label': 'Work',
-	'work.title': 'Case studies',
-	'work.lead':
-		'Product design, research and prototyping. Each one covers the problem, the decisions I made and what I would do differently.',
 
 	'playground.label': 'Playground',
 	'playground.title': 'Things I make to learn',
@@ -60,8 +54,6 @@ export const en = {
 	'wwm.title': 'Have something to build?',
 	'wwm.lead':
 		'I take on a few kinds of work. If yours does not fit one of these, tell me about it anyway.',
-	'wwm.cta': 'Start a conversation',
-
 	'contact.label': 'Contact',
 	'contact.title': 'Let’s talk',
 	'contact.reach': 'Ways to reach me',
@@ -138,7 +130,6 @@ export const es = {
 	'nav.playground': 'Playground',
 	'nav.skills': 'Habilidades',
 	'nav.workWithMe': 'Trabajemos',
-	'nav.contact': 'Contacto',
 	'nav.menuOpen': 'Abrir menú',
 	'nav.menuClose': 'Cerrar menú',
 	'nav.themeToDark': 'Cambiar a tema oscuro',
@@ -154,11 +145,6 @@ export const es = {
 
 	'project.close': 'Cerrar caso de estudio',
 	'project.next': 'Siguiente caso de estudio',
-
-	'work.label': 'Trabajo',
-	'work.title': 'Casos de estudio',
-	'work.lead':
-		'Diseño de producto, investigación y prototipado. En cada uno cuento el problema, las decisiones que tomé y qué haría distinto hoy.',
 
 	'playground.label': 'Playground',
 	'playground.title': 'Cosas que hago para aprender',
@@ -180,8 +166,6 @@ export const es = {
 	'wwm.title': '¿Tienes algo por construir?',
 	'wwm.lead':
 		'Trabajo en unos cuantos tipos de proyecto. Si lo tuyo no encaja en ninguno, cuéntamelo igual.',
-	'wwm.cta': 'Conversemos',
-
 	'contact.label': 'Contacto',
 	'contact.title': 'Hablemos',
 	'contact.reach': 'Cómo contactarme',

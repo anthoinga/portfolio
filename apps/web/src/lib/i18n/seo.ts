@@ -1,15 +1,8 @@
 import type { Lang } from './core'
 
-type Page = 'work' | 'playground' | 'skills' | 'workWithMe' | 'contact'
+type Page = 'playground' | 'skills' | 'workWithMe'
 
 const seo: Record<Page, Record<Lang, { title: string; description: string }>> = {
-	work: {
-		en: { title: 'Work', description: 'Case studies in product design, research and prototyping.' },
-		es: {
-			title: 'Trabajo',
-			description: 'Casos de estudio de diseño de producto, investigación y prototipado.'
-		}
-	},
 	playground: {
 		en: {
 			title: 'Playground',
@@ -34,22 +27,12 @@ const seo: Record<Page, Record<Lang, { title: string; description: string }>> = 
 		en: {
 			title: 'Work with me',
 			description:
-				'Ways to work together: embedded design engineering, prototype sprints, design systems and UX audits.'
+				'Ways to work together: embedded design engineering, prototype sprints, design systems and UX audits. Get in touch about roles and projects.'
 		},
 		es: {
 			title: 'Trabajemos',
 			description:
-				'Formas de trabajar juntos: design engineering dentro de tu equipo, sprints de prototipo, design systems y auditorías UX.'
-		}
-	},
-	contact: {
-		en: {
-			title: 'Contact',
-			description: 'Get in touch about roles, prototypes and product design work.'
-		},
-		es: {
-			title: 'Contacto',
-			description: 'Escríbeme para hablar de roles, prototipos y proyectos de diseño de producto.'
+				'Formas de trabajar juntos: design engineering dentro de tu equipo, sprints de prototipo, design systems y auditorías UX. Escríbeme para hablar de roles y proyectos.'
 		}
 	}
 }

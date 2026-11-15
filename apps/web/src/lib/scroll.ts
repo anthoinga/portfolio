@@ -56,7 +56,7 @@ function ratioHeight(cardWidth: number, ratio: number, viewH?: number) {
 
 /**
  * `wideFirst` makes the first card span the whole row on large screens (the
- * home feed). Pass `false` for an even two-column grid, as on /work.
+ * home feed). Pass `false` for an even two-column grid, as on /playground.
  */
 export function cardMetrics(width: number, height: number, wideFirst = true): CardMetrics {
 	if (width >= HOME.lg) {

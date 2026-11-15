@@ -13,7 +13,7 @@ const args = process.argv.slice(2)
 const base = (args.find((a) => !a.startsWith('--')) ?? 'http://127.0.0.1:4173').replace(/\/$/, '')
 const direct = args.includes('--direct')
 const RESOURCES = ['profile', 'experience', 'skills', 'projects', 'playground', 'services']
-const PAGES = ['index', 'work', 'playground', 'skills', 'work-with-me', 'contact', 'developers']
+const PAGES = ['index', 'playground', 'skills', 'work-with-me', 'developers']
 
 let failed = 0
 let passed = 0
@@ -84,7 +84,7 @@ await check('every Markdown page name is covered by the sitemap', () => {
 
 if (!direct) {
 	console.log('\nContent negotiation (needs the Vercel rewrites)')
-	for (const path of ['/', '/work', '/es/work', locs.find((p) => p.includes('/projects/')) ?? '/work']) {
+	for (const path of ['/', '/skills', '/es/skills', locs.find((p) => p.includes('/projects/')) ?? '/skills']) {
 		await check(`Accept: text/markdown on ${path}`, async () => {
 			const { r, body } = await text(path, { headers: { accept: 'text/markdown' } })
 			if (!(r.headers.get('content-type') ?? '').includes('markdown')) {
@@ -94,7 +94,7 @@ if (!direct) {
 		})
 	}
 	await check('a browser Accept header still gets HTML', async () => {
-		const { r } = await text('/work', { headers: { accept: 'text/html' } })
+		const { r } = await text('/skills', { headers: { accept: 'text/html' } })
 		if (!(r.headers.get('content-type') ?? '').includes('html')) return `got ${r.headers.get('content-type')}`
 	})
 	await check('/?mode=agent returns Markdown', async () => {

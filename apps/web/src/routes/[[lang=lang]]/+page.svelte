@@ -6,6 +6,8 @@
 	import { homeCopy } from '$lib/data/home'
 	import { currentLang, href } from '$lib/i18n'
 	import { uiDemos } from '$lib/data/uiDemos'
+	import { attachHeroDock } from '$lib/heroDock'
+	import { prefersReducedMotion } from '$lib/motion'
 	import { viewport } from '$lib/scrollRoot.svelte'
 	import type { PageData } from './$types'
 
@@ -13,9 +15,49 @@
 
 	const lang = $derived(currentLang())
 	const copy = $derived(homeCopy[lang])
-	const featured = $derived(data.projects.slice(0, 3))
 	const teaser = uiDemos.slice(0, 2)
-	const lines = $derived(copy.headline.split('\n'))
+
+	let slot: HTMLElement | undefined = $state()
+	let nameEl: HTMLElement | undefined = $state()
+	let statusEl: HTMLElement | undefined = $state()
+	let leadEl: HTMLElement | undefined = $state()
+	let ctasEl: HTMLElement | undefined = $state()
+	const leadWords = $derived(copy.lead.split(' '))
+
+	/** Groups the lead's word spans into their rendered lines. */
+	function leadLines(lead: HTMLElement) {
+		const lines: HTMLElement[][] = []
+		let top = NaN
+		for (const word of lead.querySelectorAll<HTMLElement>('[data-word]')) {
+			if (word.offsetTop !== top) {
+				lines.push([])
+				top = word.offsetTop
+			}
+			lines[lines.length - 1].push(word)
+		}
+		return lines
+	}
+
+	$effect(() => {
+		leadWords
+		const scroller = viewport.scroller
+		if (!scroller || !main || !slot || !nameEl || !statusEl || !leadEl || !ctasEl) return
+		const [status, lead, ctas] = [statusEl, leadEl, ctasEl]
+		return attachHeroDock({
+			scroller,
+			content: main,
+			slot,
+			name: nameEl,
+			steps: () => [[status], ...leadLines(lead), ...[...ctas.querySelectorAll<HTMLElement>('a')].map((a) => [a])]
+		})
+	})
+
+	function toWork(event: MouseEvent) {
+		const target = document.getElementById('work')
+		if (!target) return
+		event.preventDefault()
+		target.scrollIntoView({ block: 'start', behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
+	}
 
 	// The sticky-collapse cards measure scroll position from the top of the feed.
 	let main: HTMLElement | undefined = $state()
@@ -40,17 +82,22 @@
 
 <main id="main" bind:this={main}>
 	<section class="page-shell hero">
-		<p class="status reveal" style="--i:0">
-			<span class="dot" aria-hidden="true"></span>
-			{copy.status}
-		</p>
-		<h1 class="reveal" style="--i:1">
-			{#each lines as line, i (i)}<span>{line}</span>{/each}
+		<!-- Scroll fades go on wrappers and word spans so they don't override the .reveal entrances. -->
+		<div bind:this={statusEl}>
+			<p class="status reveal" style="--i:0">
+				<span class="dot" aria-hidden="true"></span>
+				{copy.status}
+			</p>
+		</div>
+		<h1 bind:this={slot}>
+			<span class="name" bind:this={nameEl}><span class="reveal" style="--i:1">{data.settings.name}</span></span>
 		</h1>
-		<p class="lead reveal" style="--i:2">{copy.lead}</p>
-		<div class="ctas reveal" style="--i:3">
-			<Button href={href('/work')}>{copy.ctaPrimary}</Button>
-			<Button href={href('/contact')} variant="ghost">{copy.ctaSecondary}</Button>
+		<p class="lead reveal" style="--i:2" bind:this={leadEl}>
+			{#each leadWords as word, i (i)}<span data-word>{word}</span>{' '}{/each}
+		</p>
+		<div class="ctas reveal" style="--i:3" bind:this={ctasEl}>
+			<Button href="#work" onclick={toWork}>{copy.ctaPrimary}</Button>
+			<Button href={href('/work-with-me#contact')} variant="ghost">{copy.ctaSecondary}</Button>
 		</div>
 	</section>
 
@@ -65,13 +112,12 @@
 		</ul>
 	</section>
 
-	<section class="page-shell block" aria-labelledby="work-h">
+	<section id="work" class="page-shell block" aria-labelledby="work-h">
 		<header class="row">
 			<h2 id="work-h" class="font-label">{copy.work.label}</h2>
-			<a href={href('/work')} class="more" use:sound>{copy.work.all} →</a>
 		</header>
 		<div bind:this={feed} class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
-			{#each featured as project, i (project._id)}
+			{#each data.projects as project, i (project._id)}
 				<ProjectCard {project} index={i} topOffset={feedTop} />
 			{/each}
 		</div>
@@ -110,7 +156,7 @@
 		<p>{copy.cta.body}</p>
 		<div class="ctas">
 			<Button href={href('/work-with-me')}>{copy.cta.primary}</Button>
-			<Button href={href('/contact')} variant="ghost">{copy.cta.secondary}</Button>
+			<Button href={href('/work-with-me#contact')} variant="ghost">{copy.cta.secondary}</Button>
 		</div>
 	</section>
 </main>
@@ -147,16 +193,29 @@
 			box-shadow: 0 0 0 0 transparent;
 		}
 	}
+	/* Keeps the name's place in the hero while the name itself is pinned and docked. */
 	h1 {
+		position: relative;
+		height: calc(var(--text-display) * var(--text-display--line-height));
 		margin: 0;
-		max-width: 14ch;
 		font-family: var(--font-display);
 		font-size: var(--text-display);
 		line-height: var(--text-display--line-height);
 		letter-spacing: var(--text-display--letter-spacing);
 		font-weight: 400;
+		white-space: nowrap;
 	}
-	h1 span {
+	/* White under `exclusion` inverts whatever is behind it, so the name reads over any card. */
+	.name {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 30;
+		transform-origin: 0 0;
+		color: #fff;
+		mix-blend-mode: exclusion;
+	}
+	.name > span {
 		display: block;
 	}
 	.lead {
@@ -197,6 +256,10 @@
 
 	.block {
 		padding-bottom: clamp(3.5rem, 10vh, 6.5rem);
+	}
+	/* Clears the fixed nav pill when jumped to via #work. */
+	#work {
+		scroll-margin-top: 5.5rem;
 	}
 	.row {
 		display: flex;

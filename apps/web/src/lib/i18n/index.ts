@@ -20,7 +20,7 @@ export function pick<T>(value: { en: T; es: T }, lang: Lang = currentLang()): T 
 	return value[lang]
 }
 
-/** Prefixes an internal path with the current language: `/work` → `/es/work`. */
+/** Prefixes an internal path with the current language: `/skills` → `/es/skills`. */
 export function href(path: string, lang: Lang = currentLang()) {
 	return localePathFor(path, lang)
 }

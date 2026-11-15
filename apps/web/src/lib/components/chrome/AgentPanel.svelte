@@ -12,7 +12,7 @@
 	const prefix = $derived(lang === 'es' ? '/es' : '')
 	const commands = $derived([
 		{ label: t('agent.cmdIndex'), text: `curl ${base}${prefix}/llms.txt` },
-		{ label: t('agent.cmdMarkdown'), text: `curl -H 'Accept: text/markdown' ${base}${prefix}/work` },
+		{ label: t('agent.cmdMarkdown'), text: `curl -H 'Accept: text/markdown' ${base}${prefix}/skills` },
 		{ label: t('agent.cmdApi'), text: `curl ${base}/api/v1/profile${lang === 'es' ? '?lang=es' : ''}` }
 	])
 	let copied = $state('')
