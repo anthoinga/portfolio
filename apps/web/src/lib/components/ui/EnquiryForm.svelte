@@ -97,7 +97,6 @@
 </script>
 
 <form bind:this={formEl} class="form" onsubmit={submit} novalidate aria-labelledby="enquire-h">
-	<p class="aside">{t('form.aside')}</p>
 	<p class="font-label label">{t('form.label')}</p>
 	<h2 id="enquire-h" class="title">{t('form.title')}</h2>
 	<p class="lead">{t('form.lead')}</p>
@@ -188,11 +187,6 @@
 		padding: clamp(3rem, 8vh, 5rem) 0;
 		/* Clears the fixed nav when jumped to via #enquire. */
 		scroll-margin-top: 4rem;
-	}
-	.aside {
-		margin: 0 0 2rem;
-		color: var(--fg-muted);
-		font-size: 0.9375rem;
 	}
 	.label {
 		margin: 0 0 1rem;

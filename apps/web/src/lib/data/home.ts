@@ -3,20 +3,20 @@
  * the studio gets in the Sanity phase. The Spanish is a draft written for a
  * Peruvian reader, not a translation of the English.
  *
- * Voice, after the structure of the reference site: headlines, labels and buttons are plain, and
- * the role is stated once (the lead). The site itself narrates in short captions at the seams
- * between sections, talking about "him". Each caption is tied to something true on the page.
+ * Voice, after the reference site: first person, short, plain. Headlines, labels and buttons say what
+ * they are, and the role is stated once (the lead). There is no narrator and no jokes; the services
+ * are described the way the reference site describes its own: what the work is and what you get.
  */
 export type HomeCopy = {
 	status: string
 	lead: string
 	ctaPrimary: string
 	ctaSecondary: string
-	work: { label: string; note: string }
+	work: { label: string }
 	services: { label: string; all: string }
 	proof: { outcomesLabel: string; recognisedLabel: string; outcomes: { stat: string; label: string }[] }
 	playground: { label: string; title: string; all: string }
-	cta: { tour: string; title: string; body: string; primary: string; secondary: string }
+	cta: { title: string; body: string; primary: string; secondary: string }
 }
 
 export const homeCopy: Record<'en' | 'es', HomeCopy> = {
@@ -26,7 +26,7 @@ export const homeCopy: Record<'en' | 'es', HomeCopy> = {
 		lead: 'Hello, I’m Anthony. I design and build apps. So far that’s a grocer’s pickup app, a staffing marketplace, an insurance platform and a convenience-store concept.',
 		ctaPrimary: 'Contact',
 		ctaSecondary: 'See the work',
-		work: { label: 'Case studies', note: 'Four of them. I’m not allowed to say whose.' },
+		work: { label: 'Case studies' },
 		services: { label: 'Services', all: 'Work with me' },
 		proof: {
 			outcomesLabel: 'Results from past work',
@@ -40,11 +40,10 @@ export const homeCopy: Record<'en' | 'es', HomeCopy> = {
 		},
 		playground: {
 			label: 'Playground',
-			title: 'None of this is client work, so none of it is sacred.',
+			title: 'Small things I build to learn how an interface should feel.',
 			all: 'Open the playground'
 		},
 		cta: {
-			tour: 'That’s the tour. Anything else, you’ll have to ask him.',
 			title: 'Let’s build your app.',
 			body: 'App design, a full build or a product audit. Tell me about the app.',
 			primary: 'Contact',
@@ -56,7 +55,7 @@ export const homeCopy: Record<'en' | 'es', HomeCopy> = {
 		lead: 'Hola, soy Anthony. Diseño y construyo apps. Hasta ahora: una app de recojo para un supermercado, un marketplace de personal temporal, una plataforma de seguros y un concepto para tiendas de conveniencia.',
 		ctaPrimary: 'Contacto',
 		ctaSecondary: 'Ver mi trabajo',
-		work: { label: 'Casos de estudio', note: 'Son cuatro. No me dejan decir de quién.' },
+		work: { label: 'Casos de estudio' },
 		services: { label: 'Servicios', all: 'Trabajemos juntos' },
 		proof: {
 			outcomesLabel: 'Resultados de trabajos anteriores',
@@ -70,11 +69,10 @@ export const homeCopy: Record<'en' | 'es', HomeCopy> = {
 		},
 		playground: {
 			label: 'Playground',
-			title: 'Nada de esto es trabajo para clientes, así que nada es sagrado.',
+			title: 'Cosas pequeñas que armo para entender cómo debería sentirse una interfaz.',
 			all: 'Abrir el playground'
 		},
 		cta: {
-			tour: 'Eso fue el recorrido. Lo demás, pregúntaselo a él.',
 			title: 'Hagamos tu app.',
 			body: 'Diseño de apps, una construcción completa o una auditoría de producto. Cuéntame de la app.',
 			primary: 'Contacto',

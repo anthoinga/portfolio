@@ -24,15 +24,14 @@ export function aboutCopy(lang: Lang): AboutCopy {
 		? {
 				label: 'About',
 				title: 'About me',
-				lead: 'The short version. There is no long version yet.',
+				lead: 'I’m Anthony Inga, an independent designer and developer.',
 				story: [
-					'I’m Anthony Inga, an independent designer and developer.',
-					'The case studies are on the Work page. The client names aren’t, for now.',
+					'My case studies are on the Work page, with client names withheld.',
 					'There’s also a Playground of small experiments.'
 				],
 				building: {
 					label: 'Building now',
-					paragraphs: ['My own first app. I haven’t picked which one, so there’s nothing to link yet.']
+					paragraphs: ['My own first app. I haven’t chosen which one yet, so there’s nothing to link.']
 				},
 				credentialsLabel: 'Experience',
 				elsewhereLabel: 'Elsewhere',
@@ -45,15 +44,14 @@ export function aboutCopy(lang: Lang): AboutCopy {
 		: {
 				label: 'Sobre mí',
 				title: 'Sobre mí',
-				lead: 'La versión corta. La larga todavía no existe.',
+				lead: 'Soy Anthony Inga, diseñador y desarrollador independiente.',
 				story: [
-					'Soy Anthony Inga, diseñador y desarrollador independiente.',
-					'Los casos de estudio están en Trabajo. Los nombres de los clientes no, por ahora.',
+					'Mis casos de estudio están en Trabajo, sin los nombres de los clientes.',
 					'También hay un Playground de experimentos pequeños.'
 				],
 				building: {
 					label: 'Lo que estoy construyendo',
-					paragraphs: ['Mi propia primera app. Todavía no elijo cuál, así que aún no hay nada que enlazar.']
+					paragraphs: ['Mi primera app propia. Todavía no elijo cuál, así que no hay nada que enlazar.']
 				},
 				credentialsLabel: 'Experiencia',
 				elsewhereLabel: 'En otros lugares',

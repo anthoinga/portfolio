@@ -31,8 +31,6 @@
 			{/each}
 		</ol>
 
-		<p class="pause">{t('wwm.pause')}</p>
-
 		<div id="enquire">
 			<EnquiryForm services={list} email={data.settings.email} endpoint={data.formEndpoint ?? undefined} />
 		</div>
@@ -43,12 +41,6 @@
 	.unsure {
 		max-width: 36rem;
 		margin: 0 0 clamp(2rem, 5vh, 3rem);
-		color: var(--fg-muted);
-		line-height: 1.55;
-	}
-	.pause {
-		max-width: 36rem;
-		margin: clamp(2rem, 5vh, 3rem) 0 0;
 		color: var(--fg-muted);
 		line-height: 1.55;
 	}

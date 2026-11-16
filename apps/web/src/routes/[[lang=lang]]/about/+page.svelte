@@ -98,9 +98,6 @@
 		line-height: var(--text-lead--line-height);
 		color: var(--fg-muted);
 	}
-	.story .prose p:first-child {
-		color: var(--fg);
-	}
 	.rows {
 		margin: 0;
 		padding: 0;

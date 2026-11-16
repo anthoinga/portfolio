@@ -140,7 +140,6 @@
 		<header class="row">
 			<h2 id="work-h" class="font-label">{copy.work.label}</h2>
 		</header>
-		<p class="note">{copy.work.note}</p>
 		<div bind:this={feed} class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
 			{#each data.projects as project, i (project._id)}
 				<ProjectCard {project} index={i} topOffset={feedTop} />
@@ -162,7 +161,6 @@
 	</section>
 
 	<section class="page-shell cta">
-		<p class="note tour">{copy.cta.tour}</p>
 		<h2>{copy.cta.title}</h2>
 		<p>{copy.cta.body}</p>
 		<div class="ctas">
@@ -290,14 +288,7 @@
 		}
 	}
 
-	.note {
-		margin: 0 0 1.25rem;
-		font-size: 0.9375rem;
-		color: var(--fg-muted);
-	}
-	.tour {
-		margin-bottom: 1.5rem;
-	}
+
 
 	.offers {
 		display: grid;

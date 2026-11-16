@@ -22,24 +22,24 @@ export function services(lang: Lang): Service[] {
 			id: 'build',
 			title: en ? 'App design & build' : 'Diseño y desarrollo de apps',
 			summary: en
-				? 'Design, code and launch, from the first sketch to the store.'
-				: 'Diseño, código y lanzamiento, desde el primer boceto hasta la tienda.',
+				? 'From first sketch to the App Store. Product thinking, interface design and a working build, handed over clean.'
+				: 'Del primer boceto a la App Store. Visión de producto, diseño de interfaz y una versión funcional, entregada en orden.',
 			proof: { slug: 'curbside', label: 'Curbside Pickup' }
 		},
 		{
 			id: 'design',
 			title: en ? 'Product & interface design' : 'Diseño de producto e interfaz',
 			summary: en
-				? 'The flows, screens and motion for an app.'
-				: 'Los flujos, las pantallas y el movimiento de una app.',
+				? 'Flows, screens and motion for an app, grounded in what people need and designed to be built.'
+				: 'Flujos, pantallas y movimiento para una app, basados en lo que la gente necesita y diseñados para construirse.',
 			proof: { slug: 'talent', label: 'Talent Marketplace' }
 		},
 		{
 			id: 'consult',
 			title: en ? 'Audit & product consulting' : 'Auditoría y consultoría de producto',
 			summary: en
-				? 'A close look at a product that isn’t landing, and what to fix first.'
-				: 'Una mirada de cerca a un producto que no despega, y qué arreglar primero.',
+				? 'A close look at a product that isn’t landing: where people drop off, what to fix first and a plan your team can act on.'
+				: 'Una mirada de cerca a un producto que no despega: dónde se va la gente, qué arreglar primero y un plan que tu equipo pueda ejecutar.',
 			proof: { slug: 'insurance', label: 'Insurance Aggregator' }
 		}
 	]
