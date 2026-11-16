@@ -17,7 +17,8 @@
 		{ path: '/', label: t('nav.work') },
 		{ path: '/playground', label: t('nav.playground') },
 		{ path: '/skills', label: t('nav.skills') },
-		{ path: '/work-with-me', label: t('nav.services') }
+		{ path: '/work-with-me', label: t('nav.services') },
+		{ path: '/about', label: t('nav.about') }
 	].map((l) => ({ ...l, href: href(l.path, lang) })))
 	/** Agent is the last numbered row, after the pages. */
 	const agentNumber = $derived(String(links.length + 1).padStart(2, '0'))

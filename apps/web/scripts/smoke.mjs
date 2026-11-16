@@ -18,7 +18,7 @@ const axeSource = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8'
 const base = (process.argv[2] ?? 'http://127.0.0.1:4173').replace(/\/$/, '')
 // A normal browser UA: the intro is deliberately skipped for bots and headless agents.
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
-const PATHS = ['/', '/playground', '/skills', '/work-with-me', '/developers', '/privacy', '/projects/curbside', '/projects/convenience']
+const PATHS = ['/', '/playground', '/skills', '/work-with-me', '/about', '/developers', '/privacy', '/projects/curbside', '/projects/convenience']
 
 let failed = 0
 let passed = 0
@@ -74,7 +74,7 @@ for (const lang of ['', '/es']) {
 
 console.log('\nAccessibility (axe-core: serious + critical)')
 for (const scheme of ['light', 'dark']) {
-	for (const path of ['/', '/skills', '/work-with-me', '/es/playground', '/developers', '/projects/curbside']) {
+	for (const path of ['/', '/skills', '/work-with-me', '/about', '/es/playground', '/developers', '/projects/curbside']) {
 		const { ctx, page } = await open({ colorScheme: scheme })
 		try {
 			await page.goto(base + path, { waitUntil: 'networkidle' })

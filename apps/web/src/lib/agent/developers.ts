@@ -25,8 +25,8 @@ const summaries: Record<ApiResource, Record<Lang, string>> = {
 		es: 'Experimentos de interfaz con notas sobre qué prueba cada uno.'
 	},
 	services: {
-		en: 'The services on offer, with billing shape, typical length, what each delivers and the case study that shows it.',
-		es: 'Los servicios que ofrezco, con forma de cobro, duración típica, qué entrega cada uno y el caso de estudio que lo muestra.'
+		en: 'The services on offer, what each is, and the case study that shows it.',
+		es: 'Los servicios que ofrezco, en qué consiste cada uno y el caso de estudio que lo muestra.'
 	}
 }
 

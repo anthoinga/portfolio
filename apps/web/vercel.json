@@ -12,8 +12,8 @@
 		{ "source": "/es/work", "destination": "/es#work", "permanent": true },
 		{ "source": "/work.md", "destination": "/index.md", "permanent": true },
 		{ "source": "/es/work.md", "destination": "/es/index.md", "permanent": true },
-		{ "source": "/contact", "destination": "/work-with-me#contact", "permanent": true },
-		{ "source": "/es/contact", "destination": "/es/work-with-me#contact", "permanent": true },
+		{ "source": "/contact", "destination": "/work-with-me#enquire", "permanent": true },
+		{ "source": "/es/contact", "destination": "/es/work-with-me#enquire", "permanent": true },
 		{ "source": "/contact.md", "destination": "/work-with-me.md", "permanent": true },
 		{ "source": "/es/contact.md", "destination": "/es/work-with-me.md", "permanent": true }
 	],

@@ -3,37 +3,34 @@
  * the studio gets in the Sanity phase. The Spanish is a draft written for a
  * Peruvian reader, not a translation of the English.
  *
- * The site sells independent design-engineering services to agencies and studios, so the copy
- * speaks to a buyer: what they get, who it is for, how to start.
+ * Voice, after the structure of the reference site: headlines, labels and buttons are plain, and
+ * the role is stated once (the lead). The site itself narrates in short captions at the seams
+ * between sections, talking about "him". Each caption is tied to something true on the page.
  */
 export type HomeCopy = {
 	status: string
 	lead: string
-	/** One line under the buttons: the easiest way to begin. */
-	entry: string
 	ctaPrimary: string
 	ctaSecondary: string
-	work: { label: string }
+	work: { label: string; note: string }
 	services: { label: string; all: string }
 	proof: { outcomesLabel: string; recognisedLabel: string; outcomes: { stat: string; label: string }[] }
 	playground: { label: string; title: string; all: string }
-	principles: { label: string; items: { title: string; body: string }[] }
-	cta: { title: string; body: string; primary: string; secondary: string }
+	cta: { tour: string; title: string; body: string; primary: string; secondary: string }
 }
 
 export const homeCopy: Record<'en' | 'es', HomeCopy> = {
 	en: {
-		// Availability. Add the month here once it is known, e.g. "Booking agency projects from March".
-		status: 'Taking on agency projects',
-		lead: 'I am a design engineer for agencies and studios. I design and build interface work in code, under your brand and inside your process, so your client sees something real early.',
-		entry: 'Most agencies start with a 2–3 week prototype sprint.',
-		ctaPrimary: 'Start a project',
+		// Availability. Add the month here once it is known, e.g. "Available from March".
+		status: 'Available for app builds & consulting',
+		lead: 'Hello, I’m Anthony. I design and build apps. So far that’s a grocer’s pickup app, a staffing marketplace, an insurance platform and a convenience-store concept.',
+		ctaPrimary: 'Contact',
 		ctaSecondary: 'See the work',
-		work: { label: 'Case studies' },
-		services: { label: 'Services', all: 'See how we work' },
+		work: { label: 'Case studies', note: 'Four of them. I’m not allowed to say whose.' },
+		services: { label: 'Services', all: 'Work with me' },
 		proof: {
 			outcomesLabel: 'Results from past work',
-			recognisedLabel: 'Recognised by',
+			recognisedLabel: 'Awards',
 			outcomes: [
 				{ stat: '20%', label: 'faster order fulfilment' },
 				{ stat: '40%', label: 'less training time' },
@@ -43,44 +40,27 @@ export const homeCopy: Record<'en' | 'es', HomeCopy> = {
 		},
 		playground: {
 			label: 'Playground',
-			title: 'Small things I build to learn how an interface should feel.',
+			title: 'None of this is client work, so none of it is sacred.',
 			all: 'Open the playground'
 		},
-		principles: {
-			label: 'How I work',
-			items: [
-				{
-					title: 'Design in the medium',
-					body: 'I get to something that moves early, so your client reacts to the real thing instead of a picture of it.'
-				},
-				{
-					title: 'Prototype to learn',
-					body: 'Research and prototypes feed each other. A rough build that answers a question beats a polished one that does not.'
-				},
-				{
-					title: 'Leave your team a system',
-					body: 'The goal is not one good screen. It is a set of decisions your team can keep building on after the engagement ends.'
-				}
-			]
-		},
 		cta: {
-			title: 'Have a project to scope or staff?',
-			body: 'Tell me what you are building and when. I will tell you whether I can help and how we would start.',
-			primary: 'Start a project',
-			secondary: 'See the services'
+			tour: 'That’s the tour. Anything else, you’ll have to ask him.',
+			title: 'Let’s build your app.',
+			body: 'App design, a full build or a product audit. Tell me about the app.',
+			primary: 'Contact',
+			secondary: 'About me'
 		}
 	},
 	es: {
-		status: 'Tomando proyectos de agencias',
-		lead: 'Soy design engineer para agencias y estudios. Diseño y construyo interfaces en código, bajo tu marca y dentro de tu proceso, para que tu cliente vea algo real desde temprano.',
-		entry: 'La mayoría de las agencias empieza con un sprint de prototipo de 2–3 semanas.',
-		ctaPrimary: 'Iniciar un proyecto',
+		status: 'Disponible para apps y consultoría',
+		lead: 'Hola, soy Anthony. Diseño y construyo apps. Hasta ahora: una app de recojo para un supermercado, un marketplace de personal temporal, una plataforma de seguros y un concepto para tiendas de conveniencia.',
+		ctaPrimary: 'Contacto',
 		ctaSecondary: 'Ver mi trabajo',
-		work: { label: 'Casos de estudio' },
-		services: { label: 'Servicios', all: 'Ver cómo trabajamos' },
+		work: { label: 'Casos de estudio', note: 'Son cuatro. No me dejan decir de quién.' },
+		services: { label: 'Servicios', all: 'Trabajemos juntos' },
 		proof: {
 			outcomesLabel: 'Resultados de trabajos anteriores',
-			recognisedLabel: 'Reconocido por',
+			recognisedLabel: 'Premios',
 			outcomes: [
 				{ stat: '20%', label: 'más rápido en el despacho de pedidos' },
 				{ stat: '40%', label: 'menos tiempo de capacitación' },
@@ -90,31 +70,15 @@ export const homeCopy: Record<'en' | 'es', HomeCopy> = {
 		},
 		playground: {
 			label: 'Playground',
-			title: 'Cosas pequeñas que armo para entender cómo debería sentirse una interfaz.',
+			title: 'Nada de esto es trabajo para clientes, así que nada es sagrado.',
 			all: 'Abrir el playground'
 		},
-		principles: {
-			label: 'Cómo trabajo',
-			items: [
-				{
-					title: 'Diseñar sobre lo real',
-					body: 'Llego rápido a algo que se mueve, para que tu cliente reaccione a lo real y no a una imagen.'
-				},
-				{
-					title: 'Prototipar para aprender',
-					body: 'La investigación y los prototipos se alimentan entre sí. Un prototipo a medias que responde una pregunta vale más que uno pulido que no.'
-				},
-				{
-					title: 'Dejarle un sistema a tu equipo',
-					body: 'La meta no es una pantalla bonita, sino un conjunto de decisiones que tu equipo pueda seguir usando cuando termine el trabajo.'
-				}
-			]
-		},
 		cta: {
-			title: '¿Tienes un proyecto por definir o reforzar?',
-			body: 'Cuéntame qué estás construyendo y para cuándo. Te digo si puedo ayudar y cómo empezaríamos.',
-			primary: 'Iniciar un proyecto',
-			secondary: 'Ver los servicios'
+			tour: 'Eso fue el recorrido. Lo demás, pregúntaselo a él.',
+			title: 'Hagamos tu app.',
+			body: 'Diseño de apps, una construcción completa o una auditoría de producto. Cuéntame de la app.',
+			primary: 'Contacto',
+			secondary: 'Sobre mí'
 		}
 	}
 }

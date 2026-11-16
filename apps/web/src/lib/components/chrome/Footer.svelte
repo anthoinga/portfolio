@@ -18,6 +18,7 @@
 
 <footer class="page-shell footer">
 	<p class="name">{settings.name} <span>© {year}</span></p>
+	<p class="prompt" aria-hidden="true">$ npx inga</p>
 	<ul>
 		{#each links as link (link.label)}
 			<li>
@@ -51,6 +52,12 @@
 	.name span {
 		margin-left: 0.5rem;
 		color: var(--fg-muted);
+	}
+	.prompt {
+		margin: 0;
+		font-family: var(--font-mono);
+		font-size: 0.8125rem;
+		letter-spacing: 0;
 	}
 	ul {
 		display: flex;

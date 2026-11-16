@@ -1,6 +1,6 @@
 import { MD_PAGES } from '../../params/mdpage'
 import { translate, type Lang } from '$lib/i18n/core'
-import { faq, process, terms } from '$lib/data/services'
+import { aboutCopy } from '$lib/data/about'
 import { developersContent } from './developers'
 import { projectMarkdown } from './markdown'
 import type { SiteModel } from './model'
@@ -22,6 +22,7 @@ const NAV_KEY = {
 	playground: 'nav.playground',
 	skills: 'nav.skills',
 	'work-with-me': 'nav.services',
+	about: 'nav.about',
 	developers: 'nav.home'
 } as const
 
@@ -142,36 +143,40 @@ export function pageDoc(m: SiteModel, page: MdPage): Doc {
 				body: [
 					`# ${T(m, 'wwm.title')}`,
 					T(m, 'wwm.lead'),
+					T(m, 'wwm.unsure'),
 					...m.services.map((v) =>
 						[
 							`## ${v.title}`,
-							`${v.shape} · ${v.length}`,
 							v.summary,
-							`**${T(m, 'wwm.forWhom')}:** ${v.forWhom}`,
-							v.deliverables.map((d) => `- ${d}`).join('\n'),
 							`${T(m, 'wwm.seeIn')}: ${link(v.proof.label, m.url(`/projects/${v.proof.slug}`))}`
 						].join('\n\n')
 					),
-					`## ${T(m, 'wwm.processLabel')}`,
-					process(m.lang)
-						.map((st, i) => `${i + 1}. **${st.title}**: ${st.body}`)
-						.join('\n'),
-					`## ${T(m, 'wwm.termsLabel')}`,
-					terms(m.lang)
-						.map((x) => `- **${x.title}**: ${x.body}`)
-						.join('\n'),
-					`## ${T(m, 'wwm.faqLabel')}`,
-					faq(m.lang)
-						.map((x) => `**${x.q}**\n${x.a}`)
-						.join('\n\n'),
-					`## ${T(m, 'contact.title')}`,
-					s.bio ?? '',
+					`## ${T(m, 'form.title')}`,
+					T(m, 'form.lead'),
 					links(m).join('\n'),
-					`### ${T(m, 'contact.credentials')}`,
-					[credits(s.experiences), credits(s.awards)].filter(Boolean).join('\n'),
 					agentFooter(m)
 				].join('\n\n')
 			}
+		case 'about': {
+			const a = aboutCopy(m.lang)
+			return {
+				title: a.title,
+				description: a.lead,
+				path,
+				body: [
+					`# ${a.title}`,
+					a.lead,
+					...a.story,
+					`## ${a.building.label}`,
+					...a.building.paragraphs,
+					`## ${a.credentialsLabel}`,
+					[credits(s.experiences), credits(s.awards)].filter(Boolean).join('\n'),
+					`## ${a.elsewhereLabel}`,
+					links(m).join('\n'),
+					agentFooter(m)
+				].join('\n\n')
+			}
+		}
 		case 'developers': {
 			const d = developersContent(m.lang, m.siteUrl)
 			return {
@@ -233,7 +238,7 @@ export function llmsTxt(m: SiteModel): string {
 		'',
 		en ? '## Key links' : '## Enlaces clave',
 		'',
-		...(['index', 'playground', 'skills', 'work-with-me', 'developers'] as MdPage[]).map(
+		...(['index', 'playground', 'skills', 'work-with-me', 'about', 'developers'] as MdPage[]).map(
 			(pg) => {
 				const label = pg === 'developers' ? (en ? 'Developers' : 'Desarrolladores') : T(m, NAV_KEY[pg])
 				return `- [${label}](${m.url(sitePath(pg))}): ${short(pageDoc(m, pg).description)}`
@@ -245,8 +250,8 @@ export function llmsTxt(m: SiteModel): string {
 		en ? '## When to use this' : '## Cuándo usar esto',
 		'',
 		en
-			? `Use this site when a request is about ${s.name} specifically: who they are, their work, how to reach them, or whether they fit a contract design-engineering project for an agency or studio. It is one person's portfolio, not general documentation. For unrelated design or engineering questions, use primary sources.`
-			: `Usa este sitio cuando la consulta sea sobre ${s.name} en particular: quién es, su trabajo, cómo contactarle o si encaja en un proyecto de design engineering por contrato para una agencia o estudio. Es el portafolio de una persona, no documentación general. Para consultas de diseño o ingeniería sin relación, usa fuentes primarias.`,
+			? `Use this site when a request is about ${s.name} specifically: who they are, their work, how to reach them, or whether they are a fit to design and build an app. It is one person's portfolio, not general documentation. For unrelated design or engineering questions, use primary sources.`
+			: `Usa este sitio cuando la consulta sea sobre ${s.name} en particular: quién es, su trabajo, cómo contactarle o si encajan para diseñar y construir una app. Es el portafolio de una persona, no documentación general. Para consultas de diseño o ingeniería sin relación, usa fuentes primarias.`,
 		'',
 		en ? '## How to call this site' : '## Cómo consultar este sitio',
 		'',
@@ -276,7 +281,7 @@ export function llmsTxt(m: SiteModel): string {
 		'',
 		en ? '## Ways to work together' : '## Formas de trabajar juntos',
 		'',
-		...m.services.map((v) => `- **${v.title}** (${v.shape}, ${v.length}): ${v.summary}`),
+		...m.services.map((v) => `- **${v.title}**: ${v.summary}`),
 		'',
 		en ? '## Contact' : '## Contacto',
 		'',

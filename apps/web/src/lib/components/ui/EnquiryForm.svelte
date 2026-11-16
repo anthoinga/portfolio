@@ -3,7 +3,7 @@
 	import { sound } from '$lib/actions/sfx'
 	import { flashCopied } from '$lib/cursorNotice.svelte'
 	import type { Service } from '$lib/data/services'
-	import { currentLang, t } from '$lib/i18n'
+	import { currentLang, href, t } from '$lib/i18n'
 	import { sfx } from '$lib/sfx/palette'
 
 	/**
@@ -14,7 +14,7 @@
 	let { services, email, endpoint }: { services: Service[]; email?: string; endpoint?: string } = $props()
 
 	let name = $state('')
-	let agency = $state('')
+	let company = $state('')
 	let from = $state('')
 	let service = $state('')
 	let timeline = $state('')
@@ -78,7 +78,7 @@
 				headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 				body: JSON.stringify({
 					name,
-					agency,
+					company,
 					email: from,
 					service,
 					timeline,
@@ -97,6 +97,7 @@
 </script>
 
 <form bind:this={formEl} class="form" onsubmit={submit} novalidate aria-labelledby="enquire-h">
+	<p class="aside">{t('form.aside')}</p>
 	<p class="font-label label">{t('form.label')}</p>
 	<h2 id="enquire-h" class="title">{t('form.title')}</h2>
 	<p class="lead">{t('form.lead')}</p>
@@ -118,8 +119,8 @@
 				{#if errors.name}<span id="f-name-err" class="err">{errors.name}</span>{/if}
 			</div>
 			<div class="field">
-				<label for="f-agency">{t('form.agency')}</label>
-				<input id="f-agency" name="agency" autocomplete="organization" bind:value={agency} />
+				<label for="f-company">{t('form.company')}</label>
+				<input id="f-company" name="company" autocomplete="organization" bind:value={company} />
 			</div>
 			<div class="field">
 				<label for="f-email">{t('form.email')}</label>
@@ -167,6 +168,8 @@
 			</div>
 		</div>
 
+		<p class="privacy">{t('form.privacy')} <a href={href('/privacy')} use:sound>{t('form.privacyLink')}</a></p>
+
 		<div class="actions">
 			<button type="submit" class="send" disabled={status === 'sending'} use:sound>
 				{status === 'sending' ? t('form.sending') : endpoint ? t('form.send') : t('form.copyButton')}
@@ -185,6 +188,11 @@
 		padding: clamp(3rem, 8vh, 5rem) 0;
 		/* Clears the fixed nav when jumped to via #enquire. */
 		scroll-margin-top: 4rem;
+	}
+	.aside {
+		margin: 0 0 2rem;
+		color: var(--fg-muted);
+		font-size: 0.9375rem;
 	}
 	.label {
 		margin: 0 0 1rem;
@@ -256,12 +264,22 @@
 		height: 1px;
 		overflow: hidden;
 	}
+	.privacy {
+		margin: 1.5rem 0 0;
+		font-size: 0.875rem;
+		color: var(--fg-muted);
+	}
+	.privacy a {
+		text-decoration: underline;
+		text-decoration-color: var(--rule);
+		text-underline-offset: 4px;
+	}
 	.actions {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 1rem 1.5rem;
-		margin-top: 1.75rem;
+		margin-top: 1rem;
 	}
 	.send {
 		padding: 0.85rem 1.4rem;

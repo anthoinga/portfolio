@@ -24,7 +24,6 @@
 	let statusEl: HTMLElement | undefined = $state()
 	let leadEl: HTMLElement | undefined = $state()
 	let ctasEl: HTMLElement | undefined = $state()
-	let entryEl: HTMLElement | undefined = $state()
 	const leadWords = $derived(copy.lead.split(' '))
 
 	/** Groups the lead's word spans into their rendered lines. */
@@ -44,14 +43,14 @@
 	$effect(() => {
 		leadWords
 		const scroller = viewport.scroller
-		if (!scroller || !main || !slot || !nameEl || !statusEl || !leadEl || !ctasEl || !entryEl) return
-		const [status, lead, ctas, entry] = [statusEl, leadEl, ctasEl, entryEl]
+		if (!scroller || !main || !slot || !nameEl || !statusEl || !leadEl || !ctasEl) return
+		const [status, lead, ctas] = [statusEl, leadEl, ctasEl]
 		return attachHeroDock({
 			scroller,
 			content: main,
 			slot,
 			name: nameEl,
-			steps: () => [[status], ...leadLines(lead), ...[...ctas.querySelectorAll<HTMLElement>('a')].map((a) => [a]), [entry]]
+			steps: () => [[status], ...leadLines(lead), ...[...ctas.querySelectorAll<HTMLElement>('a')].map((a) => [a])]
 		})
 	})
 
@@ -102,7 +101,6 @@
 			<Button href={href('/work-with-me#enquire')}>{copy.ctaPrimary}</Button>
 			<Button href="#work" onclick={toWork} variant="ghost">{copy.ctaSecondary}</Button>
 		</div>
-		<p class="entry reveal" style="--i:3" bind:this={entryEl}>{copy.entry}</p>
 	</section>
 
 	<section class="page-shell proof reveal" style="--i:4" aria-label={copy.proof.outcomesLabel}>
@@ -131,7 +129,7 @@
 					<span class="num font-label">0{i + 1}</span>
 					<a href={href('/work-with-me')} use:sound>
 						<h3>{offer.title}</h3>
-						<p>{offer.shape} · {offer.length}</p>
+						<p>{offer.summary}</p>
 					</a>
 				</li>
 			{/each}
@@ -142,6 +140,7 @@
 		<header class="row">
 			<h2 id="work-h" class="font-label">{copy.work.label}</h2>
 		</header>
+		<p class="note">{copy.work.note}</p>
 		<div bind:this={feed} class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
 			{#each data.projects as project, i (project._id)}
 				<ProjectCard {project} index={i} topOffset={feedTop} />
@@ -162,27 +161,13 @@
 		</div>
 	</section>
 
-	<section class="page-shell block" aria-labelledby="how-h">
-		<header class="row">
-			<h2 id="how-h" class="font-label">{copy.principles.label}</h2>
-		</header>
-		<ol class="principles">
-			{#each copy.principles.items as item, i (item.title)}
-				<li>
-					<span class="num font-label">0{i + 1}</span>
-					<h3>{item.title}</h3>
-					<p>{item.body}</p>
-				</li>
-			{/each}
-		</ol>
-	</section>
-
 	<section class="page-shell cta">
+		<p class="note tour">{copy.cta.tour}</p>
 		<h2>{copy.cta.title}</h2>
 		<p>{copy.cta.body}</p>
 		<div class="ctas">
 			<Button href={href('/work-with-me#enquire')}>{copy.cta.primary}</Button>
-			<Button href={href('/work-with-me')} variant="ghost">{copy.cta.secondary}</Button>
+			<Button href={href('/about')} variant="ghost">{copy.cta.secondary}</Button>
 		</div>
 	</section>
 </main>
@@ -305,10 +290,13 @@
 		}
 	}
 
-	.entry {
-		margin: 1rem 0 0;
+	.note {
+		margin: 0 0 1.25rem;
 		font-size: 0.9375rem;
 		color: var(--fg-muted);
+	}
+	.tour {
+		margin-bottom: 1.5rem;
 	}
 
 	.offers {
@@ -340,9 +328,14 @@
 		font-weight: 400;
 	}
 	.offers p {
+		max-width: 40rem;
 		margin: 0.25rem 0 0;
 		color: var(--fg-muted);
 		font-size: 0.9375rem;
+		line-height: 1.5;
+	}
+	.num {
+		color: var(--fg-muted);
 	}
 
 	.block {
@@ -382,34 +375,6 @@
 		letter-spacing: var(--text-h1--letter-spacing);
 	}
 
-	.principles {
-		display: grid;
-		gap: 2rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-	.principles li {
-		padding-top: 1.25rem;
-		border-top: 1px solid var(--rule);
-	}
-	.principles h3 {
-		margin: 0.75rem 0 0.5rem;
-		font-family: var(--font-display);
-		font-size: var(--text-h2);
-		line-height: var(--text-h2--line-height);
-		letter-spacing: var(--text-h2--letter-spacing);
-		font-weight: 400;
-	}
-	.principles p {
-		margin: 0;
-		max-width: 30rem;
-		color: var(--fg-muted);
-		line-height: 1.55;
-	}
-	.num {
-		color: var(--fg-muted);
-	}
 
 	.cta {
 		padding-top: clamp(2rem, 6vh, 4rem);
@@ -430,12 +395,5 @@
 		color: var(--fg-muted);
 		font-size: var(--text-lead);
 		line-height: var(--text-lead--line-height);
-	}
-
-	@media (min-width: 768px) {
-		.principles {
-			grid-template-columns: repeat(3, 1fr);
-			gap: 2.5rem;
-		}
 	}
 </style>

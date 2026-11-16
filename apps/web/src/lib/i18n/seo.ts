@@ -1,6 +1,6 @@
 import type { Lang } from './core'
 
-type Page = 'playground' | 'skills' | 'workWithMe'
+type Page = 'playground' | 'skills' | 'workWithMe' | 'about'
 
 const seo: Record<Page, Record<Lang, { title: string; description: string }>> = {
 	playground: {
@@ -16,23 +16,35 @@ const seo: Record<Page, Record<Lang, { title: string; description: string }>> = 
 	skills: {
 		en: {
 			title: 'Skills',
-			description: 'What I design and build with, and the case studies that show each one in use.'
+			description: 'What Anthony Inga works with, and the case studies that show each one in use.'
 		},
 		es: {
 			title: 'Habilidades',
-			description: 'Con qué diseño y construyo, y los casos de estudio donde se ve cada una en acción.'
+			description: 'Con qué trabaja Anthony Inga, y los casos de estudio donde se ve cada una en acción.'
+		}
+	},
+	about: {
+		en: {
+			title: 'About',
+			description:
+				'About Anthony Inga, an independent designer and developer: his experience and the work he has done.'
+		},
+		es: {
+			title: 'Sobre mí',
+			description:
+				'Sobre Anthony Inga, diseñador y desarrollador independiente: su experiencia y el trabajo que ha hecho.'
 		}
 	},
 	workWithMe: {
 		en: {
-			title: 'Services',
+			title: 'Work with me',
 			description:
-				'Design engineering for agencies and studios: prototype sprints, overflow capacity, design system foundations and UX audits. How we start, how I work, and how to send an enquiry.'
+				'Work with Anthony Inga on an app: design and build, product and interface design, or an audit. Send a few lines about your project.'
 		},
 		es: {
-			title: 'Servicios',
+			title: 'Trabajemos juntos',
 			description:
-				'Design engineering para agencias y estudios: sprints de prototipo, capacidad de refuerzo, bases de design system y auditorías UX. Cómo empezamos, cómo trabajo y cómo enviar una consulta.'
+				'Trabaja con Anthony Inga en una app: diseño y desarrollo, diseño de producto e interfaz, o una auditoría. Envíale unas líneas sobre tu proyecto.'
 		}
 	}
 }

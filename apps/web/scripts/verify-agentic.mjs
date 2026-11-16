@@ -13,7 +13,7 @@ const args = process.argv.slice(2)
 const base = (args.find((a) => !a.startsWith('--')) ?? 'http://127.0.0.1:4173').replace(/\/$/, '')
 const direct = args.includes('--direct')
 const RESOURCES = ['profile', 'experience', 'skills', 'projects', 'playground', 'services']
-const PAGES = ['index', 'playground', 'skills', 'work-with-me', 'developers']
+const PAGES = ['index', 'playground', 'skills', 'work-with-me', 'about', 'developers']
 
 let failed = 0
 let passed = 0

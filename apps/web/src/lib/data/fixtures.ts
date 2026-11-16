@@ -12,8 +12,8 @@ const tal = (file: string, alt: string) => ({ url: `/projects/talent/${file}`, a
 
 export const siteSettingsFixture: SiteSettings = {
 	name: 'Anthony Inga',
-	role: 'Design Engineer',
-	bio: 'A design engineer who works with agencies and studios. I design and build interface work in code, under your brand and inside your process. My background is human-computer interaction, media and culture, and I get technical when the project needs it.',
+	role: 'App Designer & Developer',
+	bio: 'An independent designer and developer. I design and build apps.',
 	email: 'anthony@inga.dev',
 	github: 'https://github.com/anthoinga',
 	linkedin: 'https://www.linkedin.com/in/anthonyinga/',
@@ -30,8 +30,8 @@ export const siteSettingsFixture: SiteSettings = {
 
 /** Spanish overrides. Roles and award names stay in English, as they are on a Peruvian CV. */
 export const siteSettingsEs: Partial<SiteSettings> = {
-	role: 'Design Engineer',
-	bio: 'Design engineer que trabaja con agencias y estudios. Diseño y construyo interfaces en código, bajo tu marca y dentro de tu proceso. Vengo de la interacción humano-computadora, los medios y la cultura, y me meto de lleno en el código cuando el proyecto lo pide.'
+	role: 'Diseñador y desarrollador de apps',
+	bio: 'Diseñador y desarrollador independiente. Diseño y construyo apps.'
 }
 
 const curbside: Project = {

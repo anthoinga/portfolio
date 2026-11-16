@@ -38,7 +38,7 @@ export function skillGroups(lang: Lang): SkillGroup[] {
 				? ['Interaction design', 'Information architecture', 'Flows & wireframes', 'Product thinking']
 				: ['Diseño de interacción', 'Arquitectura de información', 'Flujos y wireframes', 'Visión de producto'],
 			proof: [p('curbside', 'curbside', lang), p('talent', 'talent', lang)],
-			serviceId: 'prototype'
+			serviceId: 'design'
 		},
 		{
 			id: 'research',
@@ -50,31 +50,19 @@ export function skillGroups(lang: Lang): SkillGroup[] {
 				? ['Field research', 'Interviews', 'Usability testing', 'Synthesis']
 				: ['Investigación en campo', 'Entrevistas', 'Pruebas de usabilidad', 'Síntesis'],
 			proof: [p('curbside', 'curbside', lang), p('insurance', 'insurance', lang)],
-			serviceId: 'audit'
+			serviceId: 'consult'
 		},
 		{
 			id: 'prototyping',
-			title: en ? 'Prototyping' : 'Prototipado',
+			title: en ? 'Building early' : 'Construir temprano',
 			summary: en
-				? 'Building something that behaves like the real thing, early enough to learn from it.'
-				: 'Armar algo que se comporte como lo real, lo bastante temprano como para aprender de eso.',
+				? 'Getting something that behaves like the real thing in front of people early enough to learn from it.'
+				: 'Poner algo que se comporte como lo real frente a las personas, lo bastante temprano como para aprender de eso.',
 			skills: en
-				? ['Interactive prototypes', 'Conversational interfaces', 'Rapid iteration', 'Usability sessions']
-				: ['Prototipos interactivos', 'Interfaces conversacionales', 'Iteración rápida', 'Sesiones de usabilidad'],
+				? ['Working builds', 'Conversational interfaces', 'Rapid iteration', 'Usability sessions']
+				: ['Versiones funcionales', 'Interfaces conversacionales', 'Iteración rápida', 'Sesiones de usabilidad'],
 			proof: [p('convenience', 'convenience', lang)],
-			serviceId: 'prototype'
-		},
-		{
-			id: 'systems',
-			title: en ? 'Design systems' : 'Design systems',
-			summary: en
-				? 'Reusable decisions: tokens, components and the rules for using them.'
-				: 'Decisiones reutilizables: tokens, componentes y las reglas para usarlos.',
-			skills: en
-				? ['Design tokens', 'Component libraries', 'Documentation', 'Handoff']
-				: ['Design tokens', 'Librerías de componentes', 'Documentación', 'Handoff'],
-			proof: [p('talent', 'talent', lang), p('insurance', 'insurance', lang)],
-			serviceId: 'system'
+			serviceId: 'build'
 		},
 		{
 			id: 'front-end',
@@ -82,9 +70,9 @@ export function skillGroups(lang: Lang): SkillGroup[] {
 			summary: en
 				? 'Shipping the interface in code, including the parts that only exist in motion.'
 				: 'Llevar la interfaz a código, incluso las partes que solo existen en movimiento.',
-			skills: ['Svelte & SvelteKit', 'TypeScript', 'Tailwind CSS', 'Canvas & Web Audio', en ? 'Accessibility' : 'Accesibilidad'],
+			skills: ['Svelte & SvelteKit', 'TypeScript', 'Tailwind CSS', 'Canvas & Web Audio', en ? 'Component libraries' : 'Librerías de componentes', en ? 'Accessibility' : 'Accesibilidad'],
 			proof: [p('/playground', 'site', lang)],
-			serviceId: 'overflow'
+			serviceId: 'build'
 		},
 		{
 			id: 'motion',
@@ -96,7 +84,7 @@ export function skillGroups(lang: Lang): SkillGroup[] {
 				? ['Scroll-driven motion', 'Shared-element transitions', 'Micro-interactions', 'Sound design']
 				: ['Movimiento con scroll', 'Transiciones entre elementos', 'Microinteracciones', 'Diseño de sonido'],
 			proof: [p('/playground', 'playground', lang)],
-			serviceId: 'overflow'
+			serviceId: 'design'
 		}
 	]
 }
