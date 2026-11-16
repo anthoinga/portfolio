@@ -31,8 +31,7 @@ export function resourceData(m: SiteModel, resource: ApiResource): unknown {
 				links: {
 					email: s.email,
 					linkedin: s.linkedin,
-					github: s.github,
-					cv: s.cv ? abs(s.cv) : undefined
+					github: s.github
 				},
 				experience: s.experiences,
 				awards: s.awards

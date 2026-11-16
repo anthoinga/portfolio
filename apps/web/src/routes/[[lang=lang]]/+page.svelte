@@ -4,6 +4,7 @@
 	import Button from '$lib/components/ui/Button.svelte'
 	import { sound } from '$lib/actions/sfx'
 	import { homeCopy } from '$lib/data/home'
+	import { services } from '$lib/data/services'
 	import { currentLang, href } from '$lib/i18n'
 	import { uiDemos } from '$lib/data/uiDemos'
 	import { attachHeroDock } from '$lib/heroDock'
@@ -15,6 +16,7 @@
 
 	const lang = $derived(currentLang())
 	const copy = $derived(homeCopy[lang])
+	const offers = $derived(services(lang))
 	const teaser = uiDemos.slice(0, 2)
 
 	let slot: HTMLElement | undefined = $state()
@@ -22,6 +24,7 @@
 	let statusEl: HTMLElement | undefined = $state()
 	let leadEl: HTMLElement | undefined = $state()
 	let ctasEl: HTMLElement | undefined = $state()
+	let entryEl: HTMLElement | undefined = $state()
 	const leadWords = $derived(copy.lead.split(' '))
 
 	/** Groups the lead's word spans into their rendered lines. */
@@ -41,14 +44,14 @@
 	$effect(() => {
 		leadWords
 		const scroller = viewport.scroller
-		if (!scroller || !main || !slot || !nameEl || !statusEl || !leadEl || !ctasEl) return
-		const [status, lead, ctas] = [statusEl, leadEl, ctasEl]
+		if (!scroller || !main || !slot || !nameEl || !statusEl || !leadEl || !ctasEl || !entryEl) return
+		const [status, lead, ctas, entry] = [statusEl, leadEl, ctasEl, entryEl]
 		return attachHeroDock({
 			scroller,
 			content: main,
 			slot,
 			name: nameEl,
-			steps: () => [[status], ...leadLines(lead), ...[...ctas.querySelectorAll<HTMLElement>('a')].map((a) => [a])]
+			steps: () => [[status], ...leadLines(lead), ...[...ctas.querySelectorAll<HTMLElement>('a')].map((a) => [a]), [entry]]
 		})
 	})
 
@@ -96,20 +99,43 @@
 			{#each leadWords as word, i (i)}<span data-word>{word}</span>{' '}{/each}
 		</p>
 		<div class="ctas reveal" style="--i:3" bind:this={ctasEl}>
-			<Button href="#work" onclick={toWork}>{copy.ctaPrimary}</Button>
-			<Button href={href('/work-with-me#contact')} variant="ghost">{copy.ctaSecondary}</Button>
+			<Button href={href('/work-with-me#enquire')}>{copy.ctaPrimary}</Button>
+			<Button href="#work" onclick={toWork} variant="ghost">{copy.ctaSecondary}</Button>
 		</div>
+		<p class="entry reveal" style="--i:3" bind:this={entryEl}>{copy.entry}</p>
 	</section>
 
-	<section class="page-shell proof reveal" style="--i:4" aria-label="Experience and awards">
-		<ul>
-			{#each data.settings.experiences ?? [] as xp (xp.org)}
-				<li><b>{xp.org}</b> <span>{xp.role}</span></li>
-			{/each}
-			{#each data.settings.awards ?? [] as award (award.org)}
-				<li><b>{award.org}</b> <span>{award.role}</span></li>
+	<section class="page-shell proof reveal" style="--i:4" aria-label={copy.proof.outcomesLabel}>
+		<h2 class="font-label proof-label">{copy.proof.outcomesLabel}</h2>
+		<ul class="outcomes">
+			{#each copy.proof.outcomes as o (o.label)}
+				<li><b>{o.stat}</b> <span>{o.label}</span></li>
 			{/each}
 		</ul>
+		{#if data.settings.awards?.length}
+			<p class="recognised">
+				<span class="font-label">{copy.proof.recognisedLabel}</span>
+				{#each data.settings.awards as award, i (award.org)}{i ? ' · ' : ' '}{award.org}{award.role ? ` (${award.role})` : ''}{/each}
+			</p>
+		{/if}
+	</section>
+
+	<section class="page-shell block" aria-labelledby="svc-h">
+		<header class="row">
+			<h2 id="svc-h" class="font-label">{copy.services.label}</h2>
+			<a href={href('/work-with-me')} class="more" use:sound>{copy.services.all} →</a>
+		</header>
+		<ol class="offers">
+			{#each offers as offer, i (offer.id)}
+				<li>
+					<span class="num font-label">0{i + 1}</span>
+					<a href={href('/work-with-me')} use:sound>
+						<h3>{offer.title}</h3>
+						<p>{offer.shape} · {offer.length}</p>
+					</a>
+				</li>
+			{/each}
+		</ol>
 	</section>
 
 	<section id="work" class="page-shell block" aria-labelledby="work-h">
@@ -155,8 +181,8 @@
 		<h2>{copy.cta.title}</h2>
 		<p>{copy.cta.body}</p>
 		<div class="ctas">
-			<Button href={href('/work-with-me')}>{copy.cta.primary}</Button>
-			<Button href={href('/work-with-me#contact')} variant="ghost">{copy.cta.secondary}</Button>
+			<Button href={href('/work-with-me#enquire')}>{copy.cta.primary}</Button>
+			<Button href={href('/work-with-me')} variant="ghost">{copy.cta.secondary}</Button>
 		</div>
 	</section>
 </main>
@@ -235,23 +261,88 @@
 	.proof {
 		padding-bottom: clamp(3rem, 8vh, 5rem);
 	}
-	.proof ul {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem 2rem;
+	.proof-label {
+		margin: 0 0 0.75rem;
+		font-weight: 500;
+		color: var(--fg-muted);
+	}
+	.outcomes {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.25rem 2rem;
 		margin: 0;
-		padding: 1rem 0;
+		padding: 1.25rem 0;
 		border-block: 1px solid var(--rule);
 		list-style: none;
-		font-family: var(--font-mono);
-		font-size: 0.9375rem;
-		letter-spacing: 0;
 	}
-	.proof b {
-		font-weight: 600;
+	.outcomes li {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
 	}
-	.proof span {
+	.outcomes b {
+		font-family: var(--font-display);
+		font-size: var(--text-h1);
+		line-height: 1;
+		font-weight: 400;
+		letter-spacing: -0.02em;
+	}
+	.outcomes span {
 		color: var(--fg-muted);
+		font-size: 0.9375rem;
+	}
+	.recognised {
+		margin: 1rem 0 0;
+		font-size: 0.9375rem;
+		color: var(--fg-muted);
+	}
+	.recognised .font-label {
+		margin-right: 0.5rem;
+	}
+	@media (min-width: 900px) {
+		.outcomes {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+
+	.entry {
+		margin: 1rem 0 0;
+		font-size: 0.9375rem;
+		color: var(--fg-muted);
+	}
+
+	.offers {
+		display: grid;
+		gap: 0;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.offers li {
+		display: grid;
+		grid-template-columns: 2.5rem 1fr;
+		align-items: baseline;
+		padding: 1.1rem 0;
+		border-top: 1px solid var(--rule);
+	}
+	.offers li:last-child {
+		border-bottom: 1px solid var(--rule);
+	}
+	.offers a {
+		display: block;
+	}
+	.offers h3 {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: var(--text-h2);
+		line-height: var(--text-h2--line-height);
+		letter-spacing: var(--text-h2--letter-spacing);
+		font-weight: 400;
+	}
+	.offers p {
+		margin: 0.25rem 0 0;
+		color: var(--fg-muted);
+		font-size: 0.9375rem;
 	}
 
 	.block {

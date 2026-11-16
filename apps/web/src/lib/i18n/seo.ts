@@ -25,14 +25,14 @@ const seo: Record<Page, Record<Lang, { title: string; description: string }>> = 
 	},
 	workWithMe: {
 		en: {
-			title: 'Work with me',
+			title: 'Services',
 			description:
-				'Ways to work together: embedded design engineering, prototype sprints, design systems and UX audits. Get in touch about roles and projects.'
+				'Design engineering for agencies and studios: prototype sprints, overflow capacity, design system foundations and UX audits. How we start, how I work, and how to send an enquiry.'
 		},
 		es: {
-			title: 'Trabajemos',
+			title: 'Servicios',
 			description:
-				'Formas de trabajar juntos: design engineering dentro de tu equipo, sprints de prototipo, design systems y auditorías UX. Escríbeme para hablar de roles y proyectos.'
+				'Design engineering para agencias y estudios: sprints de prototipo, capacidad de refuerzo, bases de design system y auditorías UX. Cómo empezamos, cómo trabajo y cómo enviar una consulta.'
 		}
 	}
 }

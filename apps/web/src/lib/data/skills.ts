@@ -5,6 +5,8 @@ export type SkillGroup = {
 	skills: string[]
 	/** Case studies (by slug) or site paths that show this skill in use. */
 	proof: { slug: string; label: string }[]
+	/** The service (see data/services.ts) this group is offered through. */
+	serviceId: string
 }
 
 type Lang = 'en' | 'es'
@@ -35,7 +37,8 @@ export function skillGroups(lang: Lang): SkillGroup[] {
 			skills: en
 				? ['Interaction design', 'Information architecture', 'Flows & wireframes', 'Product thinking']
 				: ['Diseño de interacción', 'Arquitectura de información', 'Flujos y wireframes', 'Visión de producto'],
-			proof: [p('curbside', 'curbside', lang), p('talent', 'talent', lang)]
+			proof: [p('curbside', 'curbside', lang), p('talent', 'talent', lang)],
+			serviceId: 'prototype'
 		},
 		{
 			id: 'research',
@@ -46,7 +49,8 @@ export function skillGroups(lang: Lang): SkillGroup[] {
 			skills: en
 				? ['Field research', 'Interviews', 'Usability testing', 'Synthesis']
 				: ['Investigación en campo', 'Entrevistas', 'Pruebas de usabilidad', 'Síntesis'],
-			proof: [p('curbside', 'curbside', lang), p('insurance', 'insurance', lang)]
+			proof: [p('curbside', 'curbside', lang), p('insurance', 'insurance', lang)],
+			serviceId: 'audit'
 		},
 		{
 			id: 'prototyping',
@@ -57,7 +61,8 @@ export function skillGroups(lang: Lang): SkillGroup[] {
 			skills: en
 				? ['Interactive prototypes', 'Conversational interfaces', 'Rapid iteration', 'Usability sessions']
 				: ['Prototipos interactivos', 'Interfaces conversacionales', 'Iteración rápida', 'Sesiones de usabilidad'],
-			proof: [p('convenience', 'convenience', lang)]
+			proof: [p('convenience', 'convenience', lang)],
+			serviceId: 'prototype'
 		},
 		{
 			id: 'systems',
@@ -68,7 +73,8 @@ export function skillGroups(lang: Lang): SkillGroup[] {
 			skills: en
 				? ['Design tokens', 'Component libraries', 'Documentation', 'Handoff']
 				: ['Design tokens', 'Librerías de componentes', 'Documentación', 'Handoff'],
-			proof: [p('talent', 'talent', lang), p('insurance', 'insurance', lang)]
+			proof: [p('talent', 'talent', lang), p('insurance', 'insurance', lang)],
+			serviceId: 'system'
 		},
 		{
 			id: 'front-end',
@@ -77,7 +83,8 @@ export function skillGroups(lang: Lang): SkillGroup[] {
 				? 'Shipping the interface in code, including the parts that only exist in motion.'
 				: 'Llevar la interfaz a código, incluso las partes que solo existen en movimiento.',
 			skills: ['Svelte & SvelteKit', 'TypeScript', 'Tailwind CSS', 'Canvas & Web Audio', en ? 'Accessibility' : 'Accesibilidad'],
-			proof: [p('/playground', 'site', lang)]
+			proof: [p('/playground', 'site', lang)],
+			serviceId: 'overflow'
 		},
 		{
 			id: 'motion',
@@ -88,7 +95,8 @@ export function skillGroups(lang: Lang): SkillGroup[] {
 			skills: en
 				? ['Scroll-driven motion', 'Shared-element transitions', 'Micro-interactions', 'Sound design']
 				: ['Movimiento con scroll', 'Transiciones entre elementos', 'Microinteracciones', 'Diseño de sonido'],
-			proof: [p('/playground', 'playground', lang)]
+			proof: [p('/playground', 'playground', lang)],
+			serviceId: 'overflow'
 		}
 	]
 }

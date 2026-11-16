@@ -1,5 +1,6 @@
 import { MD_PAGES } from '../../params/mdpage'
 import { translate, type Lang } from '$lib/i18n/core'
+import { faq, process, terms } from '$lib/data/services'
 import { developersContent } from './developers'
 import { projectMarkdown } from './markdown'
 import type { SiteModel } from './model'
@@ -20,7 +21,7 @@ const NAV_KEY = {
 	index: 'nav.home',
 	playground: 'nav.playground',
 	skills: 'nav.skills',
-	'work-with-me': 'nav.workWithMe',
+	'work-with-me': 'nav.services',
 	developers: 'nav.home'
 } as const
 
@@ -49,8 +50,7 @@ function links(m: SiteModel) {
 	return [
 		s.email && `- Email: ${s.email}`,
 		s.linkedin && `- LinkedIn: ${s.linkedin}`,
-		s.github && `- GitHub: ${s.github}`,
-		s.cv && `- CV: ${m.siteUrl}${s.cv}`
+		s.github && `- GitHub: ${s.github}`
 	].filter(Boolean) as string[]
 }
 
@@ -143,15 +143,32 @@ export function pageDoc(m: SiteModel, page: MdPage): Doc {
 					`# ${T(m, 'wwm.title')}`,
 					T(m, 'wwm.lead'),
 					...m.services.map((v) =>
-						[`## ${v.title}`, v.summary, v.deliverables.map((d) => `- ${d}`).join('\n')].join('\n\n')
+						[
+							`## ${v.title}`,
+							`${v.shape} · ${v.length}`,
+							v.summary,
+							`**${T(m, 'wwm.forWhom')}:** ${v.forWhom}`,
+							v.deliverables.map((d) => `- ${d}`).join('\n'),
+							`${T(m, 'wwm.seeIn')}: ${link(v.proof.label, m.url(`/projects/${v.proof.slug}`))}`
+						].join('\n\n')
 					),
+					`## ${T(m, 'wwm.processLabel')}`,
+					process(m.lang)
+						.map((st, i) => `${i + 1}. **${st.title}**: ${st.body}`)
+						.join('\n'),
+					`## ${T(m, 'wwm.termsLabel')}`,
+					terms(m.lang)
+						.map((x) => `- **${x.title}**: ${x.body}`)
+						.join('\n'),
+					`## ${T(m, 'wwm.faqLabel')}`,
+					faq(m.lang)
+						.map((x) => `**${x.q}**\n${x.a}`)
+						.join('\n\n'),
 					`## ${T(m, 'contact.title')}`,
 					s.bio ?? '',
 					links(m).join('\n'),
-					`### ${T(m, 'contact.experience')}`,
-					credits(s.experiences),
-					`### ${T(m, 'contact.awards')}`,
-					credits(s.awards),
+					`### ${T(m, 'contact.credentials')}`,
+					[credits(s.experiences), credits(s.awards)].filter(Boolean).join('\n'),
 					agentFooter(m)
 				].join('\n\n')
 			}
@@ -228,8 +245,8 @@ export function llmsTxt(m: SiteModel): string {
 		en ? '## When to use this' : '## Cuándo usar esto',
 		'',
 		en
-			? `Use this site when a request is about ${s.name} specifically: who they are, their work, how to reach them, or whether they fit a design-engineering role. It is one person's portfolio, not general documentation. For unrelated design or engineering questions, use primary sources.`
-			: `Usa este sitio cuando la consulta sea sobre ${s.name} en particular: quién es, su trabajo, cómo contactarle o si encaja en un rol de design engineering. Es el portafolio de una persona, no documentación general. Para consultas de diseño o ingeniería sin relación, usa fuentes primarias.`,
+			? `Use this site when a request is about ${s.name} specifically: who they are, their work, how to reach them, or whether they fit a contract design-engineering project for an agency or studio. It is one person's portfolio, not general documentation. For unrelated design or engineering questions, use primary sources.`
+			: `Usa este sitio cuando la consulta sea sobre ${s.name} en particular: quién es, su trabajo, cómo contactarle o si encaja en un proyecto de design engineering por contrato para una agencia o estudio. Es el portafolio de una persona, no documentación general. Para consultas de diseño o ingeniería sin relación, usa fuentes primarias.`,
 		'',
 		en ? '## How to call this site' : '## Cómo consultar este sitio',
 		'',
@@ -237,7 +254,7 @@ export function llmsTxt(m: SiteModel): string {
 		`- ${en ? 'Structured data' : 'Datos estructurados'}: ${base}/api/v1/profile ${en ? '(add ?lang=es for Spanish)' : '(agrega ?lang=es para español)'}`,
 		`- ${en ? 'Both languages' : 'Ambos idiomas'}: ${base}/llms.txt, ${base}/es/llms.txt`,
 		'',
-		en ? '## Experience' : '## Experiencia',
+		en ? '## Credentials' : '## Credenciales',
 		'',
 		credits(s.experiences),
 		'',
@@ -259,13 +276,13 @@ export function llmsTxt(m: SiteModel): string {
 		'',
 		en ? '## Ways to work together' : '## Formas de trabajar juntos',
 		'',
-		...m.services.map((v) => `- **${v.title}**: ${v.summary}`),
+		...m.services.map((v) => `- **${v.title}** (${v.shape}, ${v.length}): ${v.summary}`),
 		'',
 		en ? '## Contact' : '## Contacto',
 		'',
 		en
-			? `The fastest way to reach ${s.name} is email${s.email ? `: ${s.email}` : ''}. There is no contact form to POST to.`
-			: `La forma más rápida de contactar a ${s.name} es por correo${s.email ? `: ${s.email}` : ''}. No hay un formulario al que enviar datos.`,
+			? `To start a project, email ${s.name}${s.email ? ` at ${s.email}` : ''}, or use the enquiry form on ${m.url('/work-with-me')}#enquire in a browser. There is no API to POST an enquiry to.`
+			: `Para iniciar un proyecto, escribe a ${s.name}${s.email ? ` a ${s.email}` : ''}, o usa el formulario de consulta en ${m.url('/work-with-me')}#enquire desde un navegador. No hay una API a la que enviar consultas.`,
 		''
 	]
 	return lines.filter((l, i, a) => !(l === '' && a[i - 1] === '')).join('\n')

@@ -17,7 +17,7 @@
 	const COMMAND = 'npx inga'
 
 	const BOOT: Line[] = [
-		{ kind: 'ok', label: t('intro.designer'), text: 'Persimmony · 7-Eleven R&D · Bottle Rocket' },
+		{ kind: 'ok', label: t('intro.designer'), text: 'Persimmony · Convenience retail R&D · Bottle Rocket' },
 		{ kind: 'ok', label: t('intro.developer'), text: t('intro.developerText') },
 		{ kind: 'ok', label: t('intro.awards'), text: t('intro.awardsText') },
 		{ kind: 'ok', label: t('intro.status'), text: t('intro.statusText') },
@@ -30,7 +30,7 @@
 		{ id: 'playground', en: 'playground', es: 'playground', to: '/playground' },
 		{ id: 'skills', en: 'skills', es: 'habilidades', to: '/skills' },
 		{ id: 'services', en: 'services', es: 'servicios', to: '/work-with-me' },
-		{ id: 'contact', en: 'contact', es: 'contacto', to: '/work-with-me#contact' },
+		{ id: 'contact', en: 'contact', es: 'contacto', to: '/work-with-me#enquire' },
 		{ id: 'agent', en: 'agent', es: 'agente', to: '/developers' },
 		{ id: 'theme', en: 'theme', es: 'tema' },
 		{ id: 'sound', en: 'sound', es: 'sonido' },

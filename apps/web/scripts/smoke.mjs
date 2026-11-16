@@ -82,8 +82,24 @@ for (const scheme of ['light', 'dark']) {
 			const results = await page.evaluate(async (src) => {
 				// eslint-disable-next-line no-eval
 				;(0, eval)(src)
-				return await window.axe.run(document, { resultTypes: ['violations'] })
+				// The site logo is white text under mix-blend-mode: exclusion, which renders as the inverse of
+				// the page background. axe cannot see blend modes and reads it as white on white, so it is
+				// excluded here and checked exactly below.
+				return await window.axe.run({ exclude: [['.site-logo']] }, { resultTypes: ['violations'] })
 			}, axeSource)
+			const logo = await page.evaluate(() => {
+				if (!document.querySelector('.site-logo')) return null
+				const m = getComputedStyle(document.querySelector('.scroll-root')).backgroundColor.match(/[\d.]+/g)
+				if (!m) return null
+				const lin = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
+				const lum = (c) => 0.2126 * lin(c[0]) + 0.7152 * lin(c[1]) + 0.0722 * lin(c[2])
+				const bg = m.slice(0, 3).map((n) => Number(n) / 255)
+				// White source under exclusion: result = backdrop + 1 - 2 * backdrop = 1 - backdrop.
+				const out = bg.map((c) => 1 - c)
+				const [hi, lo] = [lum(bg), lum(out)].sort((a, b) => b - a)
+				return (hi + 0.05) / (lo + 0.05)
+			})
+			if (logo !== null && logo < 4.5) bad(`${path} (${scheme}) site logo`, `blended contrast ${logo.toFixed(2)}:1`)
 			const hard = results.violations.filter((v) => ['serious', 'critical'].includes(v.impact))
 			if (hard.length) {
 				bad(`${path} (${scheme})`, hard.map((v) => `${v.id} ×${v.nodes.length}: ${v.nodes[0].target.join(' ').slice(0, 90)}`).join('\n      '))
@@ -108,9 +124,10 @@ console.log('\nBehaviour')
 	await page.waitForTimeout(900)
 	const gone = (await page.locator('.intro').count()) === 0
 	gone ? ok('Escape skips the intro') : bad('Escape skips the intro', 'still visible')
-	await page.click('a[href="/work-with-me"] >> visible=true')
+	await page.click('.menu-btn')
+	await page.click('#site-menu a[href="/work-with-me"]')
 	await page.waitForTimeout(500)
-	await page.click('a.link[href="/"]')
+	await page.click('.site-logo')
 	await page.waitForTimeout(700)
 	;(await page.locator('.intro').count()) === 0
 		? ok('going home from inside the site does not replay the intro')

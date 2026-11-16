@@ -1,10 +1,13 @@
 <script lang="ts">
 	import PageHeader from '$lib/components/ui/PageHeader.svelte'
 	import { skillGroups } from '$lib/data/skills'
+	import { services } from '$lib/data/services'
 	import { currentLang, href, t } from '$lib/i18n'
 	import { sound } from '$lib/actions/sfx'
 
 	const groups = $derived(skillGroups(currentLang()))
+	const offers = $derived(services(currentLang()))
+	const offerFor = (id: string) => offers.find((o) => o.id === id)
 	const hrefFor = (slug: string) => href(slug.startsWith('/') ? slug : `/projects/${slug}`)
 </script>
 
@@ -25,6 +28,12 @@
 							<a href={hrefFor(p.slug)} use:sound>{p.label}</a>
 						{/each}
 					</p>
+					{#if offerFor(group.serviceId)}
+						<p class="proof font-label">
+							<span>{t('skills.offeredAs')}</span>
+							<a href={href('/work-with-me')} use:sound>{offerFor(group.serviceId)?.title}</a>
+						</p>
+					{/if}
 				</li>
 			{/each}
 		</ul>
@@ -77,6 +86,9 @@
 		gap: 0.25rem 1rem;
 		margin: 0;
 		color: var(--fg-muted);
+	}
+	.proof + .proof {
+		margin-top: 0.5rem;
 	}
 	.proof a {
 		color: var(--accent);

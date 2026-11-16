@@ -5,6 +5,6 @@ import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = ({ url }) => {
 	const lang = pathLang(url.pathname)
-	const copy = privacyCopy(lang, env.PUBLIC_ANALYTICS === 'vercel')
+	const copy = privacyCopy(lang, env.PUBLIC_ANALYTICS === 'vercel', Boolean(env.PUBLIC_FORM_ENDPOINT))
 	return { copy, seo: { title: copy.title, description: copy.lead } }
 }

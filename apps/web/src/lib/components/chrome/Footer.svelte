@@ -11,7 +11,6 @@
 			settings.email && { href: `mailto:${settings.email}`, label: t('footer.email') },
 			settings.linkedin && { href: settings.linkedin, label: 'LinkedIn' },
 			settings.github && { href: settings.github, label: 'GitHub' },
-			settings.cv && { href: settings.cv, label: t('footer.cv') },
 			{ href: href('/privacy'), label: t('footer.privacy') }
 		].filter(Boolean) as { href: string; label: string }[]
 	)

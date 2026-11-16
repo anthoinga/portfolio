@@ -5,7 +5,7 @@ export type PrivacyCopy = {
 }
 
 /** Plain-language privacy notice, in both languages. The Spanish is a draft for review. */
-export function privacyCopy(lang: 'en' | 'es', analyticsOn: boolean): PrivacyCopy {
+export function privacyCopy(lang: 'en' | 'es', analyticsOn: boolean, formOn = false): PrivacyCopy {
 	const en = lang === 'en'
 	return {
 		title: en ? 'Privacy' : 'Privacidad',
@@ -30,10 +30,18 @@ export function privacyCopy(lang: 'en' | 'es', analyticsOn: boolean): PrivacyCop
 						: 'Este sitio no tiene analítica.'
 			},
 			{
-				title: en ? 'Email' : 'Correo',
+				title: en ? 'Enquiries and email' : 'Consultas y correo',
 				body: en
-					? 'If you write to me, I keep your message to answer it. I do not add you to any list or share your address.'
-					: 'Si me escribes, guardo tu mensaje para responderte. No te agrego a ninguna lista ni comparto tu correo.'
+					? `${
+							formOn
+								? 'If you send an enquiry through the form, your name, agency, email address and message pass through a form service that delivers them to my inbox. '
+								: 'The enquiry form does not send anything from this site; it only copies my email address so you can write to me. '
+						}If you write to me, I keep your details only to reply and, if we work together, to run the project. I do not add you to any list, sell your details or share them except with the service that delivers the message. You can ask me by email to delete them at any time.`
+					: `${
+							formOn
+								? 'Si envías una consulta por el formulario, tu nombre, agencia, correo y mensaje pasan por un servicio de formularios que los entrega a mi bandeja. '
+								: 'El formulario de consulta no envía nada desde este sitio; solo copia mi correo para que me escribas. '
+						}Si me escribes, guardo tus datos solo para responderte y, si trabajamos juntos, para llevar el proyecto. No te agrego a ninguna lista, no vendo tus datos ni los comparto, salvo con el servicio que entrega el mensaje. Puedes pedirme por correo que los elimine en cualquier momento.`
 			},
 			{
 				title: en ? 'AI agents' : 'Agentes de IA',

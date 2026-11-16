@@ -12,15 +12,14 @@ const tal = (file: string, alt: string) => ({ url: `/projects/talent/${file}`, a
 
 export const siteSettingsFixture: SiteSettings = {
 	name: 'Anthony Inga',
-	role: 'Creative Developer',
-	bio: 'A creative developer that thrives at the intersection of design and technology. Focus spans across human-computer interactions, media, and culture — out of the box tinkerer, technical when needed, total lab rat.',
+	role: 'Design Engineer',
+	bio: 'A design engineer who works with agencies and studios. I design and build interface work in code, under your brand and inside your process. My background is human-computer interaction, media and culture, and I get technical when the project needs it.',
 	email: 'anthony@inga.dev',
 	github: 'https://github.com/anthoinga',
 	linkedin: 'https://www.linkedin.com/in/anthonyinga/',
-	cv: '/cv.pdf',
 	experiences: [
 		{ org: 'Persimmony', role: 'Design Engineer' },
-		{ org: '7-Eleven R&D', role: 'Sr. UX Designer' },
+		{ org: 'Convenience retail R&D', role: 'Sr. UX Designer' },
 		{ org: 'Bottle Rocket', role: 'UX Architect' }
 	],
 	awards: [
@@ -31,8 +30,8 @@ export const siteSettingsFixture: SiteSettings = {
 
 /** Spanish overrides. Roles and award names stay in English, as they are on a Peruvian CV. */
 export const siteSettingsEs: Partial<SiteSettings> = {
-	role: 'Creative Developer',
-	bio: 'Creative developer que se mueve en la intersección entre diseño y tecnología. Me enfoco en la interacción humano-computadora, los medios y la cultura. Me gusta experimentar, salirme de lo convencional y meterme de lleno en el código cuando hace falta.'
+	role: 'Design Engineer',
+	bio: 'Design engineer que trabaja con agencias y estudios. Diseño y construyo interfaces en código, bajo tu marca y dentro de tu proceso. Vengo de la interacción humano-computadora, los medios y la cultura, y me meto de lleno en el código cuando el proyecto lo pide.'
 }
 
 const curbside: Project = {
@@ -72,9 +71,10 @@ const curbside: Project = {
 			},
 			{
 				label: 'Stakeholders',
-				items: ['Product Owner', 'Chief Tech Officer', 'Chief Mark Officer', 'Regional Managers']
+				items: ['Product Owner', 'Chief Tech Officer', 'Chief Marketing Officer', 'Regional Managers']
 			},
-			{ label: 'Timeline', items: ["Jan 22' - Apr 23'"] }
+			{ label: 'Timeline', items: ["Jan 22' - Apr 23'"] },
+			{ label: 'My role', items: ['Designer on the product team; led the follow-on edge-case projects'] }
 		]
 	},
 	seoDescription:
@@ -345,7 +345,7 @@ const talent: Project = {
 	previewVideo: null,
 	brief: {
 		paragraphs: [
-			"'Talent' is a study on putting hiring in your pocket: browse, shortlist, and reach people without a desktop workflow."
+			'Two features for a temporary-staffing app: a status system that tells workers why a time report was returned, and a profile that keeps itself up to date.'
 		],
 		facts: [
 			{ label: 'Project type', items: ['Svelte Web Application'] },
@@ -354,11 +354,12 @@ const talent: Project = {
 				label: 'Stakeholders',
 				items: ['Director of UX', 'Director of Research', 'VP of Product']
 			},
-			{ label: 'Timeline', items: ['2021'] }
+			{ label: 'Timeline', items: ['2021'] },
+			{ label: 'My role', items: ['Systems and UI designer, brought in through an agency, post-MVP'] }
 		]
 	},
 	seoDescription:
-		'A case study on time-report status and a self-updating profile for Robert Half temporary workers.',
+		'A case study on time-report status and a self-updating profile for temporary workers at a national staffing firm.',
 	ogImage: { url: '/og/talent.png', alt: 'Phone showing commute distance for a talent app' },
 	body: [
 		{
@@ -371,13 +372,13 @@ const talent: Project = {
 					kind: 'copy',
 					lead: true,
 					paragraphs: [
-						'Robert Half\'s temporary workers use a mobile app to submit time reports and manage their work profiles, but the app told them less than they needed to know.'
+						'A national staffing firm\'s temporary workers use a mobile app to submit time reports and manage their work profiles, but the app told them less than they needed to know.'
 					]
 				},
 				{
 					_key: 't-open-a',
 					kind: 'image',
-					image: tal('photo.png', 'A person holding a phone open to a Robert Half job listing, with a laptop behind it'),
+					image: tal('photo.png', 'A person holding a phone open to a staffing-firm job listing, with a laptop behind it'),
 					label: '01',
 					title: 'In hand',
 					text: 'Time reports and a profile, and not much said about either.'
@@ -485,7 +486,7 @@ const talent: Project = {
 					_type: 'span',
 					_key: 't-profile-problem-s',
 					marks: [],
-					text: 'Skills, experience, and education sat on the page, static, disconnected from one another, making it harder for Robert Half to match workers to the right jobs.'
+					text: 'Skills, experience, and education sat on the page, static, disconnected from one another, making it harder for the firm to match workers to the right jobs.'
 				}
 			]
 		},
@@ -623,7 +624,7 @@ const talent: Project = {
 					_type: 'span',
 					_key: 't-metrics-s',
 					marks: [],
-					text: 'Robert Half\'s internal metrics showed it landing. Fewer resubmissions, faster profile completion, better job-match rates. But the simplest signal was the support tickets asking "Why was my time rejected?" Those tickets dropped, because the app answered that question itself.'
+					text: 'The firm\'s internal metrics showed it landing. Fewer resubmissions, faster profile completion, better job-match rates. But the simplest signal was the support tickets asking "Why was my time rejected?" Those tickets dropped, because the app answered that question itself.'
 				}
 			]
 		},
@@ -691,7 +692,7 @@ const talent: Project = {
 					_type: 'span',
 					_key: 't-reflect-3s',
 					marks: [],
-					text: 'Robert Half\'s workers aren\'t one-time users. They come back for the next assignment, and the next, building a history the app now actually keeps.'
+					text: 'The firm\'s workers aren\'t one-time users. They come back for the next assignment, and the next, building a history the app now actually keeps.'
 				}
 			]
 		}
@@ -723,7 +724,7 @@ const insurance: Project = {
 	previewVideo: null,
 	brief: {
 		paragraphs: [
-			"'Aviator' is a study on demystifying a coverage marketplace so people can compare, choose, and buy without the jargon."
+			'An insurance CRM split into two experiences: dense tools for agents, and a short, jargon-free path to purchase for clients.'
 		],
 		facts: [
 			{ label: 'Project type', items: ['Svelte Web Application'] },
@@ -732,7 +733,8 @@ const insurance: Project = {
 				label: 'Stakeholders',
 				items: ['Director of UX', 'Director of Research', 'VP of Product']
 			},
-			{ label: 'Timeline', items: ['2024'] }
+			{ label: 'Timeline', items: ['2024'] },
+			{ label: 'My role', items: ["Designer inside the client's lean design unit, focused on agent workflows"] }
 		]
 	},
 	seoDescription:
@@ -1076,7 +1078,7 @@ const convenience: Project = {
 		{ at: 'f-aisle', color: '#ededed', when: 'center', line: 0.3 },
 		{ at: 'f-quote', color: '#872C02', when: 'enter', line: 0.8 }
 	],
-	poster: poster(convConv, '7-Eleven app with a late-night craving prompt'),
+	poster: poster(convConv, 'Convenience-store app with a late-night craving prompt'),
 	previewVideo: null,
 	brief: {
 		paragraphs: [
@@ -1090,12 +1092,13 @@ const convenience: Project = {
 				label: 'Stakeholders',
 				items: ['Director of UX', 'Director of Research', 'VP of Product']
 			},
-			{ label: 'Timeline', items: ['Fall 2025'] }
+			{ label: 'Timeline', items: ['Fall 2025'] },
+			{ label: 'My role', items: ['Designer, with one research partner, in an R&D group'] }
 		]
 	},
 	seoDescription:
 		'A case study on search that reorganizes a convenience catalogue instead of shopping for the customer.',
-	ogImage: { url: '/og/convenience.png', alt: '7-Eleven app with a late-night craving prompt' },
+	ogImage: { url: '/og/convenience.png', alt: 'Convenience-store app with a late-night craving prompt' },
 	body: [
 		{
 			_type: 'layoutBlock',
@@ -1156,7 +1159,7 @@ const convenience: Project = {
 				{
 					_key: 'f-open-b',
 					kind: 'image',
-					image: conv('1.2.png', '7-Eleven storefront at dusk with a question mark in the sky'),
+					image: conv('1.2.png', 'Convenience storefront at dusk with a question mark in the sky'),
 					label: '02',
 					title: 'The visit',
 					text: 'In and out, basket still unfinished.'
@@ -1187,7 +1190,7 @@ const convenience: Project = {
 					_type: 'span',
 					_key: 'f-board-2s',
 					marks: [],
-					text: 'What we kept seeing: AI shows up for large purchases. Someone will research a car, compare appliances, or plan a trip with a chatbot. That is a long decision with room for back-and-forth. A 7-Eleven run is not. People are often hungry, in a hurry, and still figuring out what they want while they look.'
+					text: 'What we kept seeing: AI shows up for large purchases. Someone will research a car, compare appliances, or plan a trip with a chatbot. That is a long decision with room for back-and-forth. A convenience-store run is not. People are often hungry, in a hurry, and still figuring out what they want while they look.'
 				}
 			]
 		},

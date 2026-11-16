@@ -9,8 +9,8 @@ const summaries: Record<ApiResource, Record<Lang, string>> = {
 		es: 'Nombre, rol, bio, disponibilidad, enlaces, experiencia y premios.'
 	},
 	experience: {
-		en: 'Employment history, most recent first.',
-		es: 'Historial laboral, lo más reciente primero.'
+		en: 'Credentials: past teams and roles, most recent first.',
+		es: 'Credenciales: equipos y roles anteriores, lo más reciente primero.'
 	},
 	skills: {
 		en: 'Skills grouped by discipline, with the case studies that show each in use.',
@@ -25,8 +25,8 @@ const summaries: Record<ApiResource, Record<Lang, string>> = {
 		es: 'Experimentos de interfaz con notas sobre qué prueba cada uno.'
 	},
 	services: {
-		en: 'The kinds of work on offer and what each delivers.',
-		es: 'Los tipos de trabajo que ofrezco y qué entrega cada uno.'
+		en: 'The services on offer, with billing shape, typical length, what each delivers and the case study that shows it.',
+		es: 'Los servicios que ofrezco, con forma de cobro, duración típica, qué entrega cada uno y el caso de estudio que lo muestra.'
 	}
 }
 
